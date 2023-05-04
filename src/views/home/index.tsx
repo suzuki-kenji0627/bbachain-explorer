@@ -9,6 +9,7 @@ import { SearchBar } from 'components/SearchBar';
 
 // Store
 import useUserSOLBalanceStore from '../../stores/useUserSOLBalanceStore';
+import Image from 'next/image';
 
 export const HomeView: FC = ({ }) => {
   const wallet = useWallet();
@@ -24,15 +25,12 @@ export const HomeView: FC = ({ }) => {
   }, [wallet.publicKey, connection, getUserSOLBalance])
 
   return (
-
-    <div className="md:hero mx-auto p-4">
-      <div className="md:hero-content flex flex-col">
-        <div className='mt-0'>
-          <h1 className="text-center text-2xl md:pl-12 font-bold text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 to-fuchsia-500 mb-4">
-            BBACHAIN Block Explorer
-          </h1>
-        </div>
-        <div className="flex flex-col">
+    <div className="hero p-4">
+      <div className="hero-content flex flex-col w-2/3">
+        <h1 className="text-center text-2xl pl-12 font-bold text-transparent bg-clip-text mb-4">
+          BBACHAIN Block Explorer
+        </h1>
+        <div className="w-full p-4">
           <SearchBar />
         </div>
       </div>
