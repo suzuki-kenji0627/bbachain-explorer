@@ -5,7 +5,7 @@ export const SearchBar: FC = () => {
       <div className="form-control">
         <div className="input-group m-0">
           <select className="select select-bordered">
-            <option disabled selected>All Filters</option>
+            <option selected>All Filters</option>
             <option>Accounts</option>
             <option>Blocks</option>
             <option>Contracts</option>
@@ -19,4 +19,3 @@ export const SearchBar: FC = () => {
       </div>
     );
 };
-
