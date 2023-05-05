@@ -1,18 +1,17 @@
 import { createContext, useEffect, useReducer } from "react";
 import { Cluster, ClusterAction, ClusterDispatchContext, ClusterState, ClusterStateContext, ClusterStatus, updateCluster } from "hooks/useCluster";
 
-export const DEFAULT_CLUSTER = Cluster.Testnet;
+const DEFAULT_CLUSTER = Cluster.Testnet;
 const DEFAULT_CUSTOM_URL = "http://localhost:8899";
 
 function clusterReducer(state: ClusterState, action: ClusterAction): ClusterState {
     switch (action.status) {
       case ClusterStatus.Connected:
       case ClusterStatus.Failure: {
-        if (
-          state.cluster !== action.cluster ||
-          state.customUrl !== action.customUrl
-        )
+        if (state.cluster !== action.cluster || state.customUrl !== action.customUrl) {
           return state;
+        }
+
         return action;
       }
       case ClusterStatus.Connecting: {

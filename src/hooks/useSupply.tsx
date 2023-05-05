@@ -3,19 +3,19 @@ import { Connection, Supply } from "@solana/web3.js";
 import { Cluster, useCluster } from "./useCluster";
 import { reportError } from "utils/sentry";
 
-export enum Status {
+export enum SupplyStatus {
   Idle,
   Disconnected,
   Connecting,
 }
 
-export type SupplyState = Supply | Status | string;
+export type SupplyState = Supply | SupplyStatus | string;
 export type SupplyDispatch = Dispatch<React.SetStateAction<SupplyState>>;
 export const SupplyStateContext = createContext<SupplyState | undefined>(undefined);
 export const SupplyDispatchContext = createContext<SupplyDispatch | undefined>(undefined);
 
 export async function fetch(dispatch: SupplyDispatch, cluster: Cluster, url: string) {
-  dispatch(Status.Connecting);
+  dispatch(SupplyStatus.Connecting);
 
   try {
     const connection = new Connection(url, "finalized");
@@ -25,7 +25,7 @@ export async function fetch(dispatch: SupplyDispatch, cluster: Cluster, url: str
 
     // Update state if still connecting
     dispatch((state) => {
-      if (state !== Status.Connecting) return state;
+      if (state !== SupplyStatus.Connecting) return state;
       return supply;
     });
   } catch (err) {

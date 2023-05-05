@@ -1,7 +1,9 @@
 import { FC, useEffect } from 'react';
-import { useFetchSupply, useSupply } from 'hooks/useSupply';
+import { SupplyStatus, useFetchSupply, useSupply } from 'hooks/useSupply';
 import { ClusterStatus, useCluster } from 'hooks/useCluster';
 import { abbreviatedNumber, toBBA } from 'utils';
+import { ErrorCard } from './common/ErrorCard';
+import { LoadingCard } from './common/LoadingCard';
 
 export const NetworkStats: FC = () => {
   const { status } = useCluster();
@@ -21,6 +23,17 @@ export const NetworkStats: FC = () => {
       fetchData();
     }
   }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (supply === SupplyStatus.Disconnected) {
+    // we'll return here to prevent flicker
+    return null;
+  }
+
+  if (supply === SupplyStatus.Idle || supply === SupplyStatus.Connecting) {
+    return <LoadingCard message="Loading supply and price data" />;
+  } else if (typeof supply === "string") {
+    return <ErrorCard text={supply} retry={fetchData} />;
+  }
 
   return (
     <div className="stats shadow w-full">
