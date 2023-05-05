@@ -1,29 +1,15 @@
 // Next, React
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
 // Wallet
-import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 
 // Components
 import { SearchBar } from 'components/SearchBar';
 
 // Store
-import useUserSOLBalanceStore from '../../stores/useUserSOLBalanceStore';
-import Image from 'next/image';
+import { NetworkStats } from 'components/NetworkStats';
 
 export const HomeView: FC = ({ }) => {
-  const wallet = useWallet();
-  const { connection } = useConnection();
-
-  const { getUserSOLBalance } = useUserSOLBalanceStore()
-
-  useEffect(() => {
-    if (wallet.publicKey) {
-      console.log(wallet.publicKey.toBase58())
-      getUserSOLBalance(wallet.publicKey, connection)
-    }
-  }, [wallet.publicKey, connection, getUserSOLBalance])
-
   return (
     <div className="mx-4">
       <div className="w-full hero p-4">
@@ -36,31 +22,7 @@ export const HomeView: FC = ({ }) => {
       </div>
 
       <div className="">
-        <div className="stats shadow w-full">
-          <div className="stat">
-            <div className="stat-figure text-secondary">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            </div>
-            <div className="stat-title">BLOCKS</div>
-            <div className="stat-value text-justify">5,000,000</div>
-          </div>
-
-          <div className="stat">
-            <div className="stat-figure text-secondary">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            </div>
-            <div className="stat-title">TRANSACTIONS</div>
-            <div className="stat-value text-justify">4,195,710 (5 TPS)</div>
-          </div>
-
-          <div className="stat">
-            <div className="stat-figure text-secondary">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            </div>
-            <div className="stat-title">EPOCHS</div>
-            <div className="stat-value text-justify">2.6M</div>
-          </div>
-        </div>
+        <NetworkStats />
       </div>
 
       <div className="grid grid-cols-2 gap-2 my-4">
