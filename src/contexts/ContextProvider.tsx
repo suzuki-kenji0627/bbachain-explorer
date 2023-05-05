@@ -1,7 +1,7 @@
 import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import {
-    UnsafeBurnerWalletAdapter
+    SolflareWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 import { Cluster, clusterApiUrl } from '@solana/web3.js';
 import { FC, ReactNode, useCallback, useMemo } from 'react';
@@ -9,6 +9,8 @@ import { AutoConnectProvider, useAutoConnect } from './AutoConnectProvider';
 import { notify } from "../utils/notifications";
 import { NetworkConfigurationProvider, useNetworkConfiguration } from './NetworkConfigurationProvider';
 import dynamic from "next/dynamic";
+import { SupplyProvider } from './SupplyProvider';
+import { ClusterProvider } from './ClusterProvider';
 
 const ReactUIWalletModalProviderDynamic = dynamic(
   async () =>
@@ -22,13 +24,11 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const network = networkConfiguration as WalletAdapterNetwork;
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
-    console.log(network);
-
     const wallets = useMemo(
         () => [
-            new UnsafeBurnerWalletAdapter(),
+            new SolflareWalletAdapter(),
         ],
-        [network]
+        []
     );
 
     const onError = useCallback(
@@ -53,12 +53,14 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
 export const ContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
     return (
-        <>
-            <NetworkConfigurationProvider>
-                <AutoConnectProvider>
-                    <WalletContextProvider>{children}</WalletContextProvider>
-                </AutoConnectProvider>
-            </NetworkConfigurationProvider>
-        </>
+        <ClusterProvider>
+            <SupplyProvider>
+                <NetworkConfigurationProvider>
+                    <AutoConnectProvider>
+                        <WalletContextProvider>{children}</WalletContextProvider>
+                    </AutoConnectProvider>
+                </NetworkConfigurationProvider>
+            </SupplyProvider>
+        </ClusterProvider>
     );
 };

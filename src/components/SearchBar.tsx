@@ -4,12 +4,12 @@ export const SearchBar: FC = () => {
     return (
       <div className="form-control">
         <div className="input-group m-0">
-          <select className="select select-bordered">
-            <option selected>All Filters</option>
-            <option>Accounts</option>
-            <option>Blocks</option>
-            <option>Contracts</option>
-            <option>Transactions</option>
+          <select defaultValue={'all'} className="select select-bordered">
+            <option value={'all'}>All Filters</option>
+            <option value={'Accounts'}>Accounts</option>
+            <option value={'Blocks'}>Blocks</option>
+            <option value={'Contracts'}>Contracts</option>
+            <option value={'Transactions'}>Transactions</option>
           </select>
           <input type="text" className="input input-bordered w-full" placeholder="Search by Address / Txn Hash / Block / Token / Domain Name" />
           <button className="btn btn-square">

@@ -19,6 +19,55 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
+"@bbachain/buffer-layout-utils@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@bbachain/buffer-layout-utils/-/buffer-layout-utils-0.0.1.tgz#e54b56254c2ac2f2933aaa92030595457c5575c7"
+  integrity sha512-wefKq4vitQfhyWD+zuwB4Tqr+xNCaeqzJ2DR6I4pkG96igM/ubDuz1FFqjdP8zhqze/SqRByExQhs82A/wdSnA==
+  dependencies:
+    "@bbachain/buffer-layout" "^0.0.1"
+    "@bbachain/web3.js" "^1.0.3"
+    bigint-buffer "^1.1.5"
+    bignumber.js "^9.0.1"
+
+"@bbachain/buffer-layout@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@bbachain/buffer-layout/-/buffer-layout-0.0.1.tgz#b5961cb94e947ed51a97bb1bb8349e444a8860d1"
+  integrity sha512-kUITbMiWVDefC85NN83Yrc4az64lmOxx81F0D12V/nSCseoN36SwMuf5osfXjgUQggXbYIOxjUPtsNoyAwOjZw==
+  dependencies:
+    buffer "~6.0.3"
+
+"@bbachain/spl-token@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@bbachain/spl-token/-/spl-token-0.0.1.tgz#c7d69c002d32a49baebacf5182603cf6ab0bf71f"
+  integrity sha512-WErz1vnZ07r/l9sbvXvy8y1bhzxzbERIwZIa5BAmFPEPP+y10CnaTPEfM7dWmp7tstD++7LZjT8ZVifBP9k5mA==
+  dependencies:
+    "@bbachain/buffer-layout" "^0.0.1"
+    "@bbachain/buffer-layout-utils" "^0.0.1"
+    buffer "^6.0.3"
+
+"@bbachain/web3.js@^1.0.3", "@bbachain/web3.js@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@bbachain/web3.js/-/web3.js-1.1.0.tgz#4e9982abc957bdc645adc683e84cefd6914d4bc3"
+  integrity sha512-SGV1k46ANZkrKCwBZ547kUUiPj8GPBjg5uoCpNifF6qg8t3jCmt9cnP/mC36MP83jodnexQsdvfNem5Yxsvl3w==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "@bbachain/buffer-layout" "^0.0.1"
+    "@bbachain/spl-token" "^0.0.1"
+    "@noble/ed25519" "^1.7.0"
+    "@noble/hashes" "^1.1.2"
+    "@noble/secp256k1" "^1.6.3"
+    agentkeepalive "^4.2.1"
+    bigint-buffer "^1.1.5"
+    bn.js "^5.0.0"
+    borsh "^0.7.0"
+    bs58 "^4.0.1"
+    buffer "6.0.1"
+    fast-stable-stringify "^1.0.0"
+    jayson "^3.4.4"
+    node-fetch "2"
+    rpc-websockets "^7.5.0"
+    superstruct "^0.14.2"
+
 "@blocto/sdk@^0.2.22":
   version "0.2.22"
   resolved "https://registry.npmjs.org/@blocto/sdk/-/sdk-0.2.22.tgz"
