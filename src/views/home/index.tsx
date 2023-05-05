@@ -129,7 +129,7 @@ export const HomeView: FC = ({ }) => {
                   <tr>
                     <th>
                       <div>
-                        <div className="font-bold">datm5oMNsscoyvKEF8...</div>
+                        <div className="font-bold">MNsscoyvKEF8...</div>
                         <div className="text-sm opacity-50">3 seconds ago</div>
                       </div>
                     </th>
@@ -142,7 +142,7 @@ export const HomeView: FC = ({ }) => {
                   <tr>
                     <th>
                       <div>
-                        <div className="font-bold">datm5oMNsscoyvKEF8...</div>
+                        <div className="font-bold">MNsscoyvKEF8...</div>
                         <div className="text-sm opacity-50">3 seconds ago</div>
                       </div>
                     </th>
@@ -155,7 +155,7 @@ export const HomeView: FC = ({ }) => {
                   <tr>
                     <th>
                       <div>
-                        <div className="font-bold">datm5oMNsscoyvKEF8...</div>
+                        <div className="font-bold">MNsscoyvKEF8...</div>
                         <div className="text-sm opacity-50">3 seconds ago</div>
                       </div>
                     </th>
