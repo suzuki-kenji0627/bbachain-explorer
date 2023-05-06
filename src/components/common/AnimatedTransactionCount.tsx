@@ -6,7 +6,7 @@ import { PerformanceInfo } from "hooks/common/PerformanceInfo";
 import { PERF_UPDATE_SEC } from "contexts/StatsInfoProvider";
 
 const CountUpDynamic = dynamic(
-  async () => await import('react-countup'),
+  async () => (await import('react-countup')),
   { ssr: false }
 );
 
