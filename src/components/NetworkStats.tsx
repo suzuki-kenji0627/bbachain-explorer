@@ -4,11 +4,18 @@ import { ClusterStatus, useCluster } from 'hooks/useCluster';
 import { abbreviatedNumber, toBBA } from 'utils';
 import { ErrorCard } from './common/ErrorCard';
 import { LoadingCard } from './common/LoadingCard';
+import { useStatsInfo, useStatsProvider } from 'hooks/useStatsInfo';
 
 export const NetworkStats: FC = () => {
-  const { status } = useCluster();
+  const { cluster, status } = useCluster();
   const supply: any = useSupply();
   const fetchSupply = useFetchSupply();
+  const statsInfo = useStatsInfo();
+  const { setActive } = useStatsProvider();
+
+  const { avgSlotTime_1min, epochInfo } = statsInfo;
+  const averageSlotTime = Math.round(1000 * avgSlotTime_1min);
+  const { blockHeight } = epochInfo;
 
   function fetchData() {
     fetchSupply();
@@ -23,6 +30,11 @@ export const NetworkStats: FC = () => {
       fetchData();
     }
   }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    setActive(true);
+    return () => setActive(false);
+  }, [setActive, cluster]);
 
   if (supply === SupplyStatus.Disconnected) {
     // we'll return here to prevent flicker
@@ -43,6 +55,14 @@ export const NetworkStats: FC = () => {
         </div>
         <div className="stat-title">SUPPLY</div>
         <div className="stat-value text-justify">{displayDaltons(supply.circulating)}</div>
+      </div>
+
+      <div className="stat">
+        <div className="stat-figure text-secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        </div>
+        <div className="stat-title">BLOCKS ({averageSlotTime}ms)</div>
+        <div className="stat-value text-justify">{blockHeight}</div>
       </div>
 
       <div className="stat">
