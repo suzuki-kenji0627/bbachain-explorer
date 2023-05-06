@@ -1,9 +1,11 @@
 import React, { ReactNode, useCallback, useEffect, useReducer, useState } from "react";
 import { Connection } from "@bbachain/web3.js";
 
-import { StatsInfoActionType, StatsInfoContext, StatsProviderContext, initialStatsInfo, statsInfoReducer } from "hooks/useStatsInfo";
+import { StatsInfoActionType, initialStatsInfo, statsInfoReducer } from "hooks/common/StatsInfo";
+import { PerformanceContext, StatsInfoContext, StatsProviderContext } from "hooks/useStatsInfo";
 import { Cluster, useCluster } from "hooks/useCluster";
 import { reportError } from "utils/sentry";
+import { PerformanceInfoActionType, initialPerformanceInfo, performanceInfoReducer } from "hooks/common/PerformanceInfo";
 
 // const PERF_UPDATE_SEC = 5;
 const SAMPLE_HISTORY_HOURS = 6;
@@ -26,7 +28,12 @@ export function StatsInfoProvider({ children }: Props) {
 
   const [statsInfo, dispatchStatsInfo] = useReducer(
     statsInfoReducer,
-    initialStatsInfo
+    initialStatsInfo,
+  );
+
+  const [performanceInfo, dispatchPerformanceInfo] = React.useReducer(
+    performanceInfoReducer,
+    initialPerformanceInfo,
   );
 
   const setTimedOut = useCallback(() => {
@@ -51,8 +58,6 @@ export function StatsInfoProvider({ children }: Props) {
   }
 
   useEffect(() => {
-    console.log(!active, !url);
-
     if (!active || !url) return;
 
     const connection = getConnection(url);
@@ -74,6 +79,11 @@ export function StatsInfoProvider({ children }: Props) {
 
         dispatchStatsInfo({
           type: StatsInfoActionType.SetPerfSamples,
+          data: samples,
+        });
+
+        dispatchPerformanceInfo({
+          type: PerformanceInfoActionType.SetPerfSamples,
           data: samples,
         });
       } catch (error) {
@@ -151,7 +161,9 @@ export function StatsInfoProvider({ children }: Props) {
   return (
     <StatsProviderContext.Provider value={{ setActive, setTimedOut, retry, active }}>
       <StatsInfoContext.Provider value={{ info: statsInfo }}>
-        {children}
+        <PerformanceContext.Provider value={{ info: performanceInfo }}>
+          {children}
+        </PerformanceContext.Provider>
       </StatsInfoContext.Provider>
     </StatsProviderContext.Provider>
   );
