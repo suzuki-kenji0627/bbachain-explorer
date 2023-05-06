@@ -3,7 +3,6 @@ import React, { FC, useEffect } from 'react';
 // Components
 import { ErrorCard } from './common/ErrorCard';
 import { LoadingCard } from './common/LoadingCard';
-import { AnimatedTransactionCount } from './common/AnimatedTransactionCount';
 
 // Hooks
 import { ClusterStatus, useCluster } from 'hooks/useCluster';
@@ -22,7 +21,7 @@ export const NetworkStats: FC = () => {
   const { setActive } = useStatsProvider();
 
   const performanceInfo = usePerformanceInfo();
-  const transactionCount = <AnimatedTransactionCount info={performanceInfo} />;
+  const transactionCount = performanceInfo.transactionCount;
 
   const { avgSlotTime_1min, avgSlotTime_1h, epochInfo } = statsInfo;
   const averageSlotTime = Math.round(1000 * avgSlotTime_1min);
@@ -30,10 +29,10 @@ export const NetworkStats: FC = () => {
 
   const { blockHeight, slotIndex, slotsInEpoch } = epochInfo;
   const epochProgress = ((100 * slotIndex) / slotsInEpoch).toFixed(1) + "%";
-  // const epochTimeRemaining = slotsToHumanString(
-  //   slotsInEpoch - slotIndex,
-  //   hourlySlotTime
-  // );
+  const epochTimeRemaining = slotsToHumanString(
+    slotsInEpoch - slotIndex,
+    hourlySlotTime
+  );
 
   function fetchData() {
     fetchSupply();
@@ -97,7 +96,7 @@ export const NetworkStats: FC = () => {
         </div>
         <div className="stat-title">{epochInfo.epoch} EPOCHS</div>
         <div className="stat-value text-justify">{epochProgress}</div>
-        {/* <div className="stat-desc">{epochTimeRemaining}</div> */}
+        <div className="stat-desc">{epochTimeRemaining}</div>
       </div>
     </div>
   );
