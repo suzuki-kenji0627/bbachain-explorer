@@ -45,3 +45,11 @@ export function useStatsInfo() {
   }
   return context.info;
 }
+
+export function usePerformanceInfo() {
+  const context = useContext(PerformanceContext);
+  if (!context) {
+    throw new Error(`usePerformanceInfo must be used within a StatsProvider`);
+  }
+  return context.info;
+}

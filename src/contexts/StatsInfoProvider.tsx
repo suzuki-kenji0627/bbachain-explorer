@@ -7,10 +7,10 @@ import { Cluster, useCluster } from "hooks/useCluster";
 import { reportError } from "utils/sentry";
 import { PerformanceInfoActionType, initialPerformanceInfo, performanceInfoReducer } from "hooks/common/PerformanceInfo";
 
-// const PERF_UPDATE_SEC = 5;
+export const PERF_UPDATE_SEC = 5;
 const SAMPLE_HISTORY_HOURS = 6;
 const PERFORMANCE_SAMPLE_INTERVAL = 60000;
-// const TRANSACTION_COUNT_INTERVAL = 5000;
+const TRANSACTION_COUNT_INTERVAL = 5000;
 const EPOCH_INFO_INTERVAL = 2000;
 const BLOCK_TIME_INTERVAL = 5000;
 // const LOADING_TIMEOUT = 10000;
@@ -122,6 +122,27 @@ export function StatsInfoProvider({ children }: Props) {
       }
     };
 
+    const getTransactionCount = async () => {
+      try {
+        const transactionCount = await connection.getTransactionCount();
+        dispatchPerformanceInfo({
+          type: PerformanceInfoActionType.SetTransactionCount,
+          data: transactionCount,
+        });
+      } catch (error) {
+        if (cluster !== Cluster.Custom) {
+          reportError(error, { url });
+        }
+        if (error instanceof Error) {
+          dispatchPerformanceInfo({
+            type: PerformanceInfoActionType.SetError,
+            data: error.toString(),
+          });
+        }
+        setActive(false);
+      }
+    };
+
     const getBlockTime = async () => {
       if (lastSlot) {
         try {
@@ -142,10 +163,12 @@ export function StatsInfoProvider({ children }: Props) {
     };
 
     const performanceInterval = setInterval(getPerformanceSamples, PERFORMANCE_SAMPLE_INTERVAL);
+    const transactionCountInterval = setInterval(getTransactionCount, TRANSACTION_COUNT_INTERVAL);
     const epochInfoInterval = setInterval(getEpochInfo, EPOCH_INFO_INTERVAL);
     const blockTimeInterval = setInterval(getBlockTime, BLOCK_TIME_INTERVAL);
 
     getPerformanceSamples();
+    getTransactionCount();
     (async () => {
       await getEpochInfo();
       await getBlockTime();
@@ -153,6 +176,7 @@ export function StatsInfoProvider({ children }: Props) {
 
     return () => {
       clearInterval(performanceInterval);
+      clearInterval(transactionCountInterval);
       clearInterval(epochInfoInterval);
       clearInterval(blockTimeInterval);
     };

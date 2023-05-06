@@ -1,10 +1,18 @@
-import { FC, useEffect } from 'react';
-import { SupplyStatus, useFetchSupply, useSupply } from 'hooks/useSupply';
-import { ClusterStatus, useCluster } from 'hooks/useCluster';
-import { abbreviatedNumber, toBBA } from 'utils';
+import React, { FC, useEffect } from 'react';
+
+// Components
 import { ErrorCard } from './common/ErrorCard';
 import { LoadingCard } from './common/LoadingCard';
-import { useStatsInfo, useStatsProvider } from 'hooks/useStatsInfo';
+import { AnimatedTransactionCount } from './common/AnimatedTransactionCount';
+
+// Hooks
+import { ClusterStatus, useCluster } from 'hooks/useCluster';
+import { SupplyStatus, useFetchSupply, useSupply } from 'hooks/useSupply';
+import { usePerformanceInfo, useStatsInfo, useStatsProvider } from 'hooks/useStatsInfo';
+
+// Utils
+import { abbreviatedNumber, slotsToHumanString, toBBA } from 'utils';
+
 
 export const NetworkStats: FC = () => {
   const { cluster, status } = useCluster();
@@ -13,9 +21,19 @@ export const NetworkStats: FC = () => {
   const statsInfo = useStatsInfo();
   const { setActive } = useStatsProvider();
 
-  const { avgSlotTime_1min, epochInfo } = statsInfo;
+  const performanceInfo = usePerformanceInfo();
+  const transactionCount = <AnimatedTransactionCount info={performanceInfo} />;
+
+  const { avgSlotTime_1min, avgSlotTime_1h, epochInfo } = statsInfo;
   const averageSlotTime = Math.round(1000 * avgSlotTime_1min);
-  const { blockHeight } = epochInfo;
+  const hourlySlotTime = Math.round(1000 * avgSlotTime_1h);
+
+  const { blockHeight, slotIndex, slotsInEpoch } = epochInfo;
+  const epochProgress = ((100 * slotIndex) / slotsInEpoch).toFixed(1) + "%";
+  // const epochTimeRemaining = slotsToHumanString(
+  //   slotsInEpoch - slotIndex,
+  //   hourlySlotTime
+  // );
 
   function fetchData() {
     fetchSupply();
@@ -70,17 +88,17 @@ export const NetworkStats: FC = () => {
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
         </div>
         <div className="stat-title">TRANSACTIONS</div>
-        <div className="stat-value text-justify">4,195,710 (5 TPS)</div>
+        <div className="stat-value text-justify">{transactionCount}</div>
       </div>
 
       <div className="stat">
         <div className="stat-figure text-secondary">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
         </div>
-        <div className="stat-title">EPOCHS</div>
-        <div className="stat-value text-justify">2.6M</div>
+        <div className="stat-title">{epochInfo.epoch} EPOCHS</div>
+        <div className="stat-value text-justify">{epochProgress}</div>
+        {/* <div className="stat-desc">{epochTimeRemaining}</div> */}
       </div>
     </div>
   );
 };
-
