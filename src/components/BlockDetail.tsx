@@ -13,6 +13,7 @@ import { ClusterStatus, useCluster } from "hooks/useCluster";
 
 // Utils
 import { displayTimestampUtc } from 'utils/date';
+import { BlockHistoryCard } from './BlockHistoryCard';
 
 type Props = { block: number }
 export const BlockDetail: FC<Props> = ({block}) => {
@@ -48,91 +49,95 @@ export const BlockDetail: FC<Props> = ({block}) => {
   );
 
   return (
-    <div className="card bg-base-100 shadow-xl">
-      <div className="card-body">
-        <h2 className="card-title">Overview</h2>
+    <>
+      <div className="card bg-base-100 shadow-xl mb-4">
+        <div className="card-body">
+          <h2 className="card-title">Overview</h2>
 
-        {/* Overview */}
-        <div className="overflow-x-auto">
-          <table className="table w-full">
-            <tbody>
-              <tr>
-                <td>Blockhash</td>
-                <td>{blockData.blockhash}</td>
-              </tr>
-              <tr>
-                <td>Block Number</td>
-                <td>{block}</td>
-              </tr>
-              {blockLeader !== undefined && (
+          {/* Overview */}
+          <div className="overflow-x-auto">
+            <table className="table w-full">
+              <tbody>
                 <tr>
-                  <td className="w-100">Block Leader</td>
-                  <td className="text-lg-end">
-                    <Address pubkey={blockLeader} link />
-                  </td>
+                  <td>Blockhash</td>
+                  <td>{blockData.blockhash}</td>
                 </tr>
-              )}
-              {blockData.blockTime ? (
                 <tr>
-                  <td>Timestamp (UTC)</td>
-                  <td className="text-lg-end">
-                    <span className="font-monospace">
-                      {displayTimestampUtc(blockData.blockTime * 1000, true)}
-                    </span>
-                  </td>
+                  <td>Block Number</td>
+                  <td>{block}</td>
                 </tr>
-              ) : (
+                {blockLeader !== undefined && (
+                  <tr>
+                    <td className="w-100">Block Leader</td>
+                    <td className="text-lg-end">
+                      <Address pubkey={blockLeader} link />
+                    </td>
+                  </tr>
+                )}
+                {blockData.blockTime ? (
+                  <tr>
+                    <td>Timestamp (UTC)</td>
+                    <td className="text-lg-end">
+                      <span className="font-monospace">
+                        {displayTimestampUtc(blockData.blockTime * 1000, true)}
+                      </span>
+                    </td>
+                  </tr>
+                ) : (
+                  <tr>
+                    <td className="w-100">Timestamp</td>
+                    <td className="text-lg-end">Unavailable</td>
+                  </tr>
+                )}
+                {epoch !== undefined && (
+                  <tr>
+                    <td className="w-100">Epoch</td>
+                    <td className="text-lg-end font-monospace">
+                      <Epoch epoch={epoch} link />
+                    </td>
+                  </tr>
+                )}
                 <tr>
-                  <td className="w-100">Timestamp</td>
-                  <td className="text-lg-end">Unavailable</td>
-                </tr>
-              )}
-              {epoch !== undefined && (
-                <tr>
-                  <td className="w-100">Epoch</td>
+                  <td className="w-100">Previous Blockhash</td>
                   <td className="text-lg-end font-monospace">
-                    <Epoch epoch={epoch} link />
+                    <span>{blockData.previousBlockhash}</span>
                   </td>
                 </tr>
-              )}
-              <tr>
-                <td className="w-100">Previous Blockhash</td>
-                <td className="text-lg-end font-monospace">
-                  <span>{blockData.previousBlockhash}</span>
-                </td>
-              </tr>
-              <tr>
-                <td className="w-100">Previous Block</td>
-                <td className="text-lg-end font-monospace">
-                  <Slot slot={blockData.parentSlot} link />
-                </td>
-              </tr>
-              {childSlot !== undefined && (
                 <tr>
-                  <td className="w-100">Next Block</td>
+                  <td className="w-100">Previous Block</td>
                   <td className="text-lg-end font-monospace">
-                    <Slot slot={childSlot} link />
+                    <Slot slot={blockData.parentSlot} link />
                   </td>
                 </tr>
-              )}
-              <tr>
-                <td className="w-100">Processed Transactions</td>
-                <td className="text-lg-end font-monospace">
-                  <span>{blockData.transactions.length}</span>
-                </td>
-              </tr>
-              {showSuccessfulCount && (
+                {childSlot !== undefined && (
+                  <tr>
+                    <td className="w-100">Next Block</td>
+                    <td className="text-lg-end font-monospace">
+                      <Slot slot={childSlot} link />
+                    </td>
+                  </tr>
+                )}
                 <tr>
-                  <td className="w-100">Successful Transactions</td>
+                  <td className="w-100">Processed Transactions</td>
                   <td className="text-lg-end font-monospace">
-                    <span>{successfulTxs.length}</span>
+                    <span>{blockData.transactions.length}</span>
                   </td>
                 </tr>
-              )}
-            </tbody>
-          </table>
+                {showSuccessfulCount && (
+                  <tr>
+                    <td className="w-100">Successful Transactions</td>
+                    <td className="text-lg-end font-monospace">
+                      <span>{successfulTxs.length}</span>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
+
+      <BlockHistoryCard block={blockData} />
+    </>
   );
 };
