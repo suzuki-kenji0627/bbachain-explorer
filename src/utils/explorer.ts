@@ -1,4 +1,4 @@
-import { PublicKey, Transaction } from '@solana/web3.js'
+import { PublicKey, Transaction } from '@bbachain/web3.js'
 import base58 from 'bs58'
 
 export function getExplorerUrl(
@@ -15,9 +15,9 @@ export function getExplorerUrl(
       } else if (endpoint === 'https://api.devnet.solana.com') {
         cluster = 'devnet'
       }
-  
+
       return cluster ? `?cluster=${cluster}` : ''
     }
-  
+
     return `https://explorer.solana.com/${itemType}/${viewTypeOrItemAddress}${getClusterUrlParam()}`
   }

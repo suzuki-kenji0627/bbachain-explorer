@@ -1,16 +1,9 @@
-import { FC } from 'react';
 import Link from "next/link";
-import dynamic from 'next/dynamic';
 import React, { useState } from "react";
 import { useAutoConnect } from '../contexts/AutoConnectProvider';
 import NetworkSwitcher from './NetworkSwitcher';
 import NavElement from './nav-element';
 import Image from 'next/image';
-
-const WalletMultiButtonDynamic = dynamic(
-  async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
-  { ssr: false }
-);
 
 export const AppBar: React.FC = () => {
   const { autoConnect, setAutoConnect } = useAutoConnect();
@@ -25,24 +18,17 @@ export const AppBar: React.FC = () => {
               <Image src={'/images/logo.png'} width={200} height={100} alt={'BBASCAN'}></Image>
             </Link>
           </div>
-          <WalletMultiButtonDynamic className="btn-ghost btn-sm relative flex md:hidden text-lg " />
         </div>
 
         {/* Nav Links */}
         {/* Wallet & Settings */}
         <div className="navbar-end">
-          <div className="hidden md:inline-flex align-items-center justify-items gap-6">
+          <div className="hidden md:inline-flex mr-6 align-items-center justify-items gap-6">
           <NavElement
             label="Home"
             href="/"
             navigationStarts={() => setIsNavOpen(false)}
           />
-          {/* <NavElement
-            label="Basics"
-            href="/basics"
-            navigationStarts={() => setIsNavOpen(false)}
-          /> */}
-          <WalletMultiButtonDynamic className="btn-ghost btn-sm rounded-btn text-lg mr-6 " />
         </div>
           <label
               htmlFor="my-drawer"

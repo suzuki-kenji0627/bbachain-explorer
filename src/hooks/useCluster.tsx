@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Connection, EpochInfo, EpochSchedule } from "@solana/web3.js";
+import { Connection, EpochInfo, EpochSchedule } from "@bbachain/web3.js";
 import { reportError } from "utils/sentry";
 
 export enum Cluster {

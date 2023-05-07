@@ -1,5 +1,5 @@
 import { Dispatch, createContext, useCallback, useContext } from "react";
-import { Connection, Supply } from "@solana/web3.js";
+import { Connection, Supply } from "@bbachain/web3.js";
 import { Cluster, useCluster } from "./useCluster";
 import { reportError } from "utils/sentry";
 
