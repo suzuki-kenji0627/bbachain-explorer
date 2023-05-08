@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { TransactionSignature } from "@solana/web3.js";
+import { TransactionSignature } from "@bbachain/web3.js";
 
 type Props = {
   signature: TransactionSignature;

@@ -1,4 +1,4 @@
-import { TransactionError } from "@solana/web3.js";
+import { TransactionError } from "@bbachain/web3.js";
 
 const instructionErrorMessage: Map<string, string> = new Map([
   ["GenericError", "generic instruction error"],
@@ -20,7 +20,7 @@ const instructionErrorMessage: Map<string, string> = new Map([
   ],
   ["ModifiedProgramId", "instruction modified the program id of an account"],
   [
-    "ExternalAccountLamportSpend",
+    "ExternalAccountDaltonSpend",
     "instruction spent from the balance of an account it does not own",
   ],
   [
@@ -28,7 +28,7 @@ const instructionErrorMessage: Map<string, string> = new Map([
     "instruction modified data of an account it does not own",
   ],
   [
-    "ReadonlyLamportChange",
+    "ReadonlyDaltonChange",
     "instruction changed the balance of a read-only account",
   ],
   ["ReadonlyDataModified", "instruction modified data of a read-only account"],
@@ -54,7 +54,7 @@ const instructionErrorMessage: Map<string, string> = new Map([
   ["InvalidError", "program returned invalid error code"],
   ["ExecutableDataModified", "instruction changed executable accounts data"],
   [
-    "ExecutableLamportChange",
+    "ExecutableDaltonChange",
     "instruction changed the balance of a executable account",
   ],
   ["ExecutableAccountNotRentExempt", "executable accounts must be rent exempt"],
@@ -87,7 +87,7 @@ const instructionErrorMessage: Map<string, string> = new Map([
   ["BorshIoError", "Failed to serialize or deserialize account data: {0}"],
   [
     "AccountNotRentExempt",
-    "An account does not have enough lamports to be rent-exempt",
+    "An account does not have enough daltons to be rent-exempt",
   ],
   ["InvalidAccountOwner", "Invalid account owner"],
   ["ArithmeticOverflow", "Program arithmetic overflowed"],

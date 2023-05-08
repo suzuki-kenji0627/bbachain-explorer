@@ -93,35 +93,37 @@ export function TransactionHistoryCard({ pubkey }: { pubkey: PublicKey }) {
 
   const fetching = history.status === FetchStatus.Fetching;
   return (
-    <div className="card">
-      <HistoryCardHeader
-        fetching={fetching}
-        refresh={() => refresh()}
-        title="Transaction History"
-      />
-      <div className="table-responsive mb-0">
-        <table className="table table-sm table-nowrap card-table">
-          <thead>
-            <tr>
-              <th className="text-muted w-1">Transaction Signature</th>
-              <th className="text-muted w-1">Block</th>
-              {hasTimestamps && (
-                <>
-                  <th className="text-muted w-1">Age</th>
-                  <th className="text-muted w-1">Timestamp</th>
-                </>
-              )}
-              <th className="text-muted">Result</th>
-            </tr>
-          </thead>
-          <tbody className="list">{detailsList}</tbody>
-        </table>
+    <div className="card bg-base-100 shadow-xl mb-4">
+      <div className="card-body">
+        <HistoryCardHeader
+          fetching={fetching}
+          refresh={() => refresh()}
+          title="Transaction History"
+        />
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            <thead>
+              <tr>
+                <th className="text-muted w-1">Transaction Signature</th>
+                <th className="text-muted w-1">Block</th>
+                {hasTimestamps && (
+                  <>
+                    <th className="text-muted w-1">Age</th>
+                    <th className="text-muted w-1">Timestamp</th>
+                  </>
+                )}
+                <th className="text-muted">Result</th>
+              </tr>
+            </thead>
+            <tbody className="list">{detailsList}</tbody>
+          </table>
+        </div>
+        <HistoryCardFooter
+          fetching={fetching}
+          foundOldest={history.data.foundOldest}
+          loadMore={() => loadMore()}
+        />
       </div>
-      <HistoryCardFooter
-        fetching={fetching}
-        foundOldest={history.data.foundOldest}
-        loadMore={() => loadMore()}
-      />
     </div>
   );
 }

@@ -9,7 +9,7 @@ export const NonceAccountInfo = type({
   authority: PublicKeyFromString,
   blockhash: string(),
   feeCalculator: type({
-    lamportsPerSignature: string(),
+    daltonsPerSignature: string(),
   }),
 });
 
