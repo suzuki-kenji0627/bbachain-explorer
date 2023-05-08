@@ -2,11 +2,14 @@ import { FC } from 'react';
 import Link from "next/link";
 import Text from './Text';
 import NavElement from './nav-element';
-interface Props {
+import useQueryContext from 'hooks/useQueryContext';
+
+type Props = {
   children: React.ReactNode;
 }
 
 export const ContentContainer: React.FC<Props> = ({ children }) => {
+  const {fmtUrlWithCluster} = useQueryContext();
 
   return (
     <div className="flex-1 drawer h-52">
@@ -25,15 +28,9 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
           <li>
             <NavElement
               label="Home"
-              href="/"
+              href={fmtUrlWithCluster('/')}
             />
           </li>
-          {/* <li>
-            <NavElement
-              label="Basics"
-              href="/basics"
-            />
-          </li> */}
         </ul>
       </div>
     </div>

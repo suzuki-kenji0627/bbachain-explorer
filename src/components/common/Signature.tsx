@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { TransactionSignature } from "@bbachain/web3.js";
+import useQueryContext from "hooks/useQueryContext";
 
 type Props = {
   signature: TransactionSignature;
@@ -17,6 +18,7 @@ export function Signature({
   truncate,
   truncateChars,
 }: Props) {
+  const {fmtUrlWithCluster} = useQueryContext();
   let signatureLabel = signature;
 
   if (truncateChars) {
@@ -27,7 +29,7 @@ export function Signature({
     <div className={`d-flex align-items-center ${alignRight ? "justify-content-end" : ""}`}>
       <span className="font-monospace">
         {link ? (
-          <Link className={truncate ? "text-truncate signature-truncate" : ""} href={`/tx/${signature}`}>
+          <Link className={truncate ? "text-truncate signature-truncate" : ""} href={fmtUrlWithCluster(`/tx/${signature}`)}>
             {signatureLabel}
           </Link>
         ) : (

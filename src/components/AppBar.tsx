@@ -1,20 +1,21 @@
 import Link from "next/link";
 import React, { useState } from "react";
-import { useAutoConnect } from '../contexts/AutoConnectProvider';
 import NetworkSwitcher from './NetworkSwitcher';
 import NavElement from './nav-element';
 import Image from 'next/image';
+import useQueryContext from "hooks/useQueryContext";
 
 export const AppBar: React.FC = () => {
-  const { autoConnect, setAutoConnect } = useAutoConnect();
+  const {fmtUrlWithCluster} = useQueryContext();
   const [isNavOpen, setIsNavOpen] = useState(false);
+
   return (
     <div>
       {/* NavBar / Header */}
       <div className="navbar flex h-20 flex-row md:mb-2 shadow-lg bg-black text-neutral-content border-b border-zinc-600 bg-opacity-66">
         <div className="navbar-start align-items-center">
           <div className="hidden sm:inline w-22 h-22 md:p-2 ml-10">
-            <Link href="/" rel="noopener noreferrer" passHref className="text-secondary hover:text-white">
+            <Link href={fmtUrlWithCluster('/')} rel="noopener noreferrer" passHref className="text-secondary hover:text-white">
               <Image src={'/images/logo.png'} width={200} height={100} alt={'BBASCAN'}></Image>
             </Link>
           </div>
@@ -26,7 +27,7 @@ export const AppBar: React.FC = () => {
           <div className="hidden md:inline-flex mr-6 align-items-center justify-items gap-6">
           <NavElement
             label="Home"
-            href="/"
+            href={fmtUrlWithCluster('/')}
             navigationStarts={() => setIsNavOpen(false)}
           />
         </div>
@@ -59,10 +60,6 @@ export const AppBar: React.FC = () => {
           <ul tabIndex={0} className="p-2 shadow menu dropdown-content bg-base-100 rounded-box sm:w-52">
             <li>
               <div className="form-control bg-opacity-100">
-                <label className="cursor-pointer label">
-                  <a>Autoconnect</a>
-                  <input type="checkbox" checked={autoConnect} onChange={(e) => setAutoConnect(e.target.checked)} className="toggle" />
-                </label>
                 <NetworkSwitcher />
               </div>
             </li>

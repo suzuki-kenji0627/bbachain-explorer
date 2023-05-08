@@ -2,8 +2,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
+// Components
 import { LoadingCard } from "components/common/LoadingCard";
-import { TxDetailView } from "views/tx";
+
+// Views
+import { TxDetailView } from "views";
 
 const TxDetail: NextPage = (props) => {
   const router = useRouter();

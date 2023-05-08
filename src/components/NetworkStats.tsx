@@ -8,6 +8,7 @@ import { LoadingCard } from './common/LoadingCard';
 import { ClusterStatus, useCluster } from 'hooks/useCluster';
 import { SupplyStatus, useFetchSupply, useSupply } from 'hooks/useSupply';
 import { usePerformanceInfo, useStatsInfo, useStatsProvider } from 'hooks/useStatsInfo';
+import useQueryContext from 'hooks/useQueryContext';
 
 // Utils
 import { abbreviatedNumber, slotsToHumanString, toBBA } from 'utils';
@@ -15,6 +16,7 @@ import Link from 'next/link';
 
 
 export const NetworkStats: FC = () => {
+  const {fmtUrlWithCluster} = useQueryContext();
   const { cluster, status } = useCluster();
   const supply: any = useSupply();
   const fetchSupply = useFetchSupply();
@@ -81,7 +83,7 @@ export const NetworkStats: FC = () => {
         </div>
         <div className="stat-title">BLOCKS ({averageSlotTime}ms)</div>
         <div className="stat-value text-justify">
-          <Link href={`/block/${blockHeight}`}>{blockHeight}</Link>
+          <Link href={fmtUrlWithCluster(`/block/${blockHeight}`)}>{blockHeight}</Link>
         </div>
       </div>
 

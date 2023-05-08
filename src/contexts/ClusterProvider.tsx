@@ -1,8 +1,23 @@
 import { createContext, useEffect, useReducer } from "react";
 import { Cluster, ClusterAction, ClusterDispatchContext, ClusterState, ClusterStateContext, ClusterStatus, updateCluster } from "hooks/useCluster";
+import { ParsedUrlQuery } from "querystring";
+import { useRouter } from "next/router";
 
 const DEFAULT_CLUSTER = Cluster.Testnet;
 const DEFAULT_CUSTOM_URL = "http://localhost:8899";
+
+function parseQuery(query: ParsedUrlQuery): Cluster {
+  const { cluster } = query
+  switch (cluster) {
+    case "custom":
+      return Cluster.Custom;
+    case "testnet":
+      return Cluster.Testnet;
+    case "mainnet":
+    default:
+      return Cluster.Mainnet;
+  }
+}
 
 function clusterReducer(state: ClusterState, action: ClusterAction): ClusterState {
     switch (action.status) {
@@ -28,10 +43,13 @@ export function ClusterProvider({ children }: ClusterProviderProps) {
     status: ClusterStatus.Connecting,
   });
 
+  const router = useRouter();
+  const cluster = parseQuery(router.query);
+
   // Reconnect to cluster when params change
   useEffect(() => {
-    updateCluster(dispatch, DEFAULT_CLUSTER, DEFAULT_CUSTOM_URL);
-  }, []);
+    updateCluster(dispatch, cluster, DEFAULT_CUSTOM_URL);
+  }, [cluster]);
 
   return (
     <ClusterStateContext.Provider value={state}>
