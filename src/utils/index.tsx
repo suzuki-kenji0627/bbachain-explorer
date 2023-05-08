@@ -5,6 +5,10 @@ import {
 import { BBA_DALTON_UNIT, PublicKey } from '@bbachain/web3.js';
 import { format } from 'date-fns';
 
+// Switch to web3 constant when web3 updates superstruct
+export const DALTONS_PER_BBA = 1_000_000_000;
+export const MICRO_DALTONS_PER_DALTON = 1_000_000;
+
 export const NUM_TICKS_PER_SECOND = 160;
 export const DEFAULT_TICKS_PER_SLOT = 64;
 export const NUM_SLOTS_PER_SECOND = NUM_TICKS_PER_SECOND / DEFAULT_TICKS_PER_SLOT;
@@ -101,6 +105,37 @@ export function toBalanceString(
 ): string {
   const amount = toBBA(daltons);
   return new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(amount);
+}
+
+export function microDaltonsToDaltons(
+  microDaltons: number | bigint
+): number {
+  if (typeof microDaltons === "number") {
+    return microDaltons / MICRO_DALTONS_PER_DALTON;
+  }
+
+  const microDaltonsString = microDaltons.toString().padStart(7, "0");
+  const splitIndex = microDaltonsString.length - 6;
+  const daltonsString =
+    microDaltonsString.slice(0, splitIndex) +
+    "." +
+    microDaltonsString.slice(splitIndex);
+  return parseFloat(daltonsString);
+}
+
+export function microDaltonsToDaltonsString(
+  microDaltons: number | bigint,
+  maximumFractionDigits: number = 6
+): string {
+  const daltons = microDaltonsToDaltons(microDaltons);
+  return new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(
+    daltons
+  );
+}
+
+export function camelToTitleCase(str: string): string {
+  const result = str.replace(/([A-Z])/g, " $1");
+  return result.charAt(0).toUpperCase() + result.slice(1);
 }
 
 export {

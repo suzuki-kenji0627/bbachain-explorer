@@ -21,8 +21,8 @@ export function HistoryCardHeader({
   fetching: boolean;
 }) {
   return (
-    <div className="card-header align-items-center">
-      <h3 className="card-header-title">{title}</h3>
+    <>
+      <h3 className="card-title">{title}</h3>
       {/* <button
         className="btn btn-white btn-sm"
         disabled={fetching}
@@ -40,7 +40,7 @@ export function HistoryCardHeader({
           </>
         )}
       </button> */}
-    </div>
+    </>
   );
 }
 

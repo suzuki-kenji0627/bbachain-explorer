@@ -1,4 +1,4 @@
-import { TransactionError } from "@solana/web3.js";
+import { TransactionError } from "@bbachain/web3.js";
 import { getProgramName } from "utils/tx";
 import { getTransactionInstructionError } from "utils/program-err";
 import { Cluster } from "hooks/useCluster";
