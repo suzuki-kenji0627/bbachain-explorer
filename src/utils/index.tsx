@@ -2,7 +2,7 @@ import {
   HumanizeDuration,
   HumanizeDurationLanguage,
 } from "humanize-duration-ts";
-import { BBA_DALTON_UNIT } from '@bbachain/web3.js';
+import { BBA_DALTON_UNIT, PublicKey } from '@bbachain/web3.js';
 import { format } from 'date-fns';
 
 export const NUM_TICKS_PER_SECOND = 160;
@@ -89,6 +89,18 @@ export function slotsToHumanString(
   slotTime = MS_PER_SLOT
 ): string {
   return HUMANIZER.humanize(slots * slotTime);
+}
+
+export const pubkeyToString = (key: PublicKey | string = "") => {
+  return typeof key === "string" ? key : key.toBase58();
+};
+
+export function toBalanceString(
+  daltons: number | bigint,
+  maximumFractionDigits: number = 9
+): string {
+  const amount = toBBA(daltons);
+  return new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(amount);
 }
 
 export {

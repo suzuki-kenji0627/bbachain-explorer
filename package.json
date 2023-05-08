@@ -13,6 +13,7 @@
   "dependencies": {
     "@bbachain/web3.js": "^1.1.0",
     "@heroicons/react": "^1.0.5",
+    "@metaplex/js": "^4.12.0",
     "@noble/ed25519": "^1.7.1",
     "@sentry/react": "^7.51.0",
     "@solana/wallet-adapter-base": "^0.9.22",
@@ -25,10 +26,13 @@
     "date-fns": "^2.29.3",
     "humanize-duration-ts": "^2.1.1",
     "immer": "^9.0.12",
+    "moment": "^2.29.4",
     "next": "^13.1.5",
     "next-compose-plugins": "^2.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-moment": "^1.1.3",
+    "superstruct": "^1.0.3",
     "zustand": "^3.6.9"
   },
   "devDependencies": {
