@@ -57,7 +57,7 @@ export const SysvarEpochScheduleAccount = type({
 export type FeesInfo = Infer<typeof FeesInfo>;
 export const FeesInfo = type({
   feeCalculator: type({
-    lamportsPerSignature: string(),
+    daltonsPerSignature: string(),
   }),
 });
 
@@ -71,7 +71,7 @@ export type RecentBlockhashesEntry = Infer<typeof RecentBlockhashesEntry>;
 export const RecentBlockhashesEntry = type({
   blockhash: string(),
   feeCalculator: type({
-    lamportsPerSignature: string(),
+    daltonsPerSignature: string(),
   }),
 });
 
@@ -88,7 +88,7 @@ export const SysvarRecentBlockhashesAccount = type({
 
 export type RentInfo = Infer<typeof RentInfo>;
 export const RentInfo = type({
-  lamportsPerByteYear: string(),
+  daltonsPerByteYear: string(),
   exemptionThreshold: number(),
   burnPercent: number(),
 });

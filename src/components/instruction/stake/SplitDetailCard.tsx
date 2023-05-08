@@ -59,7 +59,7 @@ export function SplitDetailCard(props: {
       <tr>
         <td>Split Amount (BBA)</td>
         <td className="text-lg-end">
-          <Balance daltons={info.lamports} />
+          <Balance daltons={info.daltons} />
         </td>
       </tr>
     </InstructionCard>
