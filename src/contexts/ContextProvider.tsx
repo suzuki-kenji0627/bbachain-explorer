@@ -4,7 +4,6 @@ import { SupplyProvider } from './SupplyProvider';
 import { ClusterProvider } from './ClusterProvider';
 import { StatsInfoProvider } from './StatsInfoProvider';
 import { BlockchainProvider } from './BlockchainProvider';
-import { AutoConnectProvider } from './AutoConnectProvider';
 import { NetworkConfigurationProvider } from './NetworkConfigurationProvider';
 import { AddressProvider } from './AddressProvider';
 import { TransactionProvider } from './TransactionProvider';
@@ -18,9 +17,7 @@ export const ContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
             <AddressProvider>
               <TransactionProvider>
                 <NetworkConfigurationProvider>
-                  <AutoConnectProvider>
-                    {children}
-                  </AutoConnectProvider>
+                  {children}
                 </NetworkConfigurationProvider>
               </TransactionProvider>
             </AddressProvider>
