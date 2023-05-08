@@ -2,8 +2,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
+// Views
+import { AddressDetailView } from "views";
+
+// Components
 import { LoadingCard } from "components/common/LoadingCard";
-import { AddressDetailView } from "views/address";
 
 const AddressDetail: NextPage = (props) => {
   const router = useRouter();

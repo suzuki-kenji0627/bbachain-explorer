@@ -2,7 +2,8 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
-import { BlockDetailView } from "views/block-detail";
+// Views
+import { BlockDetailView } from "views";
 
 const BlockDetail: NextPage = (props) => {
   const router = useRouter();

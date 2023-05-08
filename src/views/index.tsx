@@ -1,2 +1,4 @@
+export { AddressDetailView } from "./address";
+export { BlockDetailView } from "./block-detail";
 export { HomeView } from "./home";
-export { BasicsView } from "./basics";
+export { TxDetailView } from "./tx";

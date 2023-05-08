@@ -8,6 +8,7 @@ import {
 
 // Components
 import { Address } from "./common/Address";
+import { Balance } from "./common/Balance";
 import { Signature } from "./common/Signature";
 import { ErrorCard } from "./common/ErrorCard";
 
@@ -113,7 +114,7 @@ export function BlockHistoryCard({ block }: { block: VersionedBlockResponse }) {
                 <th className="text-muted">#</th>
                 <th className="text-muted">Status</th>
                 <th className="text-muted">Signature</th>
-                <th className="text-muted">Fee</th>
+                <th className="text-end">Fee</th>
                 <th className="text-muted">Invoked Programs</th>
               </tr>
             </thead>
@@ -156,7 +157,7 @@ export function BlockHistoryCard({ block }: { block: VersionedBlockResponse }) {
 
                     <td className="text-end">
                       {tx.meta !== null ? (
-                        tx.meta.fee
+                        <Balance daltons={tx.meta.fee} />
                       ) : (
                         "Unknown"
                       )}
