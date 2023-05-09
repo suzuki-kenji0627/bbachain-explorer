@@ -23,8 +23,8 @@ export type Block = {
 type State = Cache.State<Block>;
 type Dispatch = Cache.Dispatch<Block>;
 
-export const BlockchainStateContext = React.createContext<State | undefined>(undefined);
-export const BlockchainDispatchContext = React.createContext<Dispatch | undefined>(undefined);
+export const BlockStateContext = React.createContext<State | undefined>(undefined);
+export const BlockDispatchContext = React.createContext<Dispatch | undefined>(undefined);
 
 export async function fetchBlock(dispatch: Dispatch, url: string, cluster: Cluster, slot: number) {
   dispatch({
@@ -92,18 +92,18 @@ export async function fetchBlock(dispatch: Dispatch, url: string, cluster: Clust
   });
 }
 
-export function useBlockchain(key: number): Cache.CacheEntry<Block> | undefined {
-  const context = React.useContext(BlockchainStateContext);
+export function useBlock(key: number): Cache.CacheEntry<Block> | undefined {
+  const context = React.useContext(BlockStateContext);
 
   if (!context) {
-    throw new Error(`useBlockchain must be used within a BlockchainProvider`);
+    throw new Error(`useBlock must be used within a BlockProvider`);
   }
 
   return context.entries[key];
 }
 
 export function useFetchBlock() {
-  const dispatch = React.useContext(BlockchainDispatchContext);
+  const dispatch = React.useContext(BlockDispatchContext);
   if (!dispatch) {
     throw new Error(`useFetchBlock must be used within a BlockProvider`);
   }

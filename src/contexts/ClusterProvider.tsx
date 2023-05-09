@@ -1,8 +1,25 @@
-import { createContext, useEffect, useReducer } from "react";
-import { Cluster, ClusterAction, ClusterDispatchContext, ClusterState, ClusterStateContext, ClusterStatus, updateCluster } from "hooks/useCluster";
+import { useEffect, useReducer } from "react";
 import { ParsedUrlQuery } from "querystring";
 import { useRouter } from "next/router";
 
+// Hooks
+import {
+  Cluster,
+  ClusterAction,
+  ClusterDispatchContext,
+  ClusterState,
+  ClusterStateContext,
+  ClusterStatus,
+  updateCluster
+} from "hooks/useCluster";
+
+// Providers
+import { SupplyProvider } from "./SupplyProvider";
+import { AddressProvider } from "./AddressProvider";
+import { TransactionProvider } from "./TransactionProvider";
+import { BlockProvider } from "./BlockProvider";
+
+// Defines
 const DEFAULT_CLUSTER = Cluster.Testnet;
 const DEFAULT_CUSTOM_URL = "http://localhost:8899";
 
@@ -54,7 +71,15 @@ export function ClusterProvider({ children }: ClusterProviderProps) {
   return (
     <ClusterStateContext.Provider value={state}>
       <ClusterDispatchContext.Provider value={dispatch}>
-        {children}
+        <SupplyProvider>
+          <BlockProvider>
+            <AddressProvider>
+              <TransactionProvider>
+                {children}
+              </TransactionProvider>
+            </AddressProvider>
+          </BlockProvider>
+        </SupplyProvider>
       </ClusterDispatchContext.Provider>
     </ClusterStateContext.Provider>
   );
