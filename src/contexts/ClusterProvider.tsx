@@ -14,10 +14,11 @@ import {
 } from "hooks/useCluster";
 
 // Providers
+import { EpochProvider } from "./EpochProvider";
+import { BlockProvider } from "./BlockProvider";
 import { SupplyProvider } from "./SupplyProvider";
 import { AddressProvider } from "./AddressProvider";
 import { TransactionProvider } from "./TransactionProvider";
-import { BlockProvider } from "./BlockProvider";
 
 // Defines
 const DEFAULT_CLUSTER = Cluster.Testnet;
@@ -72,13 +73,15 @@ export function ClusterProvider({ children }: ClusterProviderProps) {
     <ClusterStateContext.Provider value={state}>
       <ClusterDispatchContext.Provider value={dispatch}>
         <SupplyProvider>
-          <BlockProvider>
-            <AddressProvider>
-              <TransactionProvider>
-                {children}
-              </TransactionProvider>
-            </AddressProvider>
-          </BlockProvider>
+          <EpochProvider>
+            <BlockProvider>
+              <AddressProvider>
+                <TransactionProvider>
+                  {children}
+                </TransactionProvider>
+              </AddressProvider>
+            </BlockProvider>
+          </EpochProvider>
         </SupplyProvider>
       </ClusterDispatchContext.Provider>
     </ClusterStateContext.Provider>
