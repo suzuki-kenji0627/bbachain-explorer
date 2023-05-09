@@ -1,6 +1,7 @@
 import React, { FC, useEffect } from 'react';
 
 // Components
+import { Epoch } from './common/Epoch';
 import { ErrorCard } from './common/ErrorCard';
 import { LoadingCard } from './common/LoadingCard';
 
@@ -99,9 +100,9 @@ export const NetworkStats: FC = () => {
         <div className="stat-figure text-secondary">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
         </div>
-        <div className="stat-title">{epochInfo.epoch} EPOCHS</div>
-        <div className="stat-value text-justify">{epochProgress}</div>
-        <div className="stat-desc">{epochTimeRemaining}</div>
+        <div className="stat-title">EPOCHS</div>
+        <div className="stat-value text-justify"><Epoch epoch={epochInfo.epoch} link /> <small>({epochProgress})</small></div>
+        <div className="stat-desc">Remaining {epochTimeRemaining}</div>
       </div>
     </div>
   );

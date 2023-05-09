@@ -3,13 +3,13 @@ import * as Cache from "../hooks/useCache";
 
 // Hooks
 import { useCluster } from "hooks/useCluster";
-import { Block, BlockchainDispatchContext, BlockchainStateContext } from "hooks/useBlockchain";
+import { Block, BlockDispatchContext, BlockStateContext } from "hooks/useBlock";
 
 type Props = {
   children: ReactNode;
 };
 
-export function BlockchainProvider({ children }: Props) {
+export function BlockProvider({ children }: Props) {
   const { url } = useCluster();
   const [state, dispatch] = Cache.useReducer<Block>(url);
 
@@ -18,10 +18,10 @@ export function BlockchainProvider({ children }: Props) {
   }, [dispatch, url]);
 
   return (
-    <BlockchainStateContext.Provider value={state}>
-      <BlockchainDispatchContext.Provider value={dispatch}>
+    <BlockStateContext.Provider value={state}>
+      <BlockDispatchContext.Provider value={dispatch}>
         {children}
-      </BlockchainDispatchContext.Provider>
-    </BlockchainStateContext.Provider>
+      </BlockDispatchContext.Provider>
+    </BlockStateContext.Provider>
   );
 }

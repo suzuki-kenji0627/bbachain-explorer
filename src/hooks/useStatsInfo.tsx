@@ -27,7 +27,7 @@ export const StatsProviderContext = createContext<
 export function useStatsProvider() {
   const context = useContext(StatsProviderContext);
   if (!context) {
-    throw new Error(`useContext must be used within a StatsProvider`);
+    throw new Error(`useContext must be used within a StatsInfoProvider`);
   }
   return context;
 }
@@ -49,7 +49,7 @@ export function useStatsInfo() {
 export function usePerformanceInfo() {
   const context = useContext(PerformanceContext);
   if (!context) {
-    throw new Error(`usePerformanceInfo must be used within a StatsProvider`);
+    throw new Error(`usePerformanceInfo must be used within a StatsInfoProvider`);
   }
   return context.info;
 }
