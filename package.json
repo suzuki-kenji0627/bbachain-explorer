@@ -21,7 +21,7 @@
     "@sentry/react": "^7.51.0",
     "@tailwindcss/typography": "^0.5.9",
     "daisyui": "^1.24.3",
-    "date-fns": "^2.29.3",
+    "date-fns": "^2.30.0",
     "humanize-duration-ts": "^2.1.1",
     "immer": "^9.0.12",
     "moment": "^2.29.4",
