@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import bs58 from "bs58";
 import Select, {
   InputActionMeta,
@@ -8,6 +9,7 @@ import Select, {
 } from "react-select";
 
 // Hooks
+import useQueryContext from 'hooks/useQueryContext';
 import { Cluster, useCluster } from 'hooks/useCluster';
 
 // Utils
@@ -18,7 +20,6 @@ import {
   SPECIAL_IDS,
   SYSVAR_IDS
 } from 'utils/tx';
-import Link from 'next/link';
 
 interface SearchOptions {
   label: string;
@@ -49,6 +50,7 @@ const CustomMenuList = ({ children, maxHeight }) => {
 }
 
 export const SearchBar: FC = () => {
+  const {fmtUrlWithCluster} = useQueryContext();
   const router = useRouter();
 
   const searchRef = React.useRef("");
@@ -68,7 +70,8 @@ export const SearchBar: FC = () => {
 
   const onChange = ({ pathname }: OnChangeValue<any, false>, meta: ActionMeta<any>) => {
     if (meta.action === "select-option") {
-      router.push({ pathname });
+      const url = fmtUrlWithCluster(pathname);
+      router.push(url);
       setSearch("");
     }
   };
