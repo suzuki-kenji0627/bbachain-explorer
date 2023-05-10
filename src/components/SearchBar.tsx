@@ -42,9 +42,9 @@ const CustomOption = ({ innerProps, isDisabled, label }) =>
   <li {...innerProps}><Link href={'/'}>{label}</Link></li>
 ) : null;
 
-const CustomMenuList = ({ children }) => {
+const CustomMenuList = ({ children, maxHeight }) => {
   return (
-    <ul className="menu bg-base-100 w-full">{children}</ul>
+    <ul className="menu bg-base-300 w-full overflow-scroll" style={{ maxHeight }}>{children}</ul>
   );
 }
 

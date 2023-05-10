@@ -1,10 +1,8 @@
 // Next, React
 import { FC } from 'react';
 
-// Wallet
-
 // Components
-import { SearchBar } from 'components/SearchBar';
+import { HeadContainer } from 'components/HeadContainer';
 
 // Store
 import { NetworkStats } from 'components/NetworkStats';
@@ -12,18 +10,8 @@ import { NetworkStats } from 'components/NetworkStats';
 export const HomeView: FC = ({ }) => {
   return (
     <div className="mx-4">
-      <div className="w-full hero p-4">
-        <div className="hero-content flex flex-col w-2/3">
-          <h1 className="text-center text-2xl pl-12 font-bold bg-clip-text mb-4">Block Explorer</h1>
-          <div className="w-full">
-            <SearchBar />
-          </div>
-        </div>
-      </div>
-
-      <div className="">
-        <NetworkStats />
-      </div>
+      <HeadContainer />
+      <NetworkStats />
 
       <div className="grid grid-cols-2 gap-2 my-4">
         <div className="card bg-base-100 shadow-xl">
