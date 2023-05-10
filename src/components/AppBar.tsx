@@ -22,12 +22,17 @@ export const AppBar: React.FC = () => {
         </div>
 
         {/* Nav Links */}
-        {/* Wallet & Settings */}
+        {/* Blocks & Settings */}
         <div className="navbar-end">
           <div className="hidden md:inline-flex mr-6 align-items-center justify-items gap-6">
           <NavElement
             label="Home"
             href={fmtUrlWithCluster('/')}
+            navigationStarts={() => setIsNavOpen(false)}
+          />
+          <NavElement
+            label="Blocks"
+            href={fmtUrlWithCluster('/blocks')}
             navigationStarts={() => setIsNavOpen(false)}
           />
         </div>
