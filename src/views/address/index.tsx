@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { PublicKey } from '@bbachain/web3.js';
 
 // Components
-import { SearchBar } from "components/SearchBar";
+import { HeadContainer } from "components/HeadContainer";
 import { AddressDetail } from "components/AddressDetail";
 import { ErrorCard } from 'components/common/ErrorCard';
 
@@ -33,14 +33,7 @@ export const AddressDetailView: FC<Props> = ({ address }) => {
 
   return (
     <div className="mx-4">
-      <div className="w-full hero p-4">
-        <div className="hero-content flex flex-col w-2/3">
-          <h1 className="text-center text-2xl pl-12 font-bold bg-clip-text mb-4">Block Explorer</h1>
-          <div className="w-full">
-            <SearchBar />
-          </div>
-        </div>
-      </div>
+      <HeadContainer />
 
       <div className="w-full mb-4">
         {!pubkey ? (

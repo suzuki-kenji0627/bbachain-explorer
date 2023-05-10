@@ -9,7 +9,6 @@ import { BigNumber } from "bignumber.js";
 
 // Components
 import { Slot } from "components/common/Slot";
-import { SearchBar } from "components/SearchBar";
 import { Address } from "components/common/Address";
 import { Balance } from "components/common/Balance";
 import { Signature } from "components/common/Signature";
@@ -20,6 +19,7 @@ import { BalanceDelta } from "components/common/BalanceDelta";
 import { TokenBalancesCard } from "components/transaction/TokenBalancesCard";
 import { ProgramLogSection } from "components/transaction/ProgramLogSection";
 import { InstructionsSection } from "components/transaction/InstructionsSection";
+import { HeadContainer } from "components/HeadContainer";
 
 // Hooks
 import { FetchStatus } from "hooks/useCache";
@@ -100,14 +100,7 @@ export const TxDetailView: FC<Props> = ({ tx }) => {
 
   return (
     <div className="mx-4">
-      <div className="w-full hero p-4">
-        <div className="hero-content flex flex-col w-2/3">
-          <h1 className="text-center text-2xl pl-12 font-bold bg-clip-text mb-4">Block Explorer</h1>
-          <div className="w-full">
-            <SearchBar />
-          </div>
-        </div>
-      </div>
+      <HeadContainer />
 
       <div className="w-full mb-4">
         {signature === undefined ? (

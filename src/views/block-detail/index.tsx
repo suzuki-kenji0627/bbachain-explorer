@@ -6,7 +6,7 @@ import { Epoch } from 'components/common/Epoch';
 import { Address } from 'components/common/Address';
 import { ErrorCard } from 'components/common/ErrorCard';
 import { LoadingCard } from "components/common/LoadingCard";
-import { SearchBar } from "components/SearchBar";
+import { HeadContainer } from "components/HeadContainer";
 
 // Hooks
 import { FetchStatus, useBlock, useFetchBlock } from "hooks/useBlock";
@@ -53,14 +53,7 @@ export const BlockDetailView: FC<Props> = ({ block }) => {
 
   return (
     <div className="mx-4">
-      <div className="w-full hero p-4">
-        <div className="hero-content flex flex-col w-2/3">
-          <h1 className="text-center text-2xl pl-12 font-bold bg-clip-text mb-4">Block Explorer</h1>
-          <div className="w-full">
-            <SearchBar />
-          </div>
-        </div>
-      </div>
+      <HeadContainer />
 
       <div className="w-full mb-4">
         <div className="card bg-base-100 shadow-xl mb-4">
