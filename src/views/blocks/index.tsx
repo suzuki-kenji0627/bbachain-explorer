@@ -1,9 +1,13 @@
 // Next, React
 import { FC, useEffect, useState } from "react";
+import { PublicKey } from "@bbachain/web3.js";
 import { Button } from "@mui/material";
 
 // Components
 import { Slot } from "components/common/Slot";
+import { Address } from "components/common/Address";
+import { Balance } from "components/common/Balance";
+import { BlockHash } from "components/common/BlockHash";
 import { ErrorCard } from "components/common/ErrorCard";
 import { LoadingCard } from "components/common/LoadingCard";
 import { HeadContainer } from "components/HeadContainer";
@@ -55,17 +59,27 @@ export const BlocksView: FC = ({}) => {
               <table className="table w-full">
                 <thead>
                   <tr>
-                    <th>Block</th>
+                    <th>Block Number</th>
                     <th>Block Hash</th>
-                    <th>Timestamp</th>
+                    <th>Rewards</th>
+                    <th>Time</th>
                   </tr>
                 </thead>
                 <tbody>
                   {blocks.map((blockData) => {
+                    console.log(blockData);
+
                     return (
                       <tr key={blockData.block.blockhash}>
-                        <td><Slot slot={blockData.block.parentSlot} link /></td>
-                        <td>{blockData.block.blockhash}</td>
+                        <td>
+                          <Slot slot={blockData.block.parentSlot} link />
+                        </td>
+                        <td>
+                          <BlockHash hash={blockData.block.blockhash} truncateChars={16} blockNumber={blockData.block.parentSlot} link />
+                        </td>
+                        <td>
+                          <Balance daltons={blockData.block.rewards.reduce((partialSum, a) => partialSum + a.daltons, 0)} />
+                        </td>
                         <td>
                           {displayTimestampUtc(blockData.block.blockTime * 1000, true)}
                         </td>
