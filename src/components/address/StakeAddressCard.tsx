@@ -100,51 +100,55 @@ function OverviewCard({
 }) {
   const refresh = useFetchAddress();
   return (
-    <div className="card">
-      <div className="card-header">
-        <h3 className="card-header-title mb-0 d-flex align-items-center">
-          Stake Address
-        </h3>
-        <button
-          className="btn btn-white btn-sm"
-          onClick={() => refresh(address.pubkey, "parsed")}
-        >
-          <span className="fe fe-refresh-cw me-2"></span>
-          Refresh
-        </button>
-      </div>
+    <>
+      <div className="card bg-base-100 shadow-xl mb-4">
+        <div className="card-body">
+          <h2 className="card-title">Stake Address</h2>
+          <button
+            className="btn btn-white btn-sm"
+            onClick={() => refresh(address.pubkey, "parsed")}
+          >
+            <span className="fe fe-refresh-cw me-2"></span>
+            Refresh
+          </button>
 
-      <table>
-        <tr>
-          <td>Address</td>
-          <td className="text-lg-end">
-            <AddressComponent pubkey={address.pubkey} />
-          </td>
-        </tr>
-        <tr>
-          <td>Balance (BBA)</td>
-          <td className="text-lg-end text-uppercase">
-            <Balance daltons={address.daltons} />
-          </td>
-        </tr>
-        <tr>
-          <td>Rent Reserve (BBA)</td>
-          <td className="text-lg-end">
-            <Balance daltons={stakeAccount.meta.rentExemptReserve} />
-          </td>
-        </tr>
-        {hideDelegation && (
-          <tr>
-            <td>Status</td>
-            <td className="text-lg-end">
-              {isFullyInactivated(stakeAccount, activation)
-                ? "Not delegated"
-                : displayStatus(stakeAccountType, activation)}
-            </td>
-          </tr>
-        )}
-      </table>
-    </div>
+          <div className="overflow-x-auto">
+            <table className="table w-full">
+              <tbody>
+                <tr>
+                  <td>Address</td>
+                  <td className="text-lg-end">
+                    <AddressComponent pubkey={address.pubkey} />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Balance (BBA)</td>
+                  <td className="text-lg-end text-uppercase">
+                    <Balance daltons={address.daltons} />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Rent Reserve (BBA)</td>
+                  <td className="text-lg-end">
+                    <Balance daltons={stakeAccount.meta.rentExemptReserve} />
+                  </td>
+                </tr>
+                {hideDelegation && (
+                  <tr>
+                    <td>Status</td>
+                    <td className="text-lg-end">
+                      {isFullyInactivated(stakeAccount, activation)
+                        ? "Not delegated"
+                        : displayStatus(stakeAccountType, activation)}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -170,79 +174,81 @@ function DelegationCard({
   }
   const { stake } = stakeAccount;
   return (
-    <div className="card">
-      <div className="card-header">
-        <h3 className="card-header-title mb-0 d-flex align-items-center">
-          Stake Delegation
-        </h3>
-      </div>
-      <table>
-        <tr>
-          <td>Status</td>
-          <td className="text-lg-end">
-            {displayStatus(stakeAccountType, activation)}
-          </td>
-        </tr>
-
-        {stake && (
-          <>
-            <tr>
-              <td>Delegated Stake (BBA)</td>
-              <td className="text-lg-end">
-                <Balance daltons={stake.delegation.stake} />
-              </td>
-            </tr>
-
-            {activation && (
-              <>
-                <tr>
-                  <td>Active Stake (BBA)</td>
-                  <td className="text-lg-end">
-                    <Balance daltons={activation.active} />
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>Inactive Stake (BBA)</td>
-                  <td className="text-lg-end">
-                    <Balance daltons={activation.inactive} />
-                  </td>
-                </tr>
-              </>
-            )}
-
-            {voterPubkey && (
+    <div className="card bg-base-100 shadow-xl mb-4">
+      <div className="card-body">
+        <h2 className="card-title">Stake Delegation</h2>
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            <tbody>
               <tr>
-                <td>Delegated Vote Address</td>
+                <td>Status</td>
                 <td className="text-lg-end">
-                  <AddressComponent pubkey={voterPubkey} link />
+                  {displayStatus(stakeAccountType, activation)}
                 </td>
               </tr>
-            )}
 
-            <tr>
-              <td>Activation Epoch</td>
-              <td className="text-lg-end">
-                {activationEpoch !== undefined ? (
-                  <Epoch epoch={activationEpoch} link />
-                ) : (
-                  "-"
-                )}
-              </td>
-            </tr>
-            <tr>
-              <td>Deactivation Epoch</td>
-              <td className="text-lg-end">
-                {deactivationEpoch !== undefined ? (
-                  <Epoch epoch={deactivationEpoch} link />
-                ) : (
-                  "-"
-                )}
-              </td>
-            </tr>
-          </>
-        )}
-      </table>
+              {stake && (
+                <>
+                  <tr>
+                    <td>Delegated Stake (BBA)</td>
+                    <td className="text-lg-end">
+                      <Balance daltons={stake.delegation.stake} />
+                    </td>
+                  </tr>
+
+                  {activation && (
+                    <>
+                      <tr>
+                        <td>Active Stake (BBA)</td>
+                        <td className="text-lg-end">
+                          <Balance daltons={activation.active} />
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>Inactive Stake (BBA)</td>
+                        <td className="text-lg-end">
+                          <Balance daltons={activation.inactive} />
+                        </td>
+                      </tr>
+                    </>
+                  )}
+
+                  {voterPubkey && (
+                    <tr>
+                      <td>Delegated Vote Address</td>
+                      <td className="text-lg-end">
+                        <AddressComponent pubkey={voterPubkey} link />
+                      </td>
+                    </tr>
+                  )}
+
+                  <tr>
+                    <td>Activation Epoch</td>
+                    <td className="text-lg-end">
+                      {activationEpoch !== undefined ? (
+                        <Epoch epoch={activationEpoch} link />
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Deactivation Epoch</td>
+                    <td className="text-lg-end">
+                      {deactivationEpoch !== undefined ? (
+                        <Epoch epoch={deactivationEpoch} link />
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                  </tr>
+                </>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
@@ -250,37 +256,42 @@ function DelegationCard({
 function AuthoritiesCard({ meta }: { meta: StakeMeta }) {
   const hasLockup = meta.lockup.unixTimestamp > 0;
   return (
-    <div className="card">
-      <div className="card-header">
-        <h3 className="card-header-title mb-0 d-flex align-items-center">
-          Authorities
-        </h3>
+    <>
+      <div className="card bg-base-100 shadow-xl mb-4">
+        <div className="card-body">
+          <h2 className="card-title">Authorities</h2>
+
+          <div className="overflow-x-auto">
+            <table className="table w-full">
+              <tbody>
+                <tr>
+                  <td>Stake Authority Address</td>
+                  <td className="text-lg-end">
+                    <AddressComponent pubkey={meta.authorized.staker} link />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Withdraw Authority Address</td>
+                  <td className="text-lg-end">
+                    <AddressComponent pubkey={meta.authorized.withdrawer} link />
+                  </td>
+                </tr>
+
+                {hasLockup && (
+                  <tr>
+                    <td>Lockup Authority Address</td>
+                    <td className="text-lg-end">
+                      <AddressComponent pubkey={meta.lockup.custodian} link />
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <table>
-        <tr>
-          <td>Stake Authority Address</td>
-          <td className="text-lg-end">
-            <AddressComponent pubkey={meta.authorized.staker} link />
-          </td>
-        </tr>
-
-        <tr>
-          <td>Withdraw Authority Address</td>
-          <td className="text-lg-end">
-            <AddressComponent pubkey={meta.authorized.withdrawer} link />
-          </td>
-        </tr>
-
-        {hasLockup && (
-          <tr>
-            <td>Lockup Authority Address</td>
-            <td className="text-lg-end">
-              <AddressComponent pubkey={meta.lockup.custodian} link />
-            </td>
-          </tr>
-        )}
-      </table>
-    </div>
+    </>
   );
 }
 
