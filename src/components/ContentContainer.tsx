@@ -34,6 +34,10 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
               label="Blocks"
               href={fmtUrlWithCluster('/blocks')}
             />
+            <NavElement
+              label="Transactions"
+              href={fmtUrlWithCluster('/transactions')}
+            />
           </li>
         </ul>
       </div>

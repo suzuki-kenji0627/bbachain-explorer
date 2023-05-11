@@ -35,6 +35,11 @@ export const AppBar: React.FC = () => {
             href={fmtUrlWithCluster('/blocks')}
             navigationStarts={() => setIsNavOpen(false)}
           />
+          <NavElement
+            label="Transactions"
+            href={fmtUrlWithCluster('/transactions')}
+            navigationStarts={() => setIsNavOpen(false)}
+          />
         </div>
           <label
               htmlFor="my-drawer"
