@@ -6,7 +6,7 @@ const BlocksPage: NextPage = (props) => {
   return (
     <div>
       <Head>
-        <title>BBASCAN | Block Explorer</title>
+        <title>Blocks | Block Explorer</title>
         <meta name="description" content="BBASCAN | Block Explorer" />
       </Head>
       <BlocksView />
