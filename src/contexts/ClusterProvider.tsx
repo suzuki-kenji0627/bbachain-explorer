@@ -10,7 +10,7 @@ import {
   ClusterState,
   ClusterStateContext,
   ClusterStatus,
-  updateCluster
+  updateCluster,
 } from "hooks/useCluster";
 
 // Providers
@@ -20,13 +20,14 @@ import { SupplyProvider } from "./SupplyProvider";
 import { AddressProvider } from "./AddressProvider";
 import { TransactionProvider } from "./TransactionProvider";
 import { LatestBlocksProvider } from "./LatestBlocksProvider";
+import { LatestTransactionsProvider } from "./LatestTransactionsProvider";
 
 // Defines
 const DEFAULT_CLUSTER = Cluster.Testnet;
 const DEFAULT_CUSTOM_URL = "http://localhost:8899";
 
 function parseQuery(query: ParsedUrlQuery): Cluster {
-  const { cluster } = query
+  const { cluster } = query;
   switch (cluster) {
     case "custom":
       return Cluster.Custom;
@@ -38,21 +39,27 @@ function parseQuery(query: ParsedUrlQuery): Cluster {
   }
 }
 
-function clusterReducer(state: ClusterState, action: ClusterAction): ClusterState {
-    switch (action.status) {
-      case ClusterStatus.Connected:
-      case ClusterStatus.Failure: {
-        if (state.cluster !== action.cluster || state.customUrl !== action.customUrl) {
-          return state;
-        }
+function clusterReducer(
+  state: ClusterState,
+  action: ClusterAction
+): ClusterState {
+  switch (action.status) {
+    case ClusterStatus.Connected:
+    case ClusterStatus.Failure: {
+      if (
+        state.cluster !== action.cluster ||
+        state.customUrl !== action.customUrl
+      ) {
+        return state;
+      }
 
-        return action;
-      }
-      case ClusterStatus.Connecting: {
-        return action;
-      }
+      return action;
+    }
+    case ClusterStatus.Connecting: {
+      return action;
     }
   }
+}
 
 type ClusterProviderProps = { children: React.ReactNode };
 export function ClusterProvider({ children }: ClusterProviderProps) {
@@ -79,7 +86,9 @@ export function ClusterProvider({ children }: ClusterProviderProps) {
               <AddressProvider>
                 <TransactionProvider>
                   <LatestBlocksProvider>
-                    {children}
+                    <LatestTransactionsProvider>
+                      {children}
+                    </LatestTransactionsProvider>
                   </LatestBlocksProvider>
                 </TransactionProvider>
               </AddressProvider>
