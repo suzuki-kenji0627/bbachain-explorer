@@ -36,8 +36,18 @@ export const AddressDetail: FC<Props> = ({pubkey, info}) => {
   }
 
   const address = info.data;
+
+  return (
+    <>
+      <InfoSection address={address} />
+      <TransactionHistoryCard pubkey={pubkey} />
+    </>
+  );
+};
+
+function InfoSection({ address }: { address: Address }) {
   const parsedData = address.data.parsed;
-  const rawData = address.data.raw;
+  // const rawData = address.data.raw;
 
   if (parsedData && parsedData.program === "bpf-upgradeable-loader") {
     return (
@@ -56,21 +66,7 @@ export const AddressDetail: FC<Props> = ({pubkey, info}) => {
         stakeAccountType={parsedData.parsed.type}
       />
     );
+  } else {
+    <UnknownAddressCard address={address} />
   }
-
-  return (
-    <>
-      {parsedData && parsedData.program === "bpf-upgradeable-loader" ? (
-        <UpgradeableLoaderAddressCard
-          address={address}
-          parsedData={parsedData.parsed}
-          programData={parsedData.programData}
-        />
-      ) : (
-        <UnknownAddressCard address={address} />
-      )}
-
-      <TransactionHistoryCard pubkey={pubkey} />
-    </>
-  );
-};
+}
