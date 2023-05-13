@@ -72,6 +72,8 @@ function InfoSection({ address }: { address: Address }) {
       <VoteAddressCard address={address} voteAccount={parsedData.parsed} />
     );
   } else {
-    <UnknownAddressCard address={address} />
+    return (
+      <UnknownAddressCard address={address} />
+    );
   }
 }
