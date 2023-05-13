@@ -7,6 +7,7 @@ import { LoadingCard } from './common/LoadingCard';
 import { UnknownAddressCard } from './address/UnknownAddressCard';
 import { UpgradeableLoaderAddressCard } from './address/UpgradeableLoaderAddressCard';
 import { StakeAddressCard } from './address/StakeAddressCard';
+import { VoteAddressCard } from './address/VoteAddressCard';
 
 // Hooks
 import { Address, useFetchAddress } from 'hooks/useAddress';
@@ -65,6 +66,10 @@ function InfoSection({ address }: { address: Address }) {
         activation={parsedData.activation}
         stakeAccountType={parsedData.parsed.type}
       />
+    );
+  } else if (parsedData && parsedData.program === "vote") {
+    return (
+      <VoteAddressCard address={address} voteAccount={parsedData.parsed} />
     );
   } else {
     <UnknownAddressCard address={address} />

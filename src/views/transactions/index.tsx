@@ -87,8 +87,6 @@ export const TransactionsView: FC = ({}) => {
                 </thead>
                 <tbody>
                   {transactions.map((transactionData) => {
-                    console.log(transactionData);
-
                     return (
                       <tr key={transactionData.signature}>
                         <td>
