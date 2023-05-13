@@ -67,8 +67,6 @@ export const BlocksView: FC = ({}) => {
                 </thead>
                 <tbody>
                   {blocks.map((blockData) => {
-                    console.log(blockData);
-
                     return (
                       <tr key={blockData.block.blockhash}>
                         <td>
