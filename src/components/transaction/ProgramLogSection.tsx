@@ -33,7 +33,7 @@ export function ProgramLogSection({ signature }: SignatureProps) {
       <div className="card bg-base-100 shadow-xl mb-4">
         <div className="card-body">
           <h2 className="card-title">Program Instruction Logs</h2>
-          {/* <button
+          <button
             className={`btn btn-sm d-flex ${
               showRaw ? "btn-black active" : "btn-white"
             }`}
@@ -41,7 +41,7 @@ export function ProgramLogSection({ signature }: SignatureProps) {
           >
             <span className="fe fe-code me-1"></span>
             Raw
-          </button> */}
+          </button>
           {prettyLogs !== null ? (
             showRaw ? (
               <RawProgramLogs raw={logMessages!} />

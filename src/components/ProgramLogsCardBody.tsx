@@ -73,8 +73,8 @@ export function ProgramLogsCardBody({
                   #{index + 1}
                 </span>
                 <span className="program-log-instruction-name">
-
-                {programId.toString()}
+                  {programId.toString()}
+                  {" "}
                   Instruction
                 </span>
                 <span className="fe fe-chevrons-up c-pointer px-2" />
