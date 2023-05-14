@@ -16,7 +16,7 @@
     "@emotion/styled": "^11.11.0",
     "@heroicons/react": "^2.0.18",
     "@metaplex/js": "^4.12.0",
-    "@mui/material": "^5.12.3",
+    "@mui/material": "^5.13.0",
     "@noble/ed25519": "^1.7.1",
     "@sentry/react": "^7.51.2",
     "@tailwindcss/typography": "^0.5.9",
