@@ -73,13 +73,26 @@ export const BlocksView: FC = ({}) => {
                           <Slot slot={blockData.block.parentSlot} link />
                         </td>
                         <td>
-                          <BlockHash hash={blockData.block.blockhash} truncateChars={16} blockNumber={blockData.block.parentSlot} link />
+                          <BlockHash
+                            hash={blockData.block.blockhash}
+                            truncateChars={16}
+                            blockNumber={blockData.block.parentSlot}
+                            link
+                          />
                         </td>
                         <td>
-                          <Balance daltons={blockData.block.rewards.reduce((partialSum, a) => partialSum + a.daltons, 0)} />
+                          <Balance
+                            daltons={blockData.block.rewards.reduce(
+                              (partialSum, a) => partialSum + a.daltons,
+                              0
+                            )}
+                          />
                         </td>
                         <td>
-                          {displayTimestampUtc(blockData.block.blockTime * 1000, true)}
+                          {displayTimestampUtc(
+                            blockData.block.blockTime * 1000,
+                            true
+                          )}
                         </td>
                       </tr>
                     );
