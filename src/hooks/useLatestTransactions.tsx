@@ -11,7 +11,7 @@ import {
 import * as Cache from "./useCache";
 import { Cluster, useCluster } from "./useCluster";
 
-const MAX_PAGINATION_PAGE = 25;
+let MAX_PAGINATION_PAGE = 25;
 
 type TxExtension = {
   confirmations?: SignatureStatus;
@@ -42,8 +42,10 @@ export async function fetchLatestTransactions(
   url: string,
   cluster: Cluster,
   nextEndSlot: number,
-  nextEndTx: number
+  nextEndTx: number,
+  pageSize?: number
 ) {
+  MAX_PAGINATION_PAGE = pageSize || 25;
   dispatch({
     type: Cache.ActionType.Update,
     status: Cache.FetchStatus.Fetching,
@@ -135,8 +137,15 @@ export function useFetchLatestTransactions() {
 
   const { cluster, url } = useCluster();
   return React.useCallback(
-    (nextEndSlot: number, nextEndTx: number) =>
-      fetchLatestTransactions(dispatch, url, cluster, nextEndSlot, nextEndTx),
+    (nextEndSlot: number, nextEndTx: number, pageSize?: number) =>
+      fetchLatestTransactions(
+        dispatch,
+        url,
+        cluster,
+        nextEndSlot,
+        nextEndTx,
+        pageSize
+      ),
     [dispatch, cluster, url]
   );
 }

@@ -27,7 +27,7 @@ export const LatestTxs: FC = ({}) => {
   const { status } = useCluster();
   const confirmedTransactions = useLatestTransactions();
   const fetchLatestTransactions = useFetchLatestTransactions();
-  const refresh = () => fetchLatestTransactions(null, null);
+  const refresh = () => fetchLatestTransactions(null, null, 3);
   const BLOCK_TIME_INTERVAL = 5000;
 
   // Fetch Transaction on load
