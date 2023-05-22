@@ -27,12 +27,14 @@ export const LatestTxs: FC = ({}) => {
   const { status } = useCluster();
   const confirmedTransactions = useLatestTransactions();
   const fetchLatestTransactions = useFetchLatestTransactions();
-  const refresh = () => fetchLatestTransactions(null, null, 3);
+  const refresh = (pageSize?: number) =>
+    fetchLatestTransactions(null, null, pageSize || 25);
   const BLOCK_TIME_INTERVAL = 5000;
 
   // Fetch Transaction on load
   useEffect(() => {
-    if (!confirmedTransactions && status === ClusterStatus.Connected) refresh();
+    if (!confirmedTransactions && status === ClusterStatus.Connected)
+      refresh(3);
     const getTxInterval = setInterval(refresh, BLOCK_TIME_INTERVAL);
     return () => clearInterval(getTxInterval);
   }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
