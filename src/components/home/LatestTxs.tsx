@@ -27,14 +27,14 @@ export const LatestTxs: FC = ({}) => {
   const { status } = useCluster();
   const confirmedTransactions = useLatestTransactions();
   const fetchLatestTransactions = useFetchLatestTransactions();
-  const refresh = (pageSize?: number) =>
-    fetchLatestTransactions(null, null, pageSize || 25);
+  const refresh = (page?: number, pageSize?: number) =>
+    fetchLatestTransactions(page || 0, pageSize || 25);
   const BLOCK_TIME_INTERVAL = 5000;
 
   // Fetch Transaction on load
   useEffect(() => {
     if (!confirmedTransactions && status === ClusterStatus.Connected)
-      refresh(3);
+      refresh(0, 3);
     const getTxInterval = setInterval(refresh, BLOCK_TIME_INTERVAL);
     return () => clearInterval(getTxInterval);
   }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -47,7 +47,10 @@ export const LatestTxs: FC = ({}) => {
     return <LoadingCard message="Loading transactions" />;
   } else if (confirmedTransactions.status === FetchStatus.FetchFailed) {
     return (
-      <ErrorCard retry={() => refresh()} text="Failed to fetch transaction" />
+      <ErrorCard
+        retry={() => refresh(0, 3)}
+        text="Failed to fetch transaction"
+      />
     );
   }
 

@@ -25,17 +25,17 @@ export const TransactionsView: FC = ({}) => {
   const { status } = useCluster();
   const confirmedTransactions = useLatestTransactions();
   const fetchLatestTransactions = useFetchLatestTransactions();
-  const refresh = (nextEndSlot: number, nextEndTx: number) =>
-    fetchLatestTransactions(nextEndSlot, nextEndTx);
+  const refresh = (page: number, pageSize: number) =>
+    fetchLatestTransactions(page, pageSize);
 
-  const handleShowMore = (nextEndSlot: number, nextEndTx: number) => {
-    refresh(nextEndSlot, nextEndTx);
+  const handleShowMore = (page: number) => {
+    refresh(page, 25);
   };
 
   // Fetch Transaction on load
   useEffect(() => {
     if (!confirmedTransactions && status === ClusterStatus.Connected)
-      refresh(0, 0);
+      refresh(0, 25);
   }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (
@@ -49,20 +49,20 @@ export const TransactionsView: FC = ({}) => {
   ) {
     return (
       <ErrorCard
-        retry={() => refresh(0, 0)}
+        retry={() => refresh(0, 25)}
         text="Failed to fetch transaction"
       />
     );
   } else if (confirmedTransactions.data.transactions === undefined) {
     return (
       <ErrorCard
-        retry={() => refresh(0, 0)}
+        retry={() => refresh(0, 25)}
         text={`Transaction was not found`}
       />
     );
   }
 
-  const { transactions, nextEndSlot, nextEndTx } = confirmedTransactions.data;
+  const { transactions, nextPage } = confirmedTransactions.data;
 
   return (
     <div className="mx-4">
@@ -128,7 +128,7 @@ export const TransactionsView: FC = ({}) => {
                 </tbody>
               </table>
               <div className="grid justify-items-center space-y-2 mt-2">
-                <Button onClick={() => handleShowMore(nextEndSlot, nextEndTx)}>
+                <Button onClick={() => handleShowMore(nextPage)}>
                   Show more
                 </Button>
               </div>

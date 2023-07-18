@@ -11,8 +11,6 @@ import {
 import * as Cache from "./useCache";
 import { Cluster, useCluster } from "./useCluster";
 
-let MAX_PAGINATION_PAGE = 25;
-
 type TxExtension = {
   confirmations?: SignatureStatus;
   signature: string;
@@ -23,8 +21,7 @@ type ParsedTransactionWithMetaExtended = ParsedTransactionWithMeta &
 
 export type LatestTransactions = {
   transactions?: ParsedTransactionWithMetaExtended[];
-  nextEndSlot?: number;
-  nextEndTx?: number;
+  nextPage: number;
 };
 
 type State = Cache.State<LatestTransactions>;
@@ -41,11 +38,9 @@ export async function fetchLatestTransactions(
   dispatch: Dispatch,
   url: string,
   cluster: Cluster,
-  nextEndSlot: number,
-  nextEndTx: number,
-  pageSize?: number
+  page: number,
+  pageSize: number
 ) {
-  MAX_PAGINATION_PAGE = pageSize || 25;
   dispatch({
     type: Cache.ActionType.Update,
     status: Cache.FetchStatus.Fetching,
@@ -55,48 +50,29 @@ export async function fetchLatestTransactions(
 
   let status: Cache.FetchStatus;
   let data: LatestTransactions | undefined = undefined;
-  const transactions: ParsedTransactionWithMetaExtended[] = [];
-  const tx = Number(nextEndTx) || 0;
-
+  let transactions: ParsedTransactionWithMetaExtended[] = [];
   try {
-    const connection = new Connection(url, "confirmed");
-    let blockNumber = nextEndSlot || (await connection.getBlockHeight());
-    let txNumber = tx;
-    while (true) {
-      const block = await connection.getBlockSignatures(blockNumber);
-      for (let i = 0; i < block.signatures.length; i++) {
-        if (i < tx) {
-          txNumber = 0;
-          continue;
+    fetch(
+      `/api/latest_transactions?page=${page || 0}&docs=${pageSize || 25}`
+    ).then((res) => {
+      res.json().then((trxs) => {
+        transactions = trxs.transactionResponse;
+        data = {
+          transactions: transactions,
+          nextPage: page + 1,
+        };
+        console.log(data);
+        if (transactions.length > 0) {
+          dispatch({
+            type: Cache.ActionType.Update,
+            status,
+            data,
+            key: "transactions",
+            url,
+          });
         }
-        const transaction = await connection.getParsedTransaction(
-          block.signatures[i]
-        );
-        const { value } = await connection.getSignatureStatus(
-          block.signatures[i]
-        );
-        transactions.push({
-          ...transaction,
-          ...{ confirmations: value, signature: block.signatures[i] },
-        });
-
-        txNumber = txNumber + 1 < block.signatures.length ? txNumber + 1 : 0;
-        if (transactions.length === MAX_PAGINATION_PAGE) {
-          blockNumber = txNumber === 0 ? blockNumber - 1 : blockNumber;
-          break;
-        }
-      }
-      if (transactions.length === MAX_PAGINATION_PAGE) {
-        break;
-      }
-      blockNumber = blockNumber - 1;
-    }
-
-    data = {
-      transactions: transactions,
-      nextEndSlot: blockNumber,
-      nextEndTx: txNumber,
-    };
+      });
+    });
   } catch (err) {
     status = Cache.FetchStatus.FetchFailed;
     if (cluster !== Cluster.Custom) {
@@ -137,15 +113,8 @@ export function useFetchLatestTransactions() {
 
   const { cluster, url } = useCluster();
   return React.useCallback(
-    (nextEndSlot: number, nextEndTx: number, pageSize?: number) =>
-      fetchLatestTransactions(
-        dispatch,
-        url,
-        cluster,
-        nextEndSlot,
-        nextEndTx,
-        pageSize
-      ),
+    (page: number, pageSize: number) =>
+      fetchLatestTransactions(dispatch, url, cluster, page, pageSize),
     [dispatch, cluster, url]
   );
 }
