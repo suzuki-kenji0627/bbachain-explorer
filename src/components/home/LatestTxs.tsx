@@ -51,7 +51,7 @@ export const LatestTxs: FC = ({}) => {
 
   const { transactions } = confirmedTransactions.data;
   return (
-    <div className="card bg-base-100 shadow-xl">
+    <div className="card bg-[#011909] shadow-xl">
       <div className="card-body">
         <h2 className="card-title">Latest Transactions</h2>
         <div className="overflow-x-auto">
@@ -93,7 +93,9 @@ export const LatestTxs: FC = ({}) => {
             </tbody>
           </table>
           <div className="grid justify-items-center space-y-2 mt-2">
-            <Link href="/transactions">Show more</Link>
+            <Link className="text-[#08b642]" href="/transactions">
+              Show more
+            </Link>
           </div>
         </div>
       </div>

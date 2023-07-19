@@ -69,7 +69,7 @@ export const TransactionsView: FC = ({}) => {
       <HeadContainer />
 
       <div className="w-full mb-4">
-        <div className="card bg-base-100 shadow-xl mb-4">
+        <div className="card bg-[#011909] shadow-xl mb-4">
           <div className="card-body">
             <h2 className="card-title">Latest Transactions</h2>
 
@@ -128,7 +128,10 @@ export const TransactionsView: FC = ({}) => {
                 </tbody>
               </table>
               <div className="grid justify-items-center space-y-2 mt-2">
-                <Button onClick={() => handleShowMore(nextEndSlot, nextEndTx)}>
+                <Button
+                  className="text-[#08b642]"
+                  onClick={() => handleShowMore(nextEndSlot, nextEndTx)}
+                >
                   Show more
                 </Button>
               </div>

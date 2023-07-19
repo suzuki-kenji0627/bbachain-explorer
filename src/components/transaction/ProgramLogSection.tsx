@@ -30,7 +30,7 @@ export function ProgramLogSection({ signature }: SignatureProps) {
 
   return (
     <>
-      <div className="card bg-base-100 shadow-xl mb-4">
+      <div className="card bg-[#011909] shadow-xl mb-4">
         <div className="card-body">
           <h2 className="card-title">Program Instruction Logs</h2>
           <button

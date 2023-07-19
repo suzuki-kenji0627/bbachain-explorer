@@ -15,9 +15,9 @@ import { VoteAccount } from "validators/accounts/vote";
 import { displayTimestamp } from "utils/date";
 
 type Props = {
-  address: Address,
-  voteAccount: VoteAccount
-}
+  address: Address;
+  voteAccount: VoteAccount;
+};
 
 export function VoteAddressCard({ address, voteAccount }: Props) {
   const refresh = useFetchAddress();
@@ -25,7 +25,7 @@ export function VoteAddressCard({ address, voteAccount }: Props) {
 
   return (
     <>
-      <div className="card bg-base-100 shadow-xl mb-4">
+      <div className="card bg-[#011909] shadow-xl mb-4">
         <div className="card-body">
           <h2 className="card-title">Vote Account</h2>
           <button
@@ -82,13 +82,17 @@ export function VoteAddressCard({ address, voteAccount }: Props) {
                 <tr>
                   <td>Last Timestamp</td>
                   <td className="text-lg-end font-monospace">
-                    {displayTimestamp(voteAccount.info.lastTimestamp.timestamp * 1000)}
+                    {displayTimestamp(
+                      voteAccount.info.lastTimestamp.timestamp * 1000
+                    )}
                   </td>
                 </tr>
 
                 <tr>
                   <td>Commission</td>
-                  <td className="text-lg-end">{voteAccount.info.commission + "%"}</td>
+                  <td className="text-lg-end">
+                    {voteAccount.info.commission + "%"}
+                  </td>
                 </tr>
 
                 <tr>

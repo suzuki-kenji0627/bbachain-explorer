@@ -2,8 +2,8 @@ import React, { FC } from "react";
 import {
   SystemInstruction,
   SystemProgram,
-  TransactionSignature
-} from '@bbachain/web3.js';
+  TransactionSignature,
+} from "@bbachain/web3.js";
 import bs58 from "bs58";
 import { BigNumber } from "bignumber.js";
 
@@ -25,7 +25,10 @@ import { HeadContainer } from "components/HeadContainer";
 import { FetchStatus } from "hooks/useCache";
 import { ClusterStatus, useCluster } from "hooks/useCluster";
 import { useFetchTransaction, useTransaction } from "hooks/useTransaction";
-import { useFetchTransactionDetail, useTransactionDetail } from "hooks/useTransactionDetail";
+import {
+  useFetchTransactionDetail,
+  useTransactionDetail,
+} from "hooks/useTransactionDetail";
 
 // Utils
 import { displayTimestamp } from "utils/date";
@@ -54,7 +57,7 @@ type AutoRefreshProps = {
   autoRefresh: AutoRefresh;
 };
 
-type Props = { tx: string }
+type Props = { tx: string };
 
 export const TxDetailView: FC<Props> = ({ tx }) => {
   let signature: TransactionSignature | undefined;
@@ -108,7 +111,9 @@ export const TxDetailView: FC<Props> = ({ tx }) => {
         ) : (
           <SignatureContext.Provider value={signature}>
             <StatusCard signature={signature} autoRefresh={autoRefresh} />
-            <React.Suspense fallback={<LoadingCard message="Loading transaction detail" />}>
+            <React.Suspense
+              fallback={<LoadingCard message="Loading transaction detail" />}
+            >
               <DetailSection signature={signature} />
             </React.Suspense>
           </SignatureContext.Provider>
@@ -216,7 +221,7 @@ function StatusCard({
   })();
 
   return (
-    <div className="card bg-base-100 shadow-xl mb-4">
+    <div className="card bg-[#011909] shadow-xl mb-4">
       <div className="card-body">
         <h2 className="card-title">Overview</h2>
 
@@ -264,7 +269,9 @@ function StatusCard({
 
               <tr>
                 <td>Confirmations</td>
-                <td className="text-lg-end text-uppercase">{info.confirmations}</td>
+                <td className="text-lg-end text-uppercase">
+                  {info.confirmations}
+                </td>
               </tr>
 
               <tr>
@@ -430,7 +437,7 @@ function AccountsCard({ signature }: SignatureProps) {
   });
 
   return (
-    <div className="card bg-base-100 shadow-xl mb-4">
+    <div className="card bg-[#011909] shadow-xl mb-4">
       <div className="card-body">
         <h2 className="card-title">Input(s)</h2>
         <div className="overflow-x-auto">

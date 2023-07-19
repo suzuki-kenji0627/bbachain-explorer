@@ -14,7 +14,7 @@ import { RawParsedDetail } from "./RawParsedDetail";
 // Hooks
 import {
   useFetchTransactionDetailRaw,
-  useTransactionDetailRaw
+  useTransactionDetailRaw,
 } from "hooks/useTransactionDetailRaw";
 
 type InstructionProps = {
@@ -60,7 +60,7 @@ export function InstructionCard({
   };
 
   return (
-    <div className="card bg-base-100 shadow-xl mb-4">
+    <div className="card bg-[#011909] shadow-xl mb-4">
       <div className="card-body">
         <h3 className="card-title">
           <span className={`badge bg-${resultClass}-soft me-2`}>
@@ -82,7 +82,7 @@ export function InstructionCard({
         </button>
 
         <div className="overflow-x-auto">
-        <table className="table w-full">
+          <table className="table w-full">
             <tbody>
               {showRaw ? (
                 <>

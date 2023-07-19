@@ -1,24 +1,24 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 
 // Components
-import { Epoch } from './common/Epoch';
-import { Slot } from './common/Slot';
-import { LoadingCard } from './common/LoadingCard';
-import { ErrorCard } from './common/ErrorCard';
-import { FetchStatus } from 'hooks/useCache';
+import { Epoch } from "./common/Epoch";
+import { Slot } from "./common/Slot";
+import { LoadingCard } from "./common/LoadingCard";
+import { ErrorCard } from "./common/ErrorCard";
+import { FetchStatus } from "hooks/useCache";
 
 // Hooks
-import { ClusterStatus, useCluster } from 'hooks/useCluster';
-import { useEpoch, useFetchEpoch } from 'hooks/useEpoch';
+import { ClusterStatus, useCluster } from "hooks/useCluster";
+import { useEpoch, useFetchEpoch } from "hooks/useEpoch";
 
 // Utils
-import { displayTimestampUtc } from 'utils/date';
+import { displayTimestampUtc } from "utils/date";
 
 type Props = {
   epoch: number;
-}
+};
 
-export const EpochOverviewCard: FC<Props> = ({epoch}) => {
+export const EpochOverviewCard: FC<Props> = ({ epoch }) => {
   const { status, clusterInfo } = useCluster();
 
   const epochState = useEpoch(epoch);
@@ -53,9 +53,11 @@ export const EpochOverviewCard: FC<Props> = ({epoch}) => {
   }
 
   return (
-    <div className="card bg-base-100 shadow-xl mb-4">
+    <div className="card bg-[#011909] shadow-xl mb-4">
       <div className="card-body">
-        <h2 className="card-title">Overview Epoch <Epoch epoch={epoch} /></h2>
+        <h2 className="card-title">
+          Overview Epoch <Epoch epoch={epoch} />
+        </h2>
         <div className="overflow-x-auto">
           <table className="table w-full">
             <tbody>
@@ -125,4 +127,4 @@ export const EpochOverviewCard: FC<Props> = ({epoch}) => {
       </div>
     </div>
   );
-}
+};

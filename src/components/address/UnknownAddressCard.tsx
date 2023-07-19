@@ -16,7 +16,7 @@ export function UnknownAddressCard({ address }: { address: Address }) {
 
   const label = addressLabel(address.pubkey.toBase58(), cluster);
   return (
-    <div className="card bg-base-100 shadow-xl mb-4">
+    <div className="card bg-[#011909] shadow-xl mb-4">
       <div className="card-body">
         <h2 className="card-title">Overview</h2>
 
@@ -63,7 +63,9 @@ export function UnknownAddressCard({ address }: { address: Address }) {
 
               <tr>
                 <td>Executable</td>
-                <td className="text-lg-end">{address.executable ? "Yes" : "No"}</td>
+                <td className="text-lg-end">
+                  {address.executable ? "Yes" : "No"}
+                </td>
               </tr>
             </tbody>
           </table>

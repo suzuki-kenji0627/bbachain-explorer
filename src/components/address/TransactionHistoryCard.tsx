@@ -6,7 +6,7 @@ import { PublicKey } from "@bbachain/web3.js";
 import {
   HistoryCardFooter,
   HistoryCardHeader,
-  getTransactionRows
+  getTransactionRows,
 } from "components/HistoryCardComponents";
 import { LoadingCard } from "components/common/LoadingCard";
 import { ErrorCard } from "components/common/ErrorCard";
@@ -17,7 +17,7 @@ import { Slot } from "components/common/Slot";
 import { FetchStatus } from "hooks/useCache";
 import {
   useAddressHistory,
-  useFetchAddressHistory
+  useFetchAddressHistory,
 } from "hooks/useAddressHistory";
 
 // Utils
@@ -93,7 +93,7 @@ export function TransactionHistoryCard({ pubkey }: { pubkey: PublicKey }) {
 
   const fetching = history.status === FetchStatus.Fetching;
   return (
-    <div className="card bg-base-100 shadow-xl mb-4">
+    <div className="card bg-[#011909] shadow-xl mb-4">
       <div className="card-body">
         <HistoryCardHeader
           fetching={fetching}
