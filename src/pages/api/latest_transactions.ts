@@ -1,75 +1,97 @@
 // pages/api/transactions.ts
 
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { MAINNET_URL } from 'hooks/useCluster';
-import { Connection, ParsedTransactionWithMeta, BlockResponse, SignatureStatus } from '@bbachain/web3.js';
-
+import type { NextApiRequest, NextApiResponse } from "next";
+import { MAINNET_URL, TESTNET_URL } from "hooks/useCluster";
+import {
+  Connection,
+  ParsedTransactionWithMeta,
+  BlockResponse,
+  SignatureStatus,
+} from "@bbachain/web3.js";
+import clientPromise from "../../lib/mongodb";
+let updating = false;
 type Confirmations = {
-    confirmations?: SignatureStatus
-}
+  confirmations?: SignatureStatus;
+};
 
-type ParsedTransactionWithMetaExtended = ParsedTransactionWithMeta & Confirmations
+type ParsedTransactionWithMetaExtended = ParsedTransactionWithMeta &
+  Confirmations;
 
 async function getLastTransactions(
-    connection: Connection,
-    endBlock: number,
-    tx:number,
-    limit: number
-): Promise<{ transactions: ParsedTransactionWithMetaExtended[]; nextEndSlot: number | null;nextEndTx: number | null }> {
-    const transactions: ParsedTransactionWithMetaExtended[] = [];
-    let blockNumber = endBlock
-    let txNumber = tx;
-    while (true) {
-        try {
-            const block = await connection.getBlockSignatures(blockNumber);
-            for (let i = 0;i<block.signatures.length;i++) {
-                if (i < tx) {
-                    txNumber = 0;
-                    continue;
-                }
-                    const transaction = await connection.getParsedTransaction(block.signatures[i]);
-                    const {value} = await connection.getSignatureStatus(block.signatures[i])
-                transactions.push({...transaction,...{confirmations:value}})
-               
-                
-                txNumber = txNumber + 1 < block.signatures.length ? txNumber + 1 : 0;
-                if (transactions.length === limit) {
-                    blockNumber = txNumber === 0 ? blockNumber - 1:blockNumber
-                    break;
-                }
-            }
-            if (transactions.length === limit) {
-                    break;
-            }
-            blockNumber = blockNumber - 1;
-        } catch (error) {
-            console.error('Error fetching block data:', error);
+  connection: Connection,
+  limit: number
+): Promise<{
+  transactions: ParsedTransactionWithMetaExtended[];
+}> {
+  const transactions: ParsedTransactionWithMetaExtended[] = [];
+  while (true) {
+    try {
+      const slot = await connection.getBlockHeight();
+      const block = await connection.getBlockSignatures(slot);
+      for (let i = 0; i < block.signatures.length; i++) {
+        const transaction = await connection.getParsedTransaction(
+          block.signatures[i]
+        );
+        const { value } = await connection.getSignatureStatus(
+          block.signatures[i]
+        );
+        transactions.push({
+          ...transaction,
+          ...{ confirmations: value, signature: block.signatures[i] },
+        });
+
+        if (transactions.length === limit) {
+          break;
         }
+      }
+      if (transactions.length === limit) {
+        break;
+      }
+    } catch (error) {
+      console.error("Error fetching block data:", error);
     }
-        
-    
+  }
 
-    const nextEndSlot = blockNumber
-    const nextEndTx = txNumber
-
-    return { transactions, nextEndSlot,nextEndTx };
+  return { transactions };
 }
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+  req: NextApiRequest,
+  res: NextApiResponse
 ) {
-    const { endSlot,endTx } = req.query;
-    const limit = 25;
-    const connection = new Connection(MAINNET_URL,'confirmed');
+  const no_of_docs_each_page = 25; // 2 docs in single page
 
-    try {
-        const slot = Number(endSlot)|| await connection.getBlockHeight();
-        const tx = Number(endTx)|| 0
-        const { transactions, nextEndSlot,nextEndTx } = await getLastTransactions(connection, slot,tx, limit);
-        res.status(200).json({ transactions, nextEndSlot,nextEndTx });
-    } catch (error) {
-        console.error('Error fetching transactions:', error);
-        res.status(500).json({ message: 'Error fetching transactions' });
+  const { page, docs } = req.query;
+  const limit = 700;
+  const connection = new Connection(MAINNET_URL, "confirmed");
+
+  try {
+    const client = await clientPromise;
+    const db = client.db("bbscan");
+    const collection = db.collection("transactions");
+    const transactionResponse = await collection
+      .find({})
+      .skip((Number(docs) || no_of_docs_each_page) * Number(page || 0))
+      .limit(Number(docs) || no_of_docs_each_page)
+      .toArray();
+    console.log(updating);
+    if (!updating) {
+      updating = true;
+      getLastTransactions(connection, limit)
+        .then(async ({ transactions }) => {
+          updating = true;
+          await collection.drop();
+          await collection.insertMany(transactions);
+          updating = false;
+        })
+        .catch((e) => {
+          updating = false;
+        });
     }
+
+    res.status(200).json({ transactionResponse });
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    res.status(500).json({ message: "Error fetching transactions" });
+  }
 }
