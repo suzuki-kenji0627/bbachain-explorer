@@ -52,7 +52,7 @@ export const LatestBlocks: FC = ({}) => {
               </tr>
             </thead>
             <tbody>
-              {blocks.slice(0, 3).map((block, index) => {
+              {blocks.slice(0, 10).map((block, index) => {
                 return (
                   <tr key={block.block.blockhash}>
                     <th>
