@@ -25,8 +25,8 @@ import { AddressLookupTableDetailCard } from "components/instruction/AddressLook
 import { Cluster, useCluster } from "hooks/useCluster";
 import { useTransaction } from "hooks/useTransaction";
 import {
-    useFetchTransactionDetail,
-    useTransactionDetail
+  useFetchTransactionDetail,
+  useTransactionDetail,
 } from "hooks/useTransactionDetail";
 
 // Utils
@@ -81,11 +81,17 @@ export function InstructionsSection({ signature }: SignatureProps) {
 
   return (
     <>
-      <div className="card bg-base-100 shadow-xl mb-4">
+      <div className="card bg-[#011909] shadow-xl mb-4">
         <div className="card-body">
-          <h2 className="card-title">{transaction.message.instructions.length > 1 ? "Instructions" : "Instruction"}</h2>
+          <h2 className="card-title">
+            {transaction.message.instructions.length > 1
+              ? "Instructions"
+              : "Instruction"}
+          </h2>
           <div className="overflow-x-auto">
-            <React.Suspense fallback={<LoadingCard message="Loading Instructions" />}>
+            <React.Suspense
+              fallback={<LoadingCard message="Loading Instructions" />}
+            >
               {transaction.message.instructions.map((instruction, index) => {
                 let innerCards: JSX.Element[] = [];
 
@@ -161,20 +167,20 @@ function InstructionCard({
     };
 
     switch (ix.program) {
-    //   case "spl-token":
-    //     return <TokenDetailCard {...props} />;
-    //   case "bpf-loader":
-    //     return <BpfLoaderDetailCard {...props} />;
-    //   case "bpf-upgradeable-loader":
-    //     return <BpfUpgradeableLoaderDetailCard {...props} />;
+      //   case "spl-token":
+      //     return <TokenDetailCard {...props} />;
+      //   case "bpf-loader":
+      //     return <BpfLoaderDetailCard {...props} />;
+      //   case "bpf-upgradeable-loader":
+      //     return <BpfUpgradeableLoaderDetailCard {...props} />;
       case "system":
         return <SystemDetailCard {...props} />;
       case "stake":
         return <StakeDetailCard {...props} />;
-    //   case "spl-memo":
-    //     return <MemoDetailCard {...props} />;
-    //   case "spl-associated-token-account":
-    //     return <AssociatedTokenDetailCard {...props} />;
+      //   case "spl-memo":
+      //     return <MemoDetailCard {...props} />;
+      //   case "spl-associated-token-account":
+      //     return <AssociatedTokenDetailCard {...props} />;
       case "vote":
         return <VoteDetailCard {...props} />;
       default:

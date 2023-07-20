@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 
 // Components
-import { Slot } from 'components/common/Slot';
-import { Epoch } from 'components/common/Epoch';
-import { Address } from 'components/common/Address';
-import { ErrorCard } from 'components/common/ErrorCard';
+import { Slot } from "components/common/Slot";
+import { Epoch } from "components/common/Epoch";
+import { Address } from "components/common/Address";
+import { ErrorCard } from "components/common/ErrorCard";
 import { LoadingCard } from "components/common/LoadingCard";
 import { HeadContainer } from "components/HeadContainer";
 
@@ -13,11 +13,10 @@ import { FetchStatus, useBlock, useFetchBlock } from "hooks/useBlock";
 import { ClusterStatus, useCluster } from "hooks/useCluster";
 
 // Utils
-import { displayTimestampUtc } from 'utils/date';
-import { BlockHistoryCard } from 'components/BlockHistoryCard';
+import { displayTimestampUtc } from "utils/date";
+import { BlockHistoryCard } from "components/BlockHistoryCard";
 
-
-type Props = { block: number }
+type Props = { block: number };
 
 export const BlockDetailView: FC<Props> = ({ block }) => {
   const { clusterInfo, status } = useCluster();
@@ -56,7 +55,7 @@ export const BlockDetailView: FC<Props> = ({ block }) => {
       <HeadContainer />
 
       <div className="w-full mb-4">
-        <div className="card bg-base-100 shadow-xl mb-4">
+        <div className="card bg-[#011909] shadow-xl mb-4">
           <div className="card-body">
             <h2 className="card-title">Overview</h2>
 
@@ -85,7 +84,10 @@ export const BlockDetailView: FC<Props> = ({ block }) => {
                       <td>Timestamp (UTC)</td>
                       <td className="text-lg-end">
                         <span className="font-monospace">
-                          {displayTimestampUtc(blockData.blockTime * 1000, true)}
+                          {displayTimestampUtc(
+                            blockData.blockTime * 1000,
+                            true
+                          )}
                         </span>
                       </td>
                     </tr>
@@ -126,7 +128,10 @@ export const BlockDetailView: FC<Props> = ({ block }) => {
                   <tr>
                     <td className="w-100">Transactions</td>
                     <td className="text-lg-end font-monospace">
-                      <span>Total success {successfulTxs.length}/{blockData.transactions.length} transactions</span>
+                      <span>
+                        Total success {successfulTxs.length}/
+                        {blockData.transactions.length} transactions
+                      </span>
                     </td>
                   </tr>
                 </tbody>

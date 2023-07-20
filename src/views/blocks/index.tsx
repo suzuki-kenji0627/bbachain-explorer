@@ -51,7 +51,7 @@ export const BlocksView: FC = ({}) => {
       <HeadContainer />
 
       <div className="w-full mb-4">
-        <div className="card bg-base-100 shadow-xl mb-4">
+        <div className="card bg-[#011909] shadow-xl mb-4">
           <div className="card-body">
             <h2 className="card-title">Latest Blocks</h2>
 
@@ -100,7 +100,12 @@ export const BlocksView: FC = ({}) => {
                 </tbody>
               </table>
               <div className="grid justify-items-center space-y-2 mt-2">
-                <Button onClick={() => handleShowMore(next)}>Show more</Button>
+                <Button
+                  className="text-[#08b642]"
+                  onClick={() => handleShowMore(next)}
+                >
+                  Show more
+                </Button>
               </div>
             </div>
           </div>

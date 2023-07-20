@@ -69,7 +69,7 @@ export const TransactionsView: FC = ({}) => {
       <HeadContainer />
 
       <div className="w-full mb-4">
-        <div className="card bg-base-100 shadow-xl mb-4">
+        <div className="card bg-[#011909] shadow-xl mb-4">
           <div className="card-body">
             <h2 className="card-title">Latest Transactions</h2>
 

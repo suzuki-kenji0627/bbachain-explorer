@@ -101,7 +101,7 @@ function OverviewCard({
   const refresh = useFetchAddress();
   return (
     <>
-      <div className="card bg-base-100 shadow-xl mb-4">
+      <div className="card bg-[#011909] shadow-xl mb-4">
         <div className="card-body">
           <h2 className="card-title">Stake Address</h2>
           <button
@@ -174,7 +174,7 @@ function DelegationCard({
   }
   const { stake } = stakeAccount;
   return (
-    <div className="card bg-base-100 shadow-xl mb-4">
+    <div className="card bg-[#011909] shadow-xl mb-4">
       <div className="card-body">
         <h2 className="card-title">Stake Delegation</h2>
         <div className="overflow-x-auto">
@@ -257,7 +257,7 @@ function AuthoritiesCard({ meta }: { meta: StakeMeta }) {
   const hasLockup = meta.lockup.unixTimestamp > 0;
   return (
     <>
-      <div className="card bg-base-100 shadow-xl mb-4">
+      <div className="card bg-[#011909] shadow-xl mb-4">
         <div className="card-body">
           <h2 className="card-title">Authorities</h2>
 
@@ -274,7 +274,10 @@ function AuthoritiesCard({ meta }: { meta: StakeMeta }) {
                 <tr>
                   <td>Withdraw Authority Address</td>
                   <td className="text-lg-end">
-                    <AddressComponent pubkey={meta.authorized.withdrawer} link />
+                    <AddressComponent
+                      pubkey={meta.authorized.withdrawer}
+                      link
+                    />
                   </td>
                 </tr>
 
