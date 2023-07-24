@@ -34,7 +34,7 @@ export const LatestTxs: FC = ({}) => {
   // Fetch Transaction on load
   useEffect(() => {
     if (!confirmedTransactions && status === ClusterStatus.Connected)
-      refresh(0, 3);
+      refresh(0, 25);
     const getTxInterval = setInterval(refresh, BLOCK_TIME_INTERVAL);
     return () => clearInterval(getTxInterval);
   }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -48,7 +48,7 @@ export const LatestTxs: FC = ({}) => {
   } else if (confirmedTransactions.status === FetchStatus.FetchFailed) {
     return (
       <ErrorCard
-        retry={() => refresh(0, 3)}
+        retry={() => refresh(0, 25)}
         text="Failed to fetch transaction"
       />
     );

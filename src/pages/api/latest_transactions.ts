@@ -7,6 +7,7 @@ import {
   ParsedTransactionWithMeta,
   BlockResponse,
   SignatureStatus,
+  BlockSignatures,
 } from "@bbachain/web3.js";
 import clientPromise from "../../lib/mongodb";
 let updating = false;
@@ -23,34 +24,51 @@ async function getLastTransactions(
 ): Promise<{
   transactions: ParsedTransactionWithMetaExtended[];
 }> {
-  const transactions: ParsedTransactionWithMetaExtended[] = [];
-  while (true) {
-    try {
-      const slot = await connection.getBlockHeight();
-      const block = await connection.getBlockSignatures(slot);
-      for (let i = 0; i < block.signatures.length; i++) {
-        const transaction = await connection.getParsedTransaction(
-          block.signatures[i]
-        );
-        const { value } = await connection.getSignatureStatus(
-          block.signatures[i]
-        );
-        transactions.push({
+  let transactions: ParsedTransactionWithMetaExtended[] = [];
+  //  while (true) {
+  try {
+    const slot = await connection.getBlockHeight();
+    const blocks = await connection.getBlocks(slot - 350, slot);
+    let blockSignatures: Array<string> = [];
+    await Promise.all(
+      blocks.map(async (block) => {
+        const bs = await connection.getBlockSignatures(block);
+        blockSignatures = [...blockSignatures, ...bs.signatures];
+      })
+    );
+    transactions = await Promise.all(
+      blockSignatures.map(async (signature) => {
+        const transaction = await connection.getParsedTransaction(signature);
+        const { value } = await connection.getSignatureStatus(signature);
+        return {
           ...transaction,
-          ...{ confirmations: value, signature: block.signatures[i] },
-        });
+          ...{ confirmations: value, signature: signature },
+        };
+      })
+    );
+    // for (let i = 0; i < block.signatures.length; i++) {
+    //   const transaction = await connection.getParsedTransaction(
+    //     block.signatures[i]
+    //   );
+    //   const { value } = await connection.getSignatureStatus(
+    //     block.signatures[i]
+    //   );
+    //   transactions.push({
+    //     ...transaction,
+    //     ...{ confirmations: value, signature: block.signatures[i] },
+    //   });
 
-        if (transactions.length === limit) {
-          break;
-        }
-      }
-      if (transactions.length === limit) {
-        break;
-      }
-    } catch (error) {
-      console.error("Error fetching block data:", error);
-    }
+    //   if (transactions.length === limit) {
+    //     break;
+    //   }
+    // }
+    // if (transactions.length === limit) {
+    //   break;
+    // }
+  } catch (error) {
+    console.error("Error fetching block data:", error);
   }
+  //}
 
   return { transactions };
 }
@@ -62,7 +80,7 @@ export default async function handler(
   const no_of_docs_each_page = 25; // 2 docs in single page
 
   const { page, docs } = req.query;
-  const limit = 700;
+  const limit = 100;
   const connection = new Connection(MAINNET_URL, "confirmed");
 
   try {
