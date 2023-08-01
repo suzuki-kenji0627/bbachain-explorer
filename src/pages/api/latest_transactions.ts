@@ -28,7 +28,7 @@ async function getLastTransactions(
   //  while (true) {
   try {
     const slot = await connection.getBlockHeight();
-    const blocks = await connection.getBlocks(slot - 350, slot);
+    const blocks = await connection.getBlocks(slot - 100, slot);
     let blockSignatures: Array<string> = [];
     await Promise.all(
       blocks.map(async (block) => {
@@ -81,7 +81,7 @@ export default async function handler(
 
   const { page, docs } = req.query;
   const limit = 100;
-  const connection = new Connection(MAINNET_URL, "confirmed");
+  const connection = new Connection(TESTNET_URL, "confirmed");
 
   try {
     const client = await clientPromise;
@@ -103,6 +103,7 @@ export default async function handler(
           updating = false;
         })
         .catch((e) => {
+          console.log(e);
           updating = false;
         });
     }
