@@ -28,7 +28,7 @@ async function getLastTransactions(
   //  while (true) {
   try {
     const slot = await connection.getBlockHeight();
-    const blocks = await connection.getBlocks(slot - 100, slot);
+    const blocks = await connection.getBlocks(slot - 10, slot);
     let blockSignatures: Array<string> = [];
     await Promise.all(
       blocks.map(async (block) => {
@@ -98,7 +98,7 @@ export default async function handler(
       getLastTransactions(connection, limit)
         .then(async ({ transactions }) => {
           updating = true;
-          await collection.drop();
+          await collection.deleteMany({});
           await collection.insertMany(transactions);
           updating = false;
         })
