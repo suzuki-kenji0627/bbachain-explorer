@@ -74,6 +74,9 @@ export async function fetchLatestTransactions(
         }
       });
     });
+    fetch("/api/latest_transactions", {
+      method: "post",
+    });
   } catch (err) {
     status = Cache.FetchStatus.FetchFailed;
     if (cluster !== Cluster.Custom) {

@@ -81,18 +81,23 @@ export default async function handler(
   const client = await clientPromise;
   const db = client.db("bbscan");
   const collection = db.collection("transactions");
-  const transactionResponse = await collection
-    .find({})
-    .sort({ slot: -1 })
-    .skip((Number(docs) || no_of_docs_each_page) * Number(page || 0))
-    .limit(Number(docs) || no_of_docs_each_page)
-    .toArray();
-  try {
+  if (req.method === "GET") {
+    const transactionResponse = await collection
+      .find({})
+      .sort({ slot: -1 })
+      .skip((Number(docs) || no_of_docs_each_page) * Number(page || 0))
+      .limit(Number(docs) || no_of_docs_each_page)
+      .toArray();
+    try {
+      res.status(200).json({ transactionResponse });
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+      res.status(500).end();
+    }
+  } else if (req.method === "POST") {
+    console.log("updating");
     const transactions = await getLastTransactions(connection, limit);
+    console.log(transactions);
     await collection.insertMany(transactions);
-    res.status(200).json({ transactionResponse });
-  } catch (error) {
-    console.error("Error fetching transactions:", error);
-    res.status(200).json({ transactionResponse });
   }
 }
