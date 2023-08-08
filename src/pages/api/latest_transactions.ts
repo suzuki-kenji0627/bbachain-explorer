@@ -89,20 +89,20 @@ export default async function handler(
       .skip((Number(docs) || no_of_docs_each_page) * Number(page || 0))
       .limit(Number(docs) || no_of_docs_each_page)
       .toArray();
-    console.log(updating);
-    if (!updating) {
-      updating = true;
-      getLastTransactions(connection, limit)
-        .then(async ({ transactions }) => {
-          updating = true;
-          await collection.insertMany(transactions);
-          updating = false;
-        })
-        .catch((e) => {
-          console.log(e);
-          updating = false;
-        });
-    }
+    // console.log(updating);
+    // if (!updating) {
+    //   updating = true;
+    getLastTransactions(connection, limit)
+      .then(async ({ transactions }) => {
+        updating = true;
+        await collection.insertMany(transactions);
+        updating = false;
+      })
+      .catch((e) => {
+        console.log(e);
+        updating = false;
+      });
+    // }
 
     res.status(200).json({ transactionResponse });
   } catch (error) {
