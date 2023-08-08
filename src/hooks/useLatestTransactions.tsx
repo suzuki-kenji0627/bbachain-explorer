@@ -14,6 +14,7 @@ import { Cluster, useCluster } from "./useCluster";
 type TxExtension = {
   confirmations?: SignatureStatus;
   signature: string;
+  signer: string;
 };
 
 type ParsedTransactionWithMetaExtended = ParsedTransactionWithMeta &
