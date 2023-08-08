@@ -83,9 +83,7 @@ export const LatestTxs: FC = ({}) => {
 
                     <td>
                       <Signer
-                        accountKeys={
-                          transactionData.transaction.message.accountKeys
-                        }
+                        signer={transactionData.signer || ""}
                         truncateChars={16}
                       />
                     </td>

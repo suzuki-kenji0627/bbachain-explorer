@@ -25,12 +25,21 @@ async function getLastTransactions(
   transactions: ParsedTransactionWithMetaExtended[];
 }> {
   let transactions: ParsedTransactionWithMetaExtended[] = [];
-  //  while (true) {
+  const client = await clientPromise;
+  const db = client.db("bbscan");
+  const collection = db.collection("transactions");
+  const latestDocument = await collection.findOne({}, { sort: { _id: -1 } });
+  await collection.deleteMany({
+    slot: { $lt: latestDocument.slot - 300 },
+  });
   try {
     const slot = await connection.getBlockHeight();
-    const blocks = await connection.getBlocks(slot - 10, slot);
+    const blocks = await connection.getBlocks(
+      Math.min(latestDocument.slot, slot - 5),
+      slot
+    );
     let blockSignatures: Array<string> = [];
-    await Promise.all(
+    await Promise.allSettled(
       blocks.map(async (block) => {
         const bs = await connection.getBlockSignatures(block);
         blockSignatures = [...blockSignatures, ...bs.signatures];
@@ -42,29 +51,16 @@ async function getLastTransactions(
         const { value } = await connection.getSignatureStatus(signature);
         return {
           ...transaction,
-          ...{ confirmations: value, signature: signature },
+          ...{
+            confirmations: value,
+            signature: signature,
+            signer: transaction.transaction.message.accountKeys
+              .filter((acc) => acc.signer)[0]
+              .pubkey.toString(),
+          },
         };
       })
     );
-    // for (let i = 0; i < block.signatures.length; i++) {
-    //   const transaction = await connection.getParsedTransaction(
-    //     block.signatures[i]
-    //   );
-    //   const { value } = await connection.getSignatureStatus(
-    //     block.signatures[i]
-    //   );
-    //   transactions.push({
-    //     ...transaction,
-    //     ...{ confirmations: value, signature: block.signatures[i] },
-    //   });
-
-    //   if (transactions.length === limit) {
-    //     break;
-    //   }
-    // }
-    // if (transactions.length === limit) {
-    //   break;
-    // }
   } catch (error) {
     console.error("Error fetching block data:", error);
   }
@@ -89,6 +85,7 @@ export default async function handler(
     const collection = db.collection("transactions");
     const transactionResponse = await collection
       .find({})
+      .sort({ slot: -1 })
       .skip((Number(docs) || no_of_docs_each_page) * Number(page || 0))
       .limit(Number(docs) || no_of_docs_each_page)
       .toArray();
@@ -98,7 +95,6 @@ export default async function handler(
       getLastTransactions(connection, limit)
         .then(async ({ transactions }) => {
           updating = true;
-          await collection.deleteMany({});
           await collection.insertMany(transactions);
           updating = false;
         })
