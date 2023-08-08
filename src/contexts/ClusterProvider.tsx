@@ -21,6 +21,7 @@ import { AddressProvider } from "./AddressProvider";
 import { TransactionProvider } from "./TransactionProvider";
 import { LatestBlocksProvider } from "./LatestBlocksProvider";
 import { LatestTransactionsProvider } from "./LatestTransactionsProvider";
+import { ValidatorsProvider } from "./ValidatorsProvider";
 
 // Defines
 const DEFAULT_CLUSTER = Cluster.Testnet;
@@ -87,7 +88,7 @@ export function ClusterProvider({ children }: ClusterProviderProps) {
                 <TransactionProvider>
                   <LatestBlocksProvider>
                     <LatestTransactionsProvider>
-                      {children}
+                      <ValidatorsProvider>{children}</ValidatorsProvider>
                     </LatestTransactionsProvider>
                   </LatestBlocksProvider>
                 </TransactionProvider>

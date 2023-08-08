@@ -4,3 +4,4 @@ export { HomeView } from "./home";
 export { TxDetailView } from "./tx";
 export { BlocksView } from "./blocks";
 export { TransactionsView } from "./transactions";
+export { ValidatorsView } from "./validators";
