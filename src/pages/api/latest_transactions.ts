@@ -78,35 +78,21 @@ export default async function handler(
   const { page, docs } = req.query;
   const limit = 100;
   const connection = new Connection(TESTNET_URL, "confirmed");
-
+  const client = await clientPromise;
+  const db = client.db("bbscan");
+  const collection = db.collection("transactions");
+  const transactionResponse = await collection
+    .find({})
+    .sort({ slot: -1 })
+    .skip((Number(docs) || no_of_docs_each_page) * Number(page || 0))
+    .limit(Number(docs) || no_of_docs_each_page)
+    .toArray();
   try {
-    const client = await clientPromise;
-    const db = client.db("bbscan");
-    const collection = db.collection("transactions");
-    const transactionResponse = await collection
-      .find({})
-      .sort({ slot: -1 })
-      .skip((Number(docs) || no_of_docs_each_page) * Number(page || 0))
-      .limit(Number(docs) || no_of_docs_each_page)
-      .toArray();
-    // console.log(updating);
-    // if (!updating) {
-    //   updating = true;
-    getLastTransactions(connection, limit)
-      .then(async ({ transactions }) => {
-        updating = true;
-        await collection.insertMany(transactions);
-        updating = false;
-      })
-      .catch((e) => {
-        console.log(e);
-        updating = false;
-      });
-    // }
-
+    const transactions = await getLastTransactions(connection, limit);
+    await collection.insertMany(transactions);
     res.status(200).json({ transactionResponse });
   } catch (error) {
     console.error("Error fetching transactions:", error);
-    res.status(500).json({ message: "Error fetching transactions" });
+    res.status(200).json({ transactionResponse });
   }
 }
