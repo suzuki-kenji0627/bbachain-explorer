@@ -22,17 +22,21 @@ import {
 
 // Utils
 import { displayTimestampUtc } from "utils/date";
+import { Balance } from "components/common/Balance";
 
 export function TransactionHistoryCard({ pubkey }: { pubkey: PublicKey }) {
   const address = pubkey.toBase58();
   const history = useAddressHistory(address);
   const fetchAccountHistory = useFetchAddressHistory();
-  const refresh = () => fetchAccountHistory(pubkey, false, true);
-  const loadMore = () => fetchAccountHistory(pubkey, false);
+  const refresh = () => fetchAccountHistory(pubkey, true, true);
+  const loadMore = () => fetchAccountHistory(pubkey, true);
 
   const transactionRows = React.useMemo(() => {
-    if (history?.data?.fetched) {
-      return getTransactionRows(history.data.fetched);
+    if (history?.data?.fetched && history?.data?.transactionMap) {
+      return getTransactionRows(
+        history.data.fetched,
+        history.data.transactionMap
+      );
     }
     return [];
   }, [history]);
@@ -59,7 +63,7 @@ export function TransactionHistoryCard({ pubkey }: { pubkey: PublicKey }) {
 
   const hasTimestamps = transactionRows.some((element) => element.blockTime);
   const detailsList: React.ReactNode[] = transactionRows.map(
-    ({ slot, signature, blockTime, statusClass, statusText }) => {
+    ({ slot, signature, fee, value, blockTime, statusClass, statusText }) => {
       return (
         <tr key={signature}>
           <td>
@@ -68,6 +72,12 @@ export function TransactionHistoryCard({ pubkey }: { pubkey: PublicKey }) {
 
           <td className="w-1">
             <Slot slot={slot} link />
+          </td>
+          <td className="w-1">
+            <Balance daltons={fee} />
+          </td>
+          <td className="w-1">
+            <Balance daltons={history?.data.transactionMap[signature]} />
           </td>
 
           {hasTimestamps && (
@@ -106,6 +116,8 @@ export function TransactionHistoryCard({ pubkey }: { pubkey: PublicKey }) {
               <tr>
                 <th className="text-muted w-1">Transaction Signature</th>
                 <th className="text-muted w-1">Block</th>
+                <th className="text-muted w-1">Fee</th>
+                <th className="text-muted w-1">Value</th>
                 {hasTimestamps && (
                   <>
                     <th className="text-muted w-1">Age</th>

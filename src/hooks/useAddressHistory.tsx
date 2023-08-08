@@ -4,7 +4,7 @@ import {
   Connection,
   ParsedTransactionWithMeta,
   PublicKey,
-  TransactionSignature
+  TransactionSignature,
 } from "@bbachain/web3.js";
 
 // Hooks
@@ -33,10 +33,16 @@ export type HistoryUpdate = {
 type AddressState = Cache.State<AddressHistory>;
 type AddressDispatch = Cache.Dispatch<HistoryUpdate>;
 
-export const AddressStateContext = React.createContext<AddressState | undefined>(undefined);
-export const AddressDispatchContext = React.createContext<AddressDispatch | undefined>(undefined);
+export const AddressStateContext = React.createContext<
+  AddressState | undefined
+>(undefined);
+export const AddressDispatchContext = React.createContext<
+  AddressDispatch | undefined
+>(undefined);
 
-export function useAddressHistory(address: string): Cache.CacheEntry<AddressHistory> | undefined {
+export function useAddressHistory(
+  address: string
+): Cache.CacheEntry<AddressHistory> | undefined {
   const context = React.useContext(AddressStateContext);
 
   if (!context) {
@@ -52,7 +58,9 @@ export function useFetchAddressHistory() {
   const dispatch = React.useContext(AddressDispatchContext);
 
   if (!state || !dispatch) {
-    throw new Error(`useFetchAddressHistory must be used within a AddressProvider`);
+    throw new Error(
+      `useFetchAddressHistory must be used within a AddressProvider`
+    );
   }
 
   return React.useCallback(
@@ -66,7 +74,8 @@ export function useFetchAddressHistory() {
           additionalSignatures = getUnfetchedSignatures(before);
         }
 
-        const oldest = before.data.fetched[before.data.fetched.length - 1].signature;
+        const oldest =
+          before.data.fetched[before.data.fetched.length - 1].signature;
         fetchAccountHistory(
           dispatch,
           pubkey,

@@ -70,12 +70,14 @@ export const ValidatorsView: FC = () => {
                           {PubKey({
                             pubkey: validator.nodePubkey,
                             truncateChars: 15,
+                            link: true,
                           })}
                         </td>
                         <td>
                           {PubKey({
                             pubkey: validator.votePubkey,
                             truncateChars: 15,
+                            link: true,
                           })}
                         </td>
                         <td>{`${validator.commission} %`}</td>

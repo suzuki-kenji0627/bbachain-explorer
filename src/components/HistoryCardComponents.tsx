@@ -1,9 +1,15 @@
 import React from "react";
-import { ConfirmedSignatureInfo, TransactionError } from "@bbachain/web3.js";
+import {
+  ConfirmedSignatureInfo,
+  ParsedTransactionWithMeta,
+  TransactionError,
+} from "@bbachain/web3.js";
 
 export type TransactionRow = {
   slot: number;
   signature: string;
+  fee: number;
+  value: number;
   err: TransactionError | null;
   blockTime: number | null | undefined;
   statusClass: string;
@@ -78,11 +84,14 @@ export function HistoryCardFooter({
 }
 
 export function getTransactionRows(
-  transactions: ConfirmedSignatureInfo[]
+  transactions: ConfirmedSignatureInfo[],
+  txMap: Map<string, ParsedTransactionWithMeta>
 ): TransactionRow[] {
   const transactionRows: TransactionRow[] = [];
   for (var i = 0; i < transactions.length; i++) {
     const slot = transactions[i].slot;
+    console.log(txMap);
+    const fee = txMap.get(transactions[i].signature)?.meta?.fee;
     const slotTransactions = [transactions[i]];
     while (i + 1 < transactions.length) {
       const nextSlot = transactions[i + 1].slot;
@@ -103,6 +112,8 @@ export function getTransactionRows(
       transactionRows.push({
         slot,
         signature: slotTransaction.signature,
+        fee,
+        value: 0,
         err: slotTransaction.err,
         blockTime: slotTransaction.blockTime,
         statusClass,
