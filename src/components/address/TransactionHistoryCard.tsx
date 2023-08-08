@@ -77,7 +77,7 @@ export function TransactionHistoryCard({ pubkey }: { pubkey: PublicKey }) {
             <Balance daltons={fee} />
           </td>
           <td className="w-1">
-            <Balance daltons={history?.data.transactionMap[signature]} />
+            <Balance daltons={value} />
           </td>
 
           {hasTimestamps && (
