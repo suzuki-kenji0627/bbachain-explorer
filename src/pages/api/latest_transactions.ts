@@ -18,10 +18,7 @@ type Confirmations = {
 type ParsedTransactionWithMetaExtended = ParsedTransactionWithMeta &
   Confirmations;
 
-async function getLastTransactions(
-  connection: Connection,
-  limit: number
-): Promise<{
+async function getLastTransactions(connection: Connection): Promise<{
   transactions: ParsedTransactionWithMetaExtended[];
 }> {
   let transactions: ParsedTransactionWithMetaExtended[] = [];
@@ -32,14 +29,16 @@ async function getLastTransactions(
   await collection.deleteMany({
     slot: { $lt: latestDocument.slot - 300 },
   });
+
   try {
     const slot = await connection.getBlockHeight();
+    if (latestDocument.slot > slot - 10) return { transactions: [] };
     const blocks = await connection.getBlocks(
-      Math.min(latestDocument.slot, slot - 5),
+      Math.max(latestDocument.slot, slot - 5),
       slot
     );
     let blockSignatures: Array<string> = [];
-    await Promise.allSettled(
+    await Promise.all(
       blocks.map(async (block) => {
         const bs = await connection.getBlockSignatures(block);
         blockSignatures = [...blockSignatures, ...bs.signatures];
@@ -65,7 +64,7 @@ async function getLastTransactions(
     console.error("Error fetching block data:", error);
   }
   //}
-
+  console.log(transactions);
   return { transactions };
 }
 
@@ -76,7 +75,6 @@ export default async function handler(
   const no_of_docs_each_page = 25; // 2 docs in single page
 
   const { page, docs } = req.query;
-  const limit = 100;
   const connection = new Connection(TESTNET_URL, "confirmed");
   const client = await clientPromise;
   const db = client.db("bbscan");
@@ -96,8 +94,12 @@ export default async function handler(
     }
   } else if (req.method === "POST") {
     console.log("updating");
-    const transactions = await getLastTransactions(connection, limit);
-    console.log(transactions);
-    await collection.insertMany(transactions);
+    try {
+      const { transactions } = await getLastTransactions(connection);
+      await collection.insertMany(transactions);
+    } catch (e) {
+      console.log(e);
+    }
+    res.status(200).json({ message: "updated" });
   }
 }

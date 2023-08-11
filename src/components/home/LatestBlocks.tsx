@@ -16,7 +16,7 @@ export const LatestBlocks: FC = ({}) => {
   const confirmedBlocks = useLatestBlocks();
   const fetchLatestBlocks = useFetchLatestBlocks();
   const refresh = () => fetchLatestBlocks(0);
-  const BLOCK_TIME_INTERVAL = 5000;
+  const BLOCK_TIME_INTERVAL = 20000;
 
   // Fetch block on load
   useEffect(() => {
