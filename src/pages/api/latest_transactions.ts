@@ -63,8 +63,7 @@ async function getLastTransactions(connection: Connection): Promise<{
   } catch (error) {
     console.error("Error fetching block data:", error);
   }
-  //}
-  console.log(transactions);
+
   return { transactions };
 }
 
@@ -93,7 +92,6 @@ export default async function handler(
       res.status(500).end();
     }
   } else if (req.method === "POST") {
-    console.log("updating");
     try {
       const { transactions } = await getLastTransactions(connection);
       await collection.insertMany(transactions);
