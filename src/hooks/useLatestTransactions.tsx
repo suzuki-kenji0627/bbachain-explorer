@@ -72,10 +72,10 @@ export async function fetchLatestTransactions(
             url,
           });
         }
+        fetch("/api/latest_transactions", {
+          method: "post",
+        });
       });
-    });
-    fetch("/api/latest_transactions", {
-      method: "post",
     });
   } catch (err) {
     status = Cache.FetchStatus.FetchFailed;

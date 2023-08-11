@@ -31,6 +31,10 @@ export const LatestTxs: FC = ({}) => {
     fetchLatestTransactions(page || 0, pageSize || 25);
   const BLOCK_TIME_INTERVAL = 5000;
 
+  useEffect(() => {
+    refresh(0, 25);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Fetch Transaction on load
   useEffect(() => {
     if (!confirmedTransactions && status === ClusterStatus.Connected)
