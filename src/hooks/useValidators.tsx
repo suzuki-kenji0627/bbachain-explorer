@@ -1,13 +1,24 @@
 import React from "react";
 import * as Sentry from "@sentry/react";
-import { Connection, PublicKey, VoteAccountInfo } from "@bbachain/web3.js";
+import {
+  Connection,
+  ContactInfo,
+  PublicKey,
+  VoteAccountInfo,
+} from "@bbachain/web3.js";
 
 // Hooks
 import * as Cache from "./useCache";
 import { Cluster, useCluster } from "./useCluster";
 
-type State = Cache.State<VoteAccountInfo[]>;
-type Dispatch = Cache.Dispatch<VoteAccountInfo[]>;
+type Validators = {
+  currentValidators: VoteAccountInfo[];
+  delinquentValidators: VoteAccountInfo[];
+  clusterNodes: ContactInfo[];
+};
+
+type State = Cache.State<Validators>;
+type Dispatch = Cache.Dispatch<Validators>;
 
 export const ValidatorsStateContext = React.createContext<State | undefined>(
   undefined
@@ -29,13 +40,18 @@ export async function fetchValidators(
   });
 
   let status: Cache.FetchStatus;
-  let data: VoteAccountInfo[] | undefined = undefined;
+  let data: Validators | undefined = undefined;
 
   try {
     const connection = new Connection(url, "confirmed");
     const validators = await connection.getVoteAccounts();
+    const clusterNodes = await connection.getClusterNodes();
 
-    data = validators.current;
+    data = {
+      currentValidators: validators.current,
+      delinquentValidators: validators.delinquent,
+      clusterNodes,
+    };
     dispatch({
       type: Cache.ActionType.Update,
       url,
@@ -58,9 +74,7 @@ export async function fetchValidators(
   }
 }
 
-export function useValidators():
-  | Cache.CacheEntry<VoteAccountInfo[]>
-  | undefined {
+export function useValidators(): Cache.CacheEntry<Validators> | undefined {
   const context = React.useContext(ValidatorsStateContext);
 
   if (!context) {
