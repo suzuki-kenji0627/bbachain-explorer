@@ -11,7 +11,7 @@ import {
 import * as Cache from "./useCache";
 import { Cluster, useCluster } from "./useCluster";
 
-type Validators = {
+export type Validators = {
   currentValidators: VoteAccountInfo[];
   delinquentValidators: VoteAccountInfo[];
   clusterNodes: ContactInfo[];
