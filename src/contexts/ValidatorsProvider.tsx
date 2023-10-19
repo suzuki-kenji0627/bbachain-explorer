@@ -4,10 +4,10 @@ import * as Cache from "../hooks/useCache";
 // Hooks
 import { useCluster } from "hooks/useCluster";
 import {
+  Validators,
   ValidatorsDispatchContext,
   ValidatorsStateContext,
 } from "hooks/useValidators";
-import { VoteAccountInfo } from "@bbachain/web3.js";
 
 type Props = {
   children: ReactNode;
@@ -15,7 +15,7 @@ type Props = {
 
 export function ValidatorsProvider({ children }: Props) {
   const { url } = useCluster();
-  const [state, dispatch] = Cache.useReducer<VoteAccountInfo[]>(url);
+  const [state, dispatch] = Cache.useReducer<Validators>(url);
 
   React.useEffect(() => {
     dispatch({ type: Cache.ActionType.Clear, url });

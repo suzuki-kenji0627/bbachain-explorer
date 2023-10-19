@@ -11,6 +11,7 @@ import { ClusterStatus, useCluster } from "hooks/useCluster";
 import { useFetchValidators, useValidators } from "hooks/useValidators";
 import { PubKey } from "components/common/PubKey";
 import { Epoch } from "components/common/Epoch";
+import { ValidatorsStats } from "components/ValidatorsStats";
 
 export const ValidatorsView: FC = () => {
   const { status } = useCluster();
@@ -32,7 +33,7 @@ export const ValidatorsView: FC = () => {
     return (
       <ErrorCard retry={() => refresh()} text="Failed to fetch validators" />
     );
-  } else if (validators.data.length === 0) {
+  } else if (validators.data.currentValidators.length === 0) {
     return <ErrorCard retry={() => refresh()} text={`No validators found`} />;
   }
 
@@ -41,10 +42,10 @@ export const ValidatorsView: FC = () => {
   return (
     <div className="mx-4">
       <HeadContainer />
-
       <div className="w-full mb-4">
         <div className="card bg-[#011909] shadow-xl mb-4">
           <div className="card-body">
+            <ValidatorsStats />
             <h2 className="card-title">Validators</h2>
 
             <div className="overflow-x-auto">
@@ -62,7 +63,7 @@ export const ValidatorsView: FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {validatorsData.map((validator) => {
+                  {validatorsData.currentValidators.map((validator) => {
                     return (
                       <tr key={validator.nodePubkey}>
                         <td>{}</td>
