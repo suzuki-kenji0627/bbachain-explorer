@@ -38,6 +38,7 @@ export const LatestTransactionsDispatchContext = React.createContext<
 export async function fetchLatestTransactions(
   dispatch: Dispatch,
   url: string,
+  name: string,
   cluster: Cluster,
   page: number,
   pageSize: number
@@ -54,7 +55,9 @@ export async function fetchLatestTransactions(
   let transactions: ParsedTransactionWithMetaExtended[] = [];
   try {
     fetch(
-      `/api/latest_transactions?page=${page || 0}&docs=${pageSize || 25}`
+      `/api/latest_transactions?page=${page || 0}&docs=${
+        pageSize || 25
+      }&name=${name}&url=${url}`
     ).then((res) => {
       res.json().then((trxs) => {
         transactions = trxs.transactionResponse;
@@ -72,7 +75,7 @@ export async function fetchLatestTransactions(
             url,
           });
         }
-        fetch("/api/latest_transactions", {
+        fetch(`/api/latest_transactions?name=${name}&url=${url}`, {
           method: "post",
         });
       });
@@ -115,10 +118,10 @@ export function useFetchLatestTransactions() {
     );
   }
 
-  const { cluster, url } = useCluster();
+  const { cluster, url, name } = useCluster();
   return React.useCallback(
     (page: number, pageSize: number) =>
-      fetchLatestTransactions(dispatch, url, cluster, page, pageSize),
-    [dispatch, cluster, url]
+      fetchLatestTransactions(dispatch, url, name, cluster, page, pageSize),
+    [dispatch, cluster, url, name]
   );
 }
