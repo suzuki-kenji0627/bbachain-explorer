@@ -65,7 +65,7 @@ export async function fetchLatestTransactions(
           transactions: transactions,
           nextPage: page + 1,
         };
-        console.log(data);
+        // console.log(data);
         if (transactions.length > 0) {
           dispatch({
             type: Cache.ActionType.Update,

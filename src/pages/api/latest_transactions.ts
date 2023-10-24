@@ -44,7 +44,7 @@ async function getLastTransactions(
   try {
     const slot = await connection.getBlockHeight();
     if (latestDocument.slot > slot - 10) return { transactions: [] };
-    console.log(latestDocument.slot, slot - 5);
+    // console.log(latestDocument.slot, slot - 5);
     const blocks = await connection.getBlocks(
       Math.max(latestDocument.slot, slot - 5),
       slot
@@ -86,7 +86,7 @@ export default async function handler(
   const no_of_docs_each_page = 25; // 2 docs in single page
 
   const { page, docs, name, url } = req.query;
-  console.log(name, url);
+  // console.log(name, url);
   const connection = new Connection(<string>url, "confirmed");
   const client = await clientPromise;
   const db = client.db(name);

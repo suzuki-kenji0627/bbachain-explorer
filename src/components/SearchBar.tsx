@@ -1,16 +1,16 @@
-import React, { FC } from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
+import React, { FC } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import bs58 from "bs58";
 import Select, {
   InputActionMeta,
   ActionMeta,
-  OnChangeValue
+  OnChangeValue,
 } from "react-select";
 
 // Hooks
-import useQueryContext from 'hooks/useQueryContext';
-import { Cluster, useCluster } from 'hooks/useCluster';
+import useQueryContext from "hooks/useQueryContext";
+import { Cluster, useCluster } from "hooks/useCluster";
 
 // Utils
 import {
@@ -18,8 +18,8 @@ import {
   LoaderName,
   PROGRAM_INFO_BY_ID,
   SPECIAL_IDS,
-  SYSVAR_IDS
-} from 'utils/tx';
+  SYSVAR_IDS,
+} from "utils/tx";
 
 interface SearchOptions {
   label: string;
@@ -33,24 +33,44 @@ interface SearchOptions {
 function DropdownIndicator() {
   return (
     <button className="p-3 text-secondary">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
     </button>
   );
 }
 
 const CustomOption = ({ innerProps, isDisabled, label }) =>
-!isDisabled ? (
-  <li {...innerProps}><Link href={'/'}>{label}</Link></li>
-) : null;
+  !isDisabled ? (
+    <li {...innerProps}>
+      <Link href={"/"}>{label}</Link>
+    </li>
+  ) : null;
 
 const CustomMenuList = ({ children, maxHeight }) => {
   return (
-    <ul className="menu bg-base-300 w-full overflow-scroll" style={{ maxHeight }}>{children}</ul>
+    <ul
+      className="menu bg-base-300 w-full overflow-scroll"
+      style={{ maxHeight }}
+    >
+      {children}
+    </ul>
   );
-}
+};
 
 export const SearchBar: FC = () => {
-  const {fmtUrlWithCluster} = useQueryContext();
+  const { fmtUrlWithCluster } = useQueryContext();
   const router = useRouter();
 
   const searchRef = React.useRef("");
@@ -58,7 +78,8 @@ export const SearchBar: FC = () => {
   const [search, setSearch] = React.useState("");
   const [loadingSearch, setLoadingSearch] = React.useState<boolean>(false);
   const [searchOptions, setSearchOptions] = React.useState<SearchOptions[]>([]);
-  const [loadingSearchMessage, setLoadingSearchMessage] = React.useState<string>("loading...");
+  const [loadingSearchMessage, setLoadingSearchMessage] =
+    React.useState<string>("loading...");
 
   const { cluster, clusterInfo } = useCluster();
 
@@ -68,7 +89,10 @@ export const SearchBar: FC = () => {
     }
   };
 
-  const onChange = ({ pathname }: OnChangeValue<any, false>, meta: ActionMeta<any>) => {
+  const onChange = (
+    { pathname }: OnChangeValue<any, false>,
+    meta: ActionMeta<any>
+  ) => {
     if (meta.action === "select-option") {
       const url = fmtUrlWithCluster(pathname);
       router.push(url);
@@ -82,11 +106,7 @@ export const SearchBar: FC = () => {
     setLoadingSearch(true);
 
     // builds and sets local search output
-    const options = buildOptions(
-      search,
-      cluster,
-      clusterInfo?.epochInfo.epoch
-    );
+    const options = buildOptions(search, cluster, clusterInfo?.epochInfo.epoch);
 
     setSearchOptions(options);
 
@@ -101,30 +121,43 @@ export const SearchBar: FC = () => {
     <>
       {/* <div className="card mb-4 bg-red-400">
         <div className="card-body"> */}
-          <Select
-            blurInputOnSelect
-            noOptionsMessage={() => "No Results"}
-            placeholder="Search by Address / Txn Hash / Block / Token / Domain Name"
-            styles={{
-              /* work around for https://github.com/JedWatson/react-select/issues/3857 */
-              placeholder: (style) => ({ ...style, pointerEvents: "none" }),
-              input: (style) => ({ ...style, width: "100%" }),
-            }}
-            loadingMessage={() => loadingSearchMessage}
-            components={{
-              DropdownIndicator,
-              Option: CustomOption,
-              MenuList: CustomMenuList,
-            }}
-            onInputChange={onInputChange}
-            onChange={onChange}
-
-            // Value and Options
-            inputValue={search}
-            options={searchOptions}
-            value={resetValue}
-          />
-        {/* </div>
+      <Select
+        blurInputOnSelect
+        noOptionsMessage={() => "No Results"}
+        placeholder="Search by Address / Txn Hash / Block / Token / Domain Name"
+        styles={{
+          /* work around for, 
+          https://github.com/JedWatson/react-select/issues/3857 
+          https://github.com/JedWatson/react-select/issues/4106
+          */
+          placeholder: (style) => ({
+            ...style,
+            pointerEvents: "none",
+            userSelect: "none",
+            MozUserSelect: "none",
+            WebkitUserSelect: "none",
+            msUserSelect: "none",
+          }),
+          input: (style) => ({
+            ...style,
+            width: "100%",
+            gridTemplateColumns: "0 minmax(min-content, 1fr)",
+          }),
+        }}
+        loadingMessage={() => loadingSearchMessage}
+        components={{
+          DropdownIndicator,
+          Option: CustomOption,
+          MenuList: CustomMenuList,
+        }}
+        onInputChange={onInputChange}
+        onChange={onChange}
+        // Value and Options
+        inputValue={search}
+        options={searchOptions}
+        value={resetValue}
+      />
+      {/* </div>
       </div> */}
     </>
   );
