@@ -21,8 +21,9 @@ const NetworkSwitcher: FC = () => {
         onChange={(e) => changeCluster(e.target.value)}
         className="select max-w-xs"
       >
-        <option value="mainnet">mainnet</option>
-        <option value="testnet">testnet</option>
+        <option value="mainnet">Mainnet</option>
+        <option value="testnet">Testnet</option>
+        <option value="custom">Custom</option>
       </select>
     </label>
   );

@@ -105,7 +105,7 @@ export enum PROGRAM_NAMES {
 
 const ALL_CLUSTERS = [Cluster.Custom, Cluster.Testnet, Cluster.Mainnet];
 
-const LIVE_CLUSTERS = [Cluster.Testnet, Cluster.Mainnet];
+const LIVE_CLUSTERS = [Cluster.Custom, Cluster.Testnet, Cluster.Mainnet];
 
 export type ProgramInfo = {
   name: string;
