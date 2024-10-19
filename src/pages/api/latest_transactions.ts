@@ -59,7 +59,9 @@ async function getLastTransactions(
     transactions = await Promise.all(
       blockSignatures.map(async (signature) => {
         const transaction = await connection.getParsedTransaction(signature);
-        const { value } = await connection.getSignatureStatus(signature);
+        const { value } = await connection.getSignatureStatus(signature, {
+          searchTransactionHistory: true,
+        });
         return {
           ...transaction,
           ...{
