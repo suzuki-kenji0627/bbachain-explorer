@@ -1,7 +1,9 @@
 import { Dispatch, createContext, useCallback, useContext } from "react";
-import { Connection, Supply } from "@bbachain/web3.js";
+import { BBA_DALTON_UNIT, Connection, Supply } from "@bbachain/web3.js";
 import { Cluster, useCluster } from "./useCluster";
 import { reportError } from "utils/sentry";
+
+const HIDDEN_BALANCE = 1_000_000 * BBA_DALTON_UNIT;
 
 export enum SupplyStatus {
   Idle,
@@ -26,6 +28,16 @@ export async function fetch(dispatch: SupplyDispatch, cluster: Cluster, url: str
     // Update state if still connecting
     dispatch((state) => {
       if (state !== SupplyStatus.Connecting) return state;
+
+      // Hide balances if cluster is mainnet
+      if (cluster === Cluster.Mainnet) {
+        return {
+          ...supply,
+          total: supply.total - HIDDEN_BALANCE,
+          circulating: supply.circulating - HIDDEN_BALANCE,
+        };
+      }
+
       return supply;
     });
   } catch (err) {
