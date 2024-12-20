@@ -50,9 +50,14 @@ export const AppBar: React.FC = () => {
               href={fmtUrlWithCluster("/transactions")}
               navigationStarts={() => setIsNavOpen(false)}
             />
-            <NavElement
+            {/* <NavElement
               label="Validators"
               href={fmtUrlWithCluster("/validators")}
+              navigationStarts={() => setIsNavOpen(false)}
+            /> */}
+            <NavElement
+              label="Top Accounts"
+              href={fmtUrlWithCluster("/accounts")}
               navigationStarts={() => setIsNavOpen(false)}
             />
           </div>
