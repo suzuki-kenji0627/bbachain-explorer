@@ -1,4 +1,15 @@
 import { FC, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
 // Components
 import { ErrorCard } from "components/common/ErrorCard";
@@ -43,60 +54,64 @@ export const ValidatorsView: FC = () => {
     <div className="mx-4">
       <HeadContainer />
       <div className="w-full mb-4">
-        <div className="card bg-[#011909] shadow-xl mb-4">
-          <div className="card-body">
+        <Card>
+          <CardContent>
             <ValidatorsStats />
-            <h2 className="card-title">Validators</h2>
+            <Typography variant="h5" component="h2" gutterBottom>
+              Validators
+            </Typography>
 
-            <div className="overflow-x-auto">
-              <table className="table w-full">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Node Account</th>
-                    <th>Vote Account</th>
-                    <th>Commision</th>
-                    <th>Last Vote Slot</th>
-                    <th>Credit</th>
-                    <th>Staked</th>
-                    <th>Epoch</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Node Account</TableCell>
+                    <TableCell>Vote Account</TableCell>
+                    <TableCell>Commission</TableCell>
+                    <TableCell>Last Vote Slot</TableCell>
+                    <TableCell>Credit</TableCell>
+                    <TableCell>Staked</TableCell>
+                    <TableCell>Epoch</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
                   {validatorsData.currentValidators.map((validator, index) => {
                     return (
-                      <tr key={`${validator.nodePubkey}-${index}`}>
-                        <td>{}</td>
-                        <td>
+                      <TableRow key={`${validator.nodePubkey}-${index}`}>
+                        <TableCell>{}</TableCell>
+                        <TableCell>
                           {PubKey({
                             pubkey: validator.nodePubkey,
                             truncateChars: 15,
                             link: true,
                           })}
-                        </td>
-                        <td>
+                        </TableCell>
+                        <TableCell>
                           {PubKey({
                             pubkey: validator.votePubkey,
                             truncateChars: 15,
                             link: true,
                           })}
-                        </td>
-                        <td>{`${validator.commission} %`}</td>
-                        <td>{validator.lastVote}</td>
-                        <td>{validator.epochCredits[0][1]}</td>
-                        <td>{`${validator.activatedStake / 10 ** 9} BBA`}</td>
+                        </TableCell>
+                        <TableCell>{`${validator.commission} %`}</TableCell>
+                        <TableCell>{validator.lastVote}</TableCell>
+                        <TableCell>{validator.epochCredits[0][1]}</TableCell>
+                        <TableCell>{`${
+                          validator.activatedStake / 10 ** 9
+                        } BBA`}</TableCell>
 
-                        <td>
+                        <TableCell>
                           {Epoch({ epoch: validator.epochCredits[0][0] })}
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     );
                   })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

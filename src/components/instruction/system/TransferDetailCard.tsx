@@ -4,6 +4,7 @@ import {
   SignatureResult,
   ParsedInstruction,
 } from "@bbachain/web3.js";
+import { TableRow, TableCell } from "@mui/material";
 import { Balance } from "components/common/Balance";
 import { InstructionCard } from "../InstructionCard";
 import { Address } from "components/common/Address";
@@ -28,33 +29,33 @@ export function TransferDetailCard(props: {
       innerCards={innerCards}
       childIndex={childIndex}
     >
-      <tr>
-        <td>Program</td>
-        <td className="text-lg-end">
+      <TableRow>
+        <TableCell>Program</TableCell>
+        <TableCell>
           <Address pubkey={SystemProgram.programId} link />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
 
-      <tr>
-        <td>From Address</td>
-        <td className="text-lg-end">
+      <TableRow>
+        <TableCell>From Address</TableCell>
+        <TableCell>
           <Address pubkey={info.source} link />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
 
-      <tr>
-        <td>To Address</td>
-        <td className="text-lg-end">
+      <TableRow>
+        <TableCell>To Address</TableCell>
+        <TableCell>
           <Address pubkey={info.destination} link />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
 
-      <tr>
-        <td>Transfer Amount (BBA)</td>
-        <td className="text-lg-end">
+      <TableRow>
+        <TableCell>Transfer Amount (BBA)</TableCell>
+        <TableCell>
           <Balance daltons={info.daltons} />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
     </InstructionCard>
   );
 }

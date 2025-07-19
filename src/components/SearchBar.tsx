@@ -51,18 +51,55 @@ function DropdownIndicator() {
   );
 }
 
-const CustomOption = ({ innerProps, isDisabled, label }) =>
+const CustomOption = ({ innerProps, isDisabled, label, data }) =>
   !isDisabled ? (
-    <li {...innerProps}>
-      <Link href={"/"}>{label}</Link>
+    <li
+      {...innerProps}
+      style={{
+        padding: "12px 16px",
+        cursor: "pointer",
+        color: "#f9fafb",
+        fontSize: "14px",
+        fontFamily: "monospace",
+        borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+        transition: "background-color 0.2s ease",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = "transparent";
+      }}
+    >
+      <Link
+        href={data?.pathname || "/"}
+        style={{
+          color: "inherit",
+          textDecoration: "none",
+          display: "block",
+          width: "100%",
+        }}
+      >
+        {label}
+      </Link>
     </li>
   ) : null;
 
 const CustomMenuList = ({ children, maxHeight }) => {
   return (
     <ul
-      className="menu bg-base-300 w-full overflow-scroll"
-      style={{ maxHeight }}
+      className="w-full overflow-scroll"
+      style={{
+        maxHeight,
+        backgroundColor: "#1a1a1a",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: "8px",
+        padding: "8px 0",
+        margin: 0,
+        listStyle: "none",
+        boxShadow:
+          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      }}
     >
       {children}
     </ul>

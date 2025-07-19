@@ -5,6 +5,15 @@ import {
   TransactionSignature,
 } from "@bbachain/web3.js";
 import bs58 from "bs58";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableContainer,
+  Chip,
+  Box,
+} from "@mui/material";
 import { BigNumber } from "bignumber.js";
 
 // Components
@@ -221,120 +230,172 @@ function StatusCard({
   })();
 
   return (
-    <div className="card bg-[#011909] shadow-xl mb-4">
-      <div className="card-body">
-        <h2 className="card-title">Overview</h2>
+    <Card
+      sx={{
+        mb: 4,
+        background:
+          "linear-gradient(135deg, rgba(20, 70, 15, 0.8) 0%, rgba(17, 25, 9, 0.9) 100%)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: 3,
+        overflow: "hidden",
+      }}
+    >
+      <CardContent sx={{ p: 0 }}>
+        <Box
+          sx={{
+            background: "rgba(0, 0, 0, 0.2)",
+            p: 3,
+            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+          }}
+        >
+          <Typography
+            variant="h4"
+            component="h2"
+            sx={{
+              fontWeight: 700,
+              color: "#9945FF",
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            📋 Transaction Overview
+          </Typography>
+          <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
+            Detailed information about this blockchain transaction
+          </Typography>
+        </Box>
 
-        {/* Overview */}
-        <div className="overflow-x-auto">
-          <table className="table w-full">
-            <tbody>
-              <tr>
-                <td>Status</td>
-                <td className="text-lg-end">
-                  <h3 className="mb-0">
-                    <span className={`badge bg-${statusClass}-soft`}>
-                      {statusText}
-                    </span>
-                  </h3>
-                </td>
-              </tr>
-
-              <tr>
-                <td>Signature</td>
-                <td className="text-lg-end">
-                  <Signature signature={signature} alignRight />
-                </td>
-              </tr>
-
-              {errorReason !== undefined && (
+        <Box sx={{ p: 3 }}>
+          <TableContainer>
+            <Table
+              sx={{
+                "& .MuiTableCell-root": {
+                  border: "none",
+                  py: 2,
+                  "&:first-of-type": {
+                    fontWeight: 600,
+                    color: "text.secondary",
+                    width: "200px",
+                    fontSize: "0.875rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  },
+                  "&:last-of-type": {
+                    fontFamily: "monospace",
+                    fontSize: "0.875rem",
+                  },
+                },
+              }}
+            >
+              <tbody>
                 <tr>
-                  <td>Error</td>
+                  <td>Status</td>
                   <td className="text-lg-end">
                     <h3 className="mb-0">
                       <span className={`badge bg-${statusClass}-soft`}>
-                        {errorReason}
+                        {statusText}
                       </span>
                     </h3>
                   </td>
                 </tr>
-              )}
 
-              <tr>
-                <td>Confirmation Status</td>
-                <td className="text-lg-end text-uppercase">
-                  {info.confirmationStatus || "Unknown"}
-                </td>
-              </tr>
-
-              <tr>
-                <td>Confirmations</td>
-                <td className="text-lg-end text-uppercase">
-                  {info.confirmations}
-                </td>
-              </tr>
-
-              <tr>
-                <td>Slot</td>
-                <td className="text-lg-end">
-                  <Slot slot={info.slot} link />
-                </td>
-              </tr>
-
-              {blockhash && (
                 <tr>
-                  <td>
-                    {isNonce ? (
-                      "Nonce"
+                  <td>Signature</td>
+                  <td className="text-lg-end">
+                    <Signature signature={signature} alignRight />
+                  </td>
+                </tr>
+
+                {errorReason !== undefined && (
+                  <tr>
+                    <td>Error</td>
+                    <td className="text-lg-end">
+                      <h3 className="mb-0">
+                        <span className={`badge bg-${statusClass}-soft`}>
+                          {errorReason}
+                        </span>
+                      </h3>
+                    </td>
+                  </tr>
+                )}
+
+                <tr>
+                  <td>Confirmation Status</td>
+                  <td className="text-lg-end text-uppercase">
+                    {info.confirmationStatus || "Unknown"}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Confirmations</td>
+                  <td className="text-lg-end text-uppercase">
+                    {info.confirmations}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Slot</td>
+                  <td className="text-lg-end">
+                    <Slot slot={info.slot} link />
+                  </td>
+                </tr>
+
+                {blockhash && (
+                  <tr>
+                    <td>
+                      {isNonce ? (
+                        "Nonce"
+                      ) : (
+                        <InfoTooltip text="Transactions use a previously confirmed blockhash as a nonce to prevent double spends">
+                          Recent Blockhash
+                        </InfoTooltip>
+                      )}
+                    </td>
+                    <td className="text-lg-end">{blockhash}</td>
+                  </tr>
+                )}
+
+                {fee && (
+                  <tr>
+                    <td>Fee (BBA)</td>
+                    <td className="text-lg-end">
+                      <Balance daltons={fee} />
+                    </td>
+                  </tr>
+                )}
+
+                {version !== undefined && (
+                  <tr>
+                    <td>Transaction Version</td>
+                    <td className="text-lg-end text-uppercase">{version}</td>
+                  </tr>
+                )}
+
+                <tr>
+                  <td>Timestamp</td>
+                  <td className="text-lg-end">
+                    {info.timestamp !== "unavailable" ? (
+                      <span className="font-monospace">
+                        {displayTimestamp(info.timestamp * 1000)}
+                      </span>
                     ) : (
-                      <InfoTooltip text="Transactions use a previously confirmed blockhash as a nonce to prevent double spends">
-                        Recent Blockhash
+                      <InfoTooltip
+                        bottom
+                        right
+                        text="Timestamps are only available for confirmed blocks"
+                      >
+                        Unavailable
                       </InfoTooltip>
                     )}
                   </td>
-                  <td className="text-lg-end">{blockhash}</td>
                 </tr>
-              )}
-
-              {fee && (
-                <tr>
-                  <td>Fee (BBA)</td>
-                  <td className="text-lg-end">
-                    <Balance daltons={fee} />
-                  </td>
-                </tr>
-              )}
-
-              {version !== undefined && (
-                <tr>
-                  <td>Transaction Version</td>
-                  <td className="text-lg-end text-uppercase">{version}</td>
-                </tr>
-              )}
-
-              <tr>
-                <td>Timestamp</td>
-                <td className="text-lg-end">
-                  {info.timestamp !== "unavailable" ? (
-                    <span className="font-monospace">
-                      {displayTimestamp(info.timestamp * 1000)}
-                    </span>
-                  ) : (
-                    <InfoTooltip
-                      bottom
-                      right
-                      text="Timestamps are only available for confirmed blocks"
-                    >
-                      Unavailable
-                    </InfoTooltip>
-                  )}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+              </tbody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -414,34 +475,101 @@ function AccountsCard({ signature }: SignatureProps) {
           <Balance daltons={post} />
         </td>
         <td>
-          {index === 0 && (
-            <span className="badge bg-info-soft me-1">Fee Payer</span>
-          )}
-          {account.signer && (
-            <span className="badge bg-info-soft me-1">Signer</span>
-          )}
-          {account.writable && (
-            <span className="badge bg-danger-soft me-1">Writable</span>
-          )}
-          {message.instructions.find((ix) => ix.programId.equals(pubkey)) && (
-            <span className="badge bg-warning-soft me-1">Program</span>
-          )}
-          {account.source === "lookupTable" && (
-            <span className="badge bg-gray-soft me-1">
-              Address Table Lookup
-            </span>
-          )}
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+            {index === 0 && (
+              <Chip
+                label="Fee Payer"
+                color="info"
+                size="small"
+                sx={{ fontSize: "0.75rem" }}
+              />
+            )}
+            {account.signer && (
+              <Chip
+                label="Signer"
+                color="info"
+                size="small"
+                sx={{ fontSize: "0.75rem" }}
+              />
+            )}
+            {account.writable && (
+              <Chip
+                label="Writable"
+                color="error"
+                size="small"
+                sx={{ fontSize: "0.75rem" }}
+              />
+            )}
+            {message.instructions.find((ix) => ix.programId.equals(pubkey)) && (
+              <Chip
+                label="Program"
+                color="warning"
+                size="small"
+                sx={{ fontSize: "0.75rem" }}
+              />
+            )}
+            {account.source === "lookupTable" && (
+              <Chip
+                label="Address Table Lookup"
+                color="default"
+                size="small"
+                sx={{ fontSize: "0.75rem" }}
+              />
+            )}
+          </Box>
         </td>
       </tr>
     );
   });
 
   return (
-    <div className="card bg-[#011909] shadow-xl mb-4">
-      <div className="card-body">
-        <h2 className="card-title">Input(s)</h2>
-        <div className="overflow-x-auto">
-          <table className="table w-full">
+    <Card
+      sx={{
+        mb: 4,
+        background:
+          "linear-gradient(135deg, rgba(17, 25, 9, 0.9) 0%, rgba(20, 70, 15, 0.8) 100%)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: 3,
+      }}
+    >
+      <CardContent>
+        <Box sx={{ mb: 3 }}>
+          <Typography
+            variant="h5"
+            component="h2"
+            sx={{
+              fontWeight: 600,
+              color: "#33a382",
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            💰 Account Inputs
+          </Typography>
+          <Typography variant="body2" sx={{ color: "text.secondary", mt: 1 }}>
+            Account balances and changes in this transaction
+          </Typography>
+        </Box>
+
+        <TableContainer>
+          <Table
+            sx={{
+              "& .MuiTableHead-root .MuiTableCell-root": {
+                backgroundColor: "rgba(0, 0, 0, 0.2)",
+                color: "text.secondary",
+                fontWeight: 600,
+                fontSize: "0.875rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                border: "none",
+              },
+              "& .MuiTableBody-root .MuiTableCell-root": {
+                border: "none",
+                py: 2,
+              },
+            }}
+          >
             <thead>
               <tr>
                 <th className="text-muted">#</th>
@@ -451,10 +579,10 @@ function AccountsCard({ signature }: SignatureProps) {
                 <th className="text-muted">Detail</th>
               </tr>
             </thead>
-            <tbody className="list">{accountRows}</tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+            <tbody className="list">{accountRows} </tbody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
   );
 }

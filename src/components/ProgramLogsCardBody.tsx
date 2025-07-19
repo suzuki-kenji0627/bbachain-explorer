@@ -1,5 +1,14 @@
 import React from "react";
 import { ParsedMessage, PublicKey, VersionedMessage } from "@bbachain/web3.js";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Chip,
+  Box,
+  Typography,
+} from "@mui/material";
 
 // Hooks
 import { Cluster } from "hooks/useCluster";
@@ -37,8 +46,8 @@ export function ProgramLogsCardBody({
   }
 
   return (
-    <table className="table w-full">
-      <tbody>
+    <Table sx={{ width: "100%" }}>
+      <TableBody>
         {instructionProgramIds.map((programId, index) => {
           const programAddress = programId.toBase58();
           let programLogs: InstructionLogs | undefined = logs[logIndex];
@@ -54,48 +63,96 @@ export function ProgramLogsCardBody({
             programLogs = undefined;
           }
 
-          let badgeColor = "white";
+          let badgeColor: "default" | "warning" | "success" = "default";
           if (programLogs) {
             badgeColor = programLogs.failed ? "warning" : "success";
           }
 
           return (
-            <tr key={index}>
-              <td>
-                {/* <Link
-                  className="d-flex align-items-center"
-                  href={(location) => ({
-                    ...location,
-                    hash: `#${getInstructionCardScrollAnchorId([index + 1])}`,
-                  })}
-                > */}
-                <span className={`badge bg-${badgeColor}-soft me-2`}>
-                  #{index + 1}
-                </span>
-                <span className="program-log-instruction-name">
-                  {programId.toString()}
-                  {" "}
-                  Instruction
-                </span>
-                <span className="fe fe-chevrons-up c-pointer px-2" />
-                {/* </Link> */}
+            <TableRow key={index}>
+              <TableCell sx={{ border: "none", p: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mb: programLogs ? 2 : 0,
+                  }}
+                >
+                  <Chip
+                    label={`#${index + 1}`}
+                    color={badgeColor}
+                    size="small"
+                    sx={{ mr: 2, fontWeight: 600 }}
+                  />
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontFamily: "monospace",
+                      color: "text.primary",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {programId.toString()} Instruction
+                  </Typography>
+                  <Typography sx={{ ml: 2, color: "text.secondary" }}>
+                    ⌄
+                  </Typography>
+                </Box>
+
                 {programLogs && (
-                  <div className="d-flex align-items-start flex-column font-monospace p-2 font-size-sm">
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      fontFamily: "monospace",
+                      fontSize: "0.875rem",
+                      p: 2,
+                      backgroundColor: "rgba(255, 255, 255, 0.05)",
+                      borderRadius: 1,
+                      border: "1px solid rgba(255, 255, 255, 0.1)",
+                    }}
+                  >
                     {programLogs.logs.map((log, key) => {
+                      const textColor =
+                        log.style === "info"
+                          ? "info.main"
+                          : log.style === "muted"
+                          ? "text.secondary"
+                          : "text.primary";
+
                       return (
-                        <span key={key}>
-                          <span className="text-muted">{log.prefix}</span>
-                          <span className={`text-${log.style}`}>{log.text}</span>
-                        </span>
+                        <Typography
+                          key={key}
+                          component="span"
+                          sx={{
+                            fontFamily: "monospace",
+                            fontSize: "0.875rem",
+                            display: "block",
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          <Typography
+                            component="span"
+                            sx={{ color: "text.secondary" }}
+                          >
+                            {log.prefix}
+                          </Typography>
+                          <Typography
+                            component="span"
+                            sx={{ color: textColor }}
+                          >
+                            {log.text}
+                          </Typography>
+                        </Typography>
                       );
                     })}
-                  </div>
+                  </Box>
                 )}
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           );
         })}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 }

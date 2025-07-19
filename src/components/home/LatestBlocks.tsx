@@ -1,4 +1,17 @@
 import { Button } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Box,
+  Link as MuiLink,
+} from "@mui/material";
 import { Balance } from "components/common/Balance";
 import { BlockHash } from "components/common/BlockHash";
 import { ErrorCard } from "components/common/ErrorCard";
@@ -39,56 +52,66 @@ export const LatestBlocks: FC = ({}) => {
 
   const { blocks, next } = confirmedBlocks.data;
   return (
-    <div className="card bg-[#011909] shadow-xl">
-      <div className="card-body">
-        <h2 className="card-title">Latest Blocks</h2>
-        <div className="overflow-x-auto">
-          <table className="table w-full">
-            <thead>
-              <tr>
-                <th>Block</th>
-                <th>Block Hash</th>
-                <th>Rewards (BBA)</th>
-              </tr>
-            </thead>
-            <tbody>
+    <Card>
+      <CardContent>
+        <Typography variant="h5" component="h2" gutterBottom>
+          Latest Blocks
+        </Typography>
+
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Block</TableCell>
+                <TableCell>Block Hash</TableCell>
+                <TableCell>Rewards (BBA)</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {blocks.slice(0, 10).map((block, index) => {
                 return (
-                  <tr key={`${block.block.blockhash}-${index}`}>
-                    <th>
-                      <div>
+                  <TableRow key={`${block.block.blockhash}-${index}`}>
+                    <TableCell>
+                      <Box>
                         <Slot slot={block.block.parentSlot} link />
                         <Time timestamp={block.block.blockTime} />
-                      </div>
-                    </th>
-                    <td>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
                       <BlockHash
                         hash={block.block.blockhash}
                         truncateChars={8}
                         blockNumber={block.block.parentSlot}
                         link
                       />
-                    </td>
-                    <td>
+                    </TableCell>
+                    <TableCell>
                       <Balance
                         daltons={block.block.rewards.reduce(
                           (partialSum, a) => partialSum + a.daltons,
                           0
                         )}
                       />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
-            </tbody>
-          </table>
-          <div className="grid justify-items-center space-y-2 mt-2">
-            <Link className="text-[#08b642]" href="/blocks">
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          <Link href="/blocks" passHref>
+            <MuiLink
+              color="success.light"
+              underline="hover"
+              sx={{ cursor: "pointer" }}
+            >
               Show more
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+            </MuiLink>
+          </Link>
+        </Box>
+      </CardContent>
+    </Card>
   );
 };

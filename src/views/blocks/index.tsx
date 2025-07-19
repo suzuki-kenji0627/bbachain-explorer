@@ -1,7 +1,18 @@
 // Next, React
 import { FC, useEffect, useState } from "react";
 import { PublicKey } from "@bbachain/web3.js";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
 // Components
 import { Slot } from "components/common/Slot";
@@ -51,65 +62,71 @@ export const BlocksView: FC = ({}) => {
       <HeadContainer />
 
       <div className="w-full mb-4">
-        <div className="card bg-[#011909] shadow-xl mb-4">
-          <div className="card-body">
-            <h2 className="card-title">Latest Blocks</h2>
+        <Card>
+          <CardContent>
+            <Typography variant="h5" component="h2" gutterBottom>
+              Latest Blocks
+            </Typography>
 
-            <div className="overflow-x-auto">
-              <table className="table w-full">
-                <thead>
-                  <tr>
-                    <th>Block Number</th>
-                    <th>Block Hash</th>
-                    <th>Rewards</th>
-                    <th>Time</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Block Number</TableCell>
+                    <TableCell>Block Hash</TableCell>
+                    <TableCell>Rewards</TableCell>
+                    <TableCell>Time</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
                   {blocks.map((blockData, index) => {
                     return (
-                      <tr key={`${blockData.block.blockhash}-${index}`}>
-                        <td>
+                      <TableRow key={`${blockData.block.blockhash}-${index}`}>
+                        <TableCell>
                           <Slot slot={blockData.block.parentSlot} link />
-                        </td>
-                        <td>
+                        </TableCell>
+                        <TableCell>
                           <BlockHash
                             hash={blockData.block.blockhash}
                             truncateChars={16}
                             blockNumber={blockData.block.parentSlot}
                             link
                           />
-                        </td>
-                        <td>
+                        </TableCell>
+                        <TableCell>
                           <Balance
                             daltons={blockData.block.rewards.reduce(
                               (partialSum, a) => partialSum + a.daltons,
                               0
                             )}
                           />
-                        </td>
-                        <td>
+                        </TableCell>
+                        <TableCell>
                           {displayTimestampUtc(
                             blockData.block.blockTime * 1000,
                             true
                           )}
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     );
                   })}
-                </tbody>
-              </table>
-              <div className="grid justify-items-center space-y-2 mt-2">
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            {next !== null && (
+              <div className="grid justify-items-center space-y-2 mt-4">
                 <Button
-                  className="text-[#08b642]"
+                  variant="contained"
+                  color="secondary"
                   onClick={() => handleShowMore(next)}
                 >
-                  Show more
+                  Show More
                 </Button>
               </div>
-            </div>
-          </div>
-        </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

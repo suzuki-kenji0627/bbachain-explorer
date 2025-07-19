@@ -1,4 +1,14 @@
 import React from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from "@mui/material";
 
 // Components
 import { Address as AddressComponent } from "components/common/Address";
@@ -16,61 +26,75 @@ export function UnknownAddressCard({ address }: { address: Address }) {
 
   const label = addressLabel(address.pubkey.toBase58(), cluster);
   return (
-    <div className="card bg-[#011909] shadow-xl mb-4">
-      <div className="card-body">
-        <h2 className="card-title">Overview</h2>
+    <Card sx={{ mb: 2 }}>
+      <CardContent>
+        <Typography variant="h5" component="h2" gutterBottom>
+          Overview
+        </Typography>
 
         {/* Overview */}
-        <div className="overflow-x-auto">
-          <table className="table w-full">
-            <tbody>
-              <tr>
-                <td>Address</td>
-                <td className="text-lg-end">
+        <TableContainer>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Address
+                </TableCell>
+                <TableCell align="right">
                   <AddressComponent pubkey={address.pubkey} />
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
               {label && (
-                <tr>
-                  <td>Address Label</td>
-                  <td className="text-lg-end">{label}</td>
-                </tr>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Address Label
+                  </TableCell>
+                  <TableCell align="right">{label}</TableCell>
+                </TableRow>
               )}
-              <tr>
-                <td>Balance (BBA)</td>
-                <td className="text-lg-end">
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Balance (BBA)
+                </TableCell>
+                <TableCell align="right">
                   {address.daltons === 0 ? (
                     "Account does not exist"
                   ) : (
                     <Balance daltons={address.daltons} />
                   )}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
 
               {address.space !== undefined && (
-                <tr>
-                  <td>Allocated Data Size</td>
-                  <td className="text-lg-end">{address.space} byte(s)</td>
-                </tr>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Allocated Data Size
+                  </TableCell>
+                  <TableCell align="right">{address.space} byte(s)</TableCell>
+                </TableRow>
               )}
 
-              <tr>
-                <td>Assigned Program Id</td>
-                <td className="text-lg-end">
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Assigned Program Id
+                </TableCell>
+                <TableCell align="right">
                   <AddressComponent pubkey={address.owner} link />
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
 
-              <tr>
-                <td>Executable</td>
-                <td className="text-lg-end">
-                  {address.executable ? "Yes" : "No"}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+              {address.executable && (
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Executable
+                  </TableCell>
+                  <TableCell align="right">Yes</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
   );
 }

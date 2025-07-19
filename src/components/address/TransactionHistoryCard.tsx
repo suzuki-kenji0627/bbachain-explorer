@@ -1,4 +1,15 @@
-import React from "react";
+import React, { useMemo } from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableContainer,
+  TableHead,
+} from "@mui/material";
 import Moment from "react-moment";
 import { PublicKey } from "@bbachain/web3.js";
 
@@ -65,77 +76,79 @@ export function TransactionHistoryCard({ pubkey }: { pubkey: PublicKey }) {
   const detailsList: React.ReactNode[] = transactionRows.map(
     ({ slot, signature, fee, value, blockTime, statusClass, statusText }) => {
       return (
-        <tr key={signature}>
-          <td>
+        <TableRow key={signature}>
+          <TableCell>
             <Signature signature={signature} link truncateChars={60} />
-          </td>
+          </TableCell>
 
-          <td className="w-1">
+          <TableCell className="w-1">
             <Slot slot={slot} link />
-          </td>
-          <td className="w-1">
+          </TableCell>
+          <TableCell className="w-1">
             <Balance daltons={fee} />
-          </td>
-          <td className="w-1">
+          </TableCell>
+          <TableCell className="w-1">
             <Balance daltons={value} />
-          </td>
+          </TableCell>
 
           {hasTimestamps && (
             <>
-              <td className="text-muted">
+              <TableCell className="text-muted">
                 {blockTime ? <Moment date={blockTime * 1000} fromNow /> : "---"}
-              </td>
-              <td className="text-muted">
+              </TableCell>
+              <TableCell className="text-muted">
                 {blockTime
                   ? displayTimestampUtc(blockTime * 1000, true)
                   : "---"}
-              </td>
+              </TableCell>
             </>
           )}
 
-          <td>
+          <TableCell>
             <span className={`badge bg-${statusClass}-soft`}>{statusText}</span>
-          </td>
-        </tr>
+          </TableCell>
+        </TableRow>
       );
     }
   );
 
   const fetching = history.status === FetchStatus.Fetching;
   return (
-    <div className="card bg-[#011909] shadow-xl mb-4">
-      <div className="card-body">
+    <Card className="bg-[#011909] shadow-xl mb-4">
+      <CardContent>
         <HistoryCardHeader
           fetching={fetching}
           refresh={() => refresh()}
           title="Transaction History"
         />
-        <div className="overflow-x-auto">
-          <table className="table w-full">
-            <thead>
-              <tr>
-                <th className="text-muted w-1">Transaction Signature</th>
-                <th className="text-muted w-1">Block</th>
-                <th className="text-muted w-1">Fee</th>
-                <th className="text-muted w-1">Value</th>
+        <TableContainer>
+          <Table className="w-full">
+            <TableHead>
+              <TableRow>
+                <TableCell className="text-muted w-1">
+                  Transaction Signature
+                </TableCell>
+                <TableCell className="text-muted w-1">Block</TableCell>
+                <TableCell className="text-muted w-1">Fee</TableCell>
+                <TableCell className="text-muted w-1">Value</TableCell>
                 {hasTimestamps && (
                   <>
-                    <th className="text-muted w-1">Age</th>
-                    <th className="text-muted w-1">Timestamp</th>
+                    <TableCell className="text-muted w-1">Age</TableCell>
+                    <TableCell className="text-muted w-1">Timestamp</TableCell>
                   </>
                 )}
-                <th className="text-muted">Result</th>
-              </tr>
-            </thead>
-            <tbody className="list">{detailsList}</tbody>
-          </table>
-        </div>
+                <TableCell className="text-muted">Result</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody className="list">{detailsList}</TableBody>
+          </Table>
+        </TableContainer>
         <HistoryCardFooter
           fetching={fetching}
           foundOldest={history.data.foundOldest}
           loadMore={() => loadMore()}
         />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

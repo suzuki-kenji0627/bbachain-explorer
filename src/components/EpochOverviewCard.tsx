@@ -1,4 +1,14 @@
 import React, { FC } from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from "@mui/material";
 
 // Components
 import { Epoch } from "./common/Epoch";
@@ -53,78 +63,94 @@ export const EpochOverviewCard: FC<Props> = ({ epoch }) => {
   }
 
   return (
-    <div className="card bg-[#011909] shadow-xl mb-4">
-      <div className="card-body">
-        <h2 className="card-title">
+    <Card sx={{ mb: 2 }}>
+      <CardContent>
+        <Typography variant="h5" component="h2" gutterBottom>
           Overview Epoch <Epoch epoch={epoch} />
-        </h2>
-        <div className="overflow-x-auto">
-          <table className="table w-full">
-            <tbody>
+        </Typography>
+        <TableContainer>
+          <Table>
+            <TableBody>
               {epoch > 0 && (
-                <tr>
-                  <td className="w-100">Previous Epoch</td>
-                  <td className="text-lg-end font-monospace">
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Previous Epoch
+                  </TableCell>
+                  <TableCell align="right" sx={{ fontFamily: "monospace" }}>
                     <Epoch epoch={epoch - 1} link />
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               )}
-              <tr>
-                <td className="w-100">Next Epoch</td>
-                <td className="text-lg-end font-monospace">
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Next Epoch
+                </TableCell>
+                <TableCell align="right" sx={{ fontFamily: "monospace" }}>
                   {currentEpoch > epoch ? (
                     <Epoch epoch={epoch + 1} link />
                   ) : (
-                    <span className="text-muted">Epoch in progress</span>
+                    <span style={{ color: "rgba(255,255,255,0.6)" }}>
+                      Epoch in progress
+                    </span>
                   )}
-                </td>
-              </tr>
-              <tr>
-                <td className="w-100">First Block</td>
-                <td className="text-lg-end font-monospace">
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  First Block
+                </TableCell>
+                <TableCell align="right" sx={{ fontFamily: "monospace" }}>
                   <Slot slot={epochState.data.firstBlock} link />
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
               {epochState.data.firstTimestamp && (
-                <tr>
-                  <td className="w-100">First Block Timestamp</td>
-                  <td className="text-lg-end">
-                    <span className="font-monospace">
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    First Block Timestamp
+                  </TableCell>
+                  <TableCell align="right">
+                    <span style={{ fontFamily: "monospace" }}>
                       {displayTimestampUtc(
                         epochState.data.firstTimestamp * 1000,
                         true
                       )}
                     </span>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               )}
-              <tr>
-                <td className="w-100">Last Block</td>
-                <td className="text-lg-end font-monospace">
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Last Block
+                </TableCell>
+                <TableCell align="right" sx={{ fontFamily: "monospace" }}>
                   {epochState.data.lastBlock !== undefined ? (
                     <Slot slot={epochState.data.lastBlock} link />
                   ) : (
-                    <span className="text-muted">Epoch in progress</span>
+                    <span style={{ color: "rgba(255,255,255,0.6)" }}>
+                      Epoch in progress
+                    </span>
                   )}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
               {epochState.data.lastTimestamp && (
-                <tr>
-                  <td className="w-100">Last Block Timestamp</td>
-                  <td className="text-lg-end">
-                    <span className="font-monospace">
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Last Block Timestamp
+                  </TableCell>
+                  <TableCell align="right">
+                    <span style={{ fontFamily: "monospace" }}>
                       {displayTimestampUtc(
                         epochState.data.lastTimestamp * 1000,
                         true
                       )}
                     </span>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
   );
 };

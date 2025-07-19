@@ -30,8 +30,12 @@ export interface ClusterState {
 
 export type ClusterAction = ClusterState;
 export type ClusterDispatch = (action: ClusterAction) => void;
-export const ClusterDispatchContext = createContext<ClusterDispatch | undefined>(undefined);
-export const ClusterStateContext = createContext<ClusterState | undefined>(undefined);
+export const ClusterDispatchContext = createContext<
+  ClusterDispatch | undefined
+>(undefined);
+export const ClusterStateContext = createContext<ClusterState | undefined>(
+  undefined
+);
 
 export const MAINNET_URL = "https://api-mainnet.bbachain.com";
 export const TESTNET_URL = "https://api-testnet.bbachain.com";
@@ -58,6 +62,21 @@ export function clusterName(cluster: Cluster): string {
   }
 }
 
+// Create robust connection with retry logic
+export function createRobustConnection(url: string, options?: any): Connection {
+  return new Connection(url, {
+    commitment: "confirmed",
+    confirmTransactionInitialTimeout: parseInt(
+      process.env.REACT_APP_RPC_TIMEOUT || "30000"
+    ),
+    disableRetryOnRateLimit: false,
+    httpHeaders: {
+      "User-Agent": "BBAChain-Explorer/1.0",
+    },
+    ...options,
+  });
+}
+
 export async function updateCluster(
   dispatch: ClusterDispatch,
   cluster: Cluster,
@@ -71,9 +90,10 @@ export async function updateCluster(
 
   try {
     // validate url
-    new URL(customUrl);
+    new URL(clusterUrl(cluster, customUrl));
 
-    const connection = new Connection(clusterUrl(cluster, customUrl));
+    const connection = createRobustConnection(clusterUrl(cluster, customUrl));
+
     const [firstAvailableBlock, epochSchedule, epochInfo, genesisHash] =
       await Promise.all([
         connection.getFirstAvailableBlock(),
@@ -88,14 +108,18 @@ export async function updateCluster(
       customUrl,
       clusterInfo: {
         firstAvailableBlock,
-        genesisHash,
         epochSchedule,
         epochInfo,
+        genesisHash,
       },
     });
   } catch (error) {
+    console.error(`Failed to connect to cluster: ${error.message}`);
     if (cluster !== Cluster.Custom) {
-      reportError(error, { clusterUrl: clusterUrl(cluster, customUrl) });
+      reportError(error, {
+        url: clusterUrl(cluster, customUrl),
+        cluster: clusterName(cluster),
+      });
     }
     dispatch({
       status: ClusterStatus.Failure,

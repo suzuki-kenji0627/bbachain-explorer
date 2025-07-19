@@ -1,9 +1,24 @@
 // Next, React
 import { FC, useEffect, useState } from "react";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
 // Components
 import { Slot } from "components/common/Slot";
+import { Signature } from "components/common/Signature";
+import { Confirmations } from "components/common/Confirmations";
+import { Signer } from "components/common/Signer";
+import { Status } from "components/common/Status";
 import { ErrorCard } from "components/common/ErrorCard";
 import { LoadingCard } from "components/common/LoadingCard";
 import { HeadContainer } from "components/HeadContainer";
@@ -16,10 +31,6 @@ import {
   useLatestTransactions,
 } from "hooks/useLatestTransactions";
 import { displayTimestampUtc } from "utils/date";
-import { Signature } from "components/common/Signature";
-import { Confirmations } from "components/common/Confirmations";
-import { Signer } from "components/common/Signer";
-import { Status } from "components/common/Status";
 
 export const TransactionsView: FC = ({}) => {
   const { status } = useCluster();
@@ -69,71 +80,80 @@ export const TransactionsView: FC = ({}) => {
       <HeadContainer />
 
       <div className="w-full mb-4">
-        <div className="card bg-[#011909] shadow-xl mb-4">
-          <div className="card-body">
-            <h2 className="card-title">Latest Transactions</h2>
+        <Card>
+          <CardContent>
+            <Typography variant="h5" component="h2" gutterBottom>
+              Latest Transactions
+            </Typography>
 
-            <div className="overflow-x-auto">
-              <table className="table w-full">
-                <thead>
-                  <tr>
-                    <th>Signature</th>
-                    <th>Status</th>
-                    <th>Confirmations</th>
-                    <th>Signer</th>
-                    <th>Block</th>
-                    <th>Timestamp</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Signature</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Confirmations</TableCell>
+                    <TableCell>Signer</TableCell>
+                    <TableCell>Block</TableCell>
+                    <TableCell>Timestamp</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
                   {transactions.map((transactionData, index) => {
                     return (
-                      <tr key={`${transactionData.signature}-${index}`}>
-                        <td>
+                      <TableRow key={`${transactionData.signature}-${index}`}>
+                        <TableCell>
                           <Signature
                             signature={transactionData.signature}
                             truncateChars={16}
                             link
                           />
-                        </td>
-                        <td>
+                        </TableCell>
+                        <TableCell>
                           <Status
                             confirmations={transactionData.confirmations}
                           />
-                        </td>
-                        <td>
+                        </TableCell>
+                        <TableCell>
                           <Confirmations
                             confirmations={transactionData.confirmations}
                           />
-                        </td>
-                        <td>
+                        </TableCell>
+                        <TableCell>
                           <Signer
                             signer={transactionData.signer || ""}
                             truncateChars={16}
                           />
-                        </td>
-                        <td>
+                        </TableCell>
+                        <TableCell>
                           <Slot slot={transactionData.slot} link />
-                        </td>
-                        <td>
+                        </TableCell>
+                        <TableCell>
                           {displayTimestampUtc(
                             transactionData.blockTime * 1000,
                             true
                           )}
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     );
                   })}
-                </tbody>
-              </table>
-              <div className="grid justify-items-center space-y-2 mt-2">
-                <Button onClick={() => handleShowMore(nextPage)}>
-                  Show more
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            {nextPage !== null && (
+              <div className="grid justify-items-center space-y-2 mt-4">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => handleShowMore(nextPage)}
+                >
+                  Show More
                 </Button>
               </div>
-            </div>
-          </div>
-        </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

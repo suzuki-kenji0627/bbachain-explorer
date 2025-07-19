@@ -1,91 +1,149 @@
 import React, { FC, useEffect } from "react";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  SvgIcon,
+} from "@mui/material";
 
 // Components
-import { Epoch } from "./common/Epoch";
-import { ErrorCard } from "./common/ErrorCard";
 import { LoadingCard } from "./common/LoadingCard";
 
 // Hooks
 import { FetchStatus } from "hooks/useCache";
 import { ClusterStatus, useCluster } from "hooks/useCluster";
-
-// Utils
-import Link from "next/link";
 import { useFetchValidators, useValidators } from "hooks/useValidators";
-import { VoteAccountInfo } from "validators/accounts/vote";
-import getNodeVersions from "utils/nodes";
+
+// Lightning Icon Component
+const UsersIcon = () => (
+  <SvgIcon sx={{ fontSize: "2rem" }}>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a4 4 0 11-8 0 4 4 0 018 0z"
+      fill="none"
+      stroke="currentColor"
+    />
+  </SvgIcon>
+);
 
 export const ValidatorsStats: FC = () => {
   const { status } = useCluster();
   const validators = useValidators();
   const fetchValidators = useFetchValidators();
-  const refresh = () => fetchValidators();
 
   // Fetch validators on load
   useEffect(() => {
-    if (!validators && status === ClusterStatus.Connected) refresh();
+    if (!validators && status === ClusterStatus.Connected) {
+      fetchValidators();
+    }
   }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!validators || validators.status === FetchStatus.Fetching) {
     return <LoadingCard message="Loading validators" />;
-  } else if (
-    validators.data === undefined ||
-    validators.status === FetchStatus.FetchFailed
-  ) {
-    return (
-      <ErrorCard retry={() => refresh()} text="Failed to fetch validators" />
-    );
-  } else if (validators.data.currentValidators.length === 0) {
-    return <ErrorCard retry={() => refresh()} text={`No validators found`} />;
   }
 
-  const { data: validatorsData } = validators;
+  if (!validators.data || !validators.data.currentValidators) {
+    return null;
+  }
+
+  const { currentValidators, delinquentValidators } = validators.data;
+  const activeValidators = currentValidators.length;
+  const delinquentCount = delinquentValidators
+    ? delinquentValidators.length
+    : 0;
+  const totalValidators = activeValidators + delinquentCount;
+  const activePercentage =
+    totalValidators > 0
+      ? ((activeValidators / totalValidators) * 100).toFixed(1)
+      : "0";
+
+  const stats = [
+    {
+      title: "TOTAL VALIDATORS",
+      value: totalValidators.toLocaleString(),
+      icon: <UsersIcon />,
+    },
+    {
+      title: "ACTIVE VALIDATORS",
+      value: activeValidators.toLocaleString(),
+      subtitle: `${activePercentage}% of total`,
+      icon: <UsersIcon />,
+    },
+    {
+      title: "DELINQUENT VALIDATORS",
+      value: delinquentCount.toLocaleString(),
+      subtitle: delinquentCount > 0 ? "Need attention" : "All performing well",
+      icon: <UsersIcon />,
+    },
+  ];
 
   return (
-    <div className="stats shadow w-full">
-      <div className="stat">
-        <div className="stat-title">VALIDATORS</div>
-        <div className="stat-value text-justify">
-          <table className="table w-full">
-            <thead>
-              <tr>
-                <th>CURRENT</th>
-                <th>DELINQUENT</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{validatorsData.currentValidators.length}</td>
-                <td>{validatorsData.delinquentValidators.length}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <Grid container spacing={2} sx={{ width: "100%", mb: 3 }}>
+      {stats.map((stat, index) => (
+        <Grid item xs={12} md={4} key={index}>
+          <Card
+            sx={{
+              height: "100%",
+              background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+            }}
+          >
+            <CardContent sx={{ p: 3, "&:last-child": { pb: 3 } }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  justifyContent: "space-between",
+                  mb: 2,
+                }}
+              >
+                <Box sx={{ flex: 1 }}>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: "text.secondary",
+                      fontWeight: 600,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {stat.title}
+                  </Typography>
+                </Box>
+                <Box sx={{ color: "text.secondary", opacity: 0.7 }}>
+                  {stat.icon}
+                </Box>
+              </Box>
 
-      <div className="stat">
-        <div className="stat-title">TOTAL STAKED (BBA)</div>
-        <div className="stat-value text-justify">
-          {(
-            validatorsData.currentValidators.reduce(
-              (acc: number, validator: any) => acc + validator.activatedStake,
-              0
-            ) /
-            10 ** 9
-          ).toFixed(2)}
-        </div>
-      </div>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+                  color: "text.primary",
+                  lineHeight: 1.2,
+                  mb: stat.subtitle ? 1 : 0,
+                }}
+              >
+                {stat.value}
+              </Typography>
 
-      <div className="stat">
-        <div className="stat-title">Nodes</div>
-        {getNodeVersions(validatorsData.clusterNodes).map((node) => (
-          <div className="stat-value text-justify" key={node[0]}>
-            {node[0]}
-            {"  - "}
-            {node[1]}%
-          </div>
-        ))}
-      </div>
-    </div>
+              {stat.subtitle && (
+                <Typography
+                  variant="body2"
+                  sx={{ color: "text.secondary", mt: 1 }}
+                >
+                  {stat.subtitle}
+                </Typography>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
   );
 };

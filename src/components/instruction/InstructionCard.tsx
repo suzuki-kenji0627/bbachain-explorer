@@ -1,5 +1,18 @@
 import React, { useContext } from "react";
 import {
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableContainer,
+  TableRow,
+  TableCell,
+  Box,
+  Chip,
+} from "@mui/material";
+import {
   TransactionInstruction,
   SignatureResult,
   ParsedInstruction,
@@ -60,66 +73,135 @@ export function InstructionCard({
   };
 
   return (
-    <div className="card bg-[#011909] shadow-xl mb-4">
-      <div className="card-body">
-        <h3 className="card-title">
-          <span className={`badge bg-${resultClass}-soft me-2`}>
-            #{index + 1}
-            {childIndex !== undefined ? `.${childIndex + 1}` : ""}
-          </span>
-          {title}
-        </h3>
-
-        <button
-          disabled={defaultRaw}
-          className={`btn btn-sm d-flex ${
-            showRaw ? "btn-black active" : "btn-white"
-          }`}
-          onClick={rawClickHandler}
+    <Card
+      sx={{
+        mb: 4,
+        background:
+          "linear-gradient(135deg, rgba(20, 70, 15, 0.8) 0%, rgba(17, 25, 9, 0.9) 100%)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: 3,
+        overflow: "hidden",
+      }}
+    >
+      <CardContent sx={{ p: 0 }}>
+        <Box
+          sx={{
+            background: "rgba(0, 0, 0, 0.2)",
+            p: 3,
+            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+          }}
         >
-          <span className="fe fe-code me-1"></span>
-          Raw
-        </button>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+            <Chip
+              label={`#${index + 1}${
+                childIndex !== undefined ? `.${childIndex + 1}` : ""
+              }`}
+              color={
+                resultClass === "success"
+                  ? "success"
+                  : resultClass === "warning"
+                  ? "warning"
+                  : "error"
+              }
+              size="small"
+              sx={{ fontWeight: 600 }}
+            />
+            <Typography
+              variant="h5"
+              component="h3"
+              sx={{
+                fontWeight: 600,
+                color: "#ff9900",
+                flex: 1,
+              }}
+            >
+              ⚙️ {title}
+            </Typography>
+          </Box>
 
-        <div className="overflow-x-auto">
-          <table className="table w-full">
-            <tbody>
-              {showRaw ? (
-                <>
-                  <tr>
-                    <td>Program</td>
-                    <td className="text-lg-end">
-                      <Address pubkey={ix.programId} link />
-                    </td>
-                  </tr>
-                  {"parsed" in ix ? (
-                    <RawParsedDetail ix={ix}>
-                      {raw ? <RawDetail ix={raw} /> : null}
-                    </RawParsedDetail>
-                  ) : (
-                    <RawDetail ix={ix} />
-                  )}
-                </>
-              ) : (
-                children
-              )}
-              {innerCards && innerCards.length > 0 && (
-                <>
-                  <tr className="table-sep">
-                    <td colSpan={3}>Inner Instructions</td>
-                  </tr>
-                  <tr>
-                    <td colSpan={3}>
-                      <div className="inner-cards">{innerCards}</div>
-                    </td>
-                  </tr>
-                </>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+          <Button
+            disabled={defaultRaw}
+            variant={showRaw ? "outlined" : "contained"}
+            color="primary"
+            size="small"
+            onClick={rawClickHandler}
+          >
+            💻 Raw
+          </Button>
+        </Box>
+
+        <Box sx={{ p: 3 }}>
+          <TableContainer>
+            <Table
+              sx={{
+                "& .MuiTableCell-root": {
+                  border: "none",
+                  py: 2,
+                  "&:first-of-type": {
+                    fontWeight: 600,
+                    color: "text.secondary",
+                    width: "200px",
+                    fontSize: "0.875rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  },
+                  "&:last-of-type": {
+                    fontFamily: "monospace",
+                    fontSize: "0.875rem",
+                  },
+                },
+              }}
+            >
+              <TableBody>
+                {showRaw ? (
+                  <>
+                    <TableRow>
+                      <TableCell>Program</TableCell>
+                      <TableCell>
+                        <Address pubkey={ix.programId} link />
+                      </TableCell>
+                    </TableRow>
+                    {"parsed" in ix ? (
+                      <RawParsedDetail ix={ix}>
+                        {raw ? <RawDetail ix={raw} /> : null}
+                      </RawParsedDetail>
+                    ) : (
+                      <RawDetail ix={ix} />
+                    )}
+                  </>
+                ) : (
+                  children
+                )}
+                {innerCards && innerCards.length > 0 && (
+                  <>
+                    <TableRow>
+                      <TableCell
+                        colSpan={2}
+                        sx={{
+                          borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+                          pt: 3,
+                          fontWeight: 600,
+                          color: "#ff9900",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.05em",
+                        }}
+                      >
+                        Inner Instructions
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell colSpan={2} sx={{ p: 0 }}>
+                        <Box sx={{ p: 2 }}>{innerCards}</Box>
+                      </TableCell>
+                    </TableRow>
+                  </>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }
 

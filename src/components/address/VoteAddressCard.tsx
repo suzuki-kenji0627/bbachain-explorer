@@ -1,111 +1,115 @@
 import React from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from "@mui/material";
 
 // Components
 import { Address as AddressComponent } from "components/common/Address";
 import { Balance } from "components/common/Balance";
-import { Slot } from "components/common/Slot";
 
 // Hooks
 import { Address, useFetchAddress } from "hooks/useAddress";
-
-// Validators
-import { VoteAccount } from "validators/accounts/vote";
+import { useCluster } from "hooks/useCluster";
 
 // Utils
-import { displayTimestamp } from "utils/date";
+import { VoteAccount } from "validators/accounts/vote";
+import { addressLabel } from "utils/tx";
 
-type Props = {
+export function VoteAddressCard({
+  address,
+  voteAccount,
+}: {
   address: Address;
   voteAccount: VoteAccount;
-};
-
-export function VoteAddressCard({ address, voteAccount }: Props) {
+}) {
   const refresh = useFetchAddress();
-  const rootSlot = voteAccount.info.rootSlot;
+  const { cluster } = useCluster();
+
+  const label = addressLabel(address.pubkey.toBase58(), cluster);
 
   return (
-    <>
-      <div className="card bg-[#011909] shadow-xl mb-4">
-        <div className="card-body">
-          <h2 className="card-title">Vote Account</h2>
-          <button
-            className="btn btn-white btn-sm"
+    <Card sx={{ mb: 2 }}>
+      <CardContent>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Typography variant="h5" component="h2">
+            Vote Account
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
             onClick={() => refresh(address.pubkey, "parsed")}
           >
-            <span className="fe fe-refresh-cw me-2"></span>
-            Refresh
-          </button>
+            ⟳ Refresh
+          </Button>
+        </Box>
 
-          <div className="overflow-x-auto">
-            <table className="table w-full">
-              <tbody>
-                <tr>
-                  <td>Address</td>
-                  <td className="text-lg-end">
-                    <AddressComponent pubkey={address.pubkey} />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Balance (BBA)</td>
-                  <td className="text-lg-end text-uppercase">
-                    <Balance daltons={address.daltons} />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Authorized Voter
-                    {voteAccount.info.authorizedVoters.length > 1 ? "s" : ""}
-                  </td>
-                  <td className="text-lg-end">
-                    {voteAccount.info.authorizedVoters.map((voter) => {
-                      return (
-                        <AddressComponent
-                          pubkey={voter.authorizedVoter}
-                          key={voter.authorizedVoter.toString()}
-                          link
-                        />
-                      );
-                    })}
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>Authorized Withdrawer</td>
-                  <td className="text-lg-end">
-                    <AddressComponent
-                      pubkey={voteAccount.info.authorizedWithdrawer}
-                      link
-                    />
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>Last Timestamp</td>
-                  <td className="text-lg-end font-monospace">
-                    {displayTimestamp(
-                      voteAccount.info.lastTimestamp.timestamp * 1000
-                    )}
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>Commission</td>
-                  <td className="text-lg-end">
-                    {voteAccount.info.commission + "%"}
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>Root Slot</td>
-                  <td className="text-lg-end">
-                    {rootSlot !== null ? <Slot slot={rootSlot} link /> : "N/A"}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </>
+        <TableContainer>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Address
+                </TableCell>
+                <TableCell align="right">
+                  <AddressComponent pubkey={address.pubkey} />
+                </TableCell>
+              </TableRow>
+              {label && (
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Address Label
+                  </TableCell>
+                  <TableCell align="right">{label}</TableCell>
+                </TableRow>
+              )}
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Balance (BBA)
+                </TableCell>
+                <TableCell align="right">
+                  <Balance daltons={address.daltons} />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Authorized Withdrawer
+                </TableCell>
+                <TableCell align="right">
+                  <AddressComponent
+                    pubkey={voteAccount.info.authorizedWithdrawer}
+                    link
+                  />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Commission
+                </TableCell>
+                <TableCell align="right">
+                  {voteAccount.info.commission}%
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
   );
 }

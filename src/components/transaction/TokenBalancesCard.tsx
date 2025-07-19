@@ -6,6 +6,18 @@ import {
   TokenBalance,
 } from "@bbachain/web3.js";
 import { BigNumber } from "bignumber.js";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  Box,
+} from "@mui/material";
 
 // Components
 import { Address } from "components/common/Address";
@@ -53,41 +65,116 @@ export function TokenBalancesCard({ signature }: SignatureProps) {
     const key = account.toBase58() + mint;
 
     return (
-      <tr key={key}>
-        <td>
+      <TableRow key={key}>
+        <TableCell>
           <Address pubkey={account} link />
-        </td>
-        <td>
+        </TableCell>
+        <TableCell>
           <Address pubkey={new PublicKey(mint)} link />
-        </td>
-        <td>
+        </TableCell>
+        <TableCell>
           <BalanceDelta delta={delta} />
-        </td>
-        <td>{balance.uiAmountString} UNITs</td>
-      </tr>
+        </TableCell>
+        <TableCell>{balance.uiAmountString} UNITs</TableCell>
+      </TableRow>
     );
   });
 
   return (
-    <div className="card bg-[#011909] shadow-xl mb-4">
-      <div className="card-body">
-        <h2 className="card-title">Token Balances</h2>
+    <Card
+      sx={{
+        mb: 4,
+        background:
+          "linear-gradient(135deg, rgba(17, 25, 9, 0.9) 0%, rgba(20, 70, 15, 0.8) 100%)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: 3,
+        overflow: "hidden",
+      }}
+    >
+      <CardContent sx={{ p: 0 }}>
+        <Box
+          sx={{
+            background: "rgba(0, 0, 0, 0.2)",
+            p: 3,
+            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+          }}
+        >
+          <Typography
+            variant="h5"
+            component="h2"
+            sx={{
+              fontWeight: 600,
+              color: "#33a382",
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            💰 Token Balances
+          </Typography>
+        </Box>
 
-        <div className="overflow-x-auto">
-          <table className="table w-full">
-            <thead>
-              <tr>
-                <th className="text-muted">Address</th>
-                <th className="text-muted">Token</th>
-                <th className="text-muted">Change</th>
-                <th className="text-muted">Post Balance</th>
-              </tr>
-            </thead>
-            <tbody className="list">{accountRows}</tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+        <Box sx={{ p: 3 }}>
+          <TableContainer>
+            <Table
+              sx={{
+                "& .MuiTableCell-root": {
+                  border: "none",
+                  py: 2,
+                  fontSize: "0.875rem",
+                },
+              }}
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    sx={{
+                      fontWeight: 600,
+                      color: "text.secondary",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    Address
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 600,
+                      color: "text.secondary",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    Token
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 600,
+                      color: "text.secondary",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    Change (BBA)
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontWeight: 600,
+                      color: "text.secondary",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    Post Balance (BBA)
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{accountRows}</TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }
 

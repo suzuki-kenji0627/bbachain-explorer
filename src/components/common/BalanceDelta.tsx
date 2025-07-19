@@ -1,5 +1,6 @@
 import React from "react";
 import { BigNumber } from "bignumber.js";
+import { Chip, Box } from "@mui/material";
 import { Balance } from "./Balance";
 
 export function BalanceDelta({
@@ -9,25 +10,45 @@ export function BalanceDelta({
   delta: BigNumber;
   isBBA?: boolean;
 }) {
-  let amount: any;
-
-  if (isBBA) {
-    amount = <Balance daltons={Math.abs(delta.toNumber())} />;
-  }
-
   if (delta.gt(0)) {
     return (
-      <span className="badge bg-success-soft">
-        +{isBBA ? amount : delta.toString()}
-      </span>
+      <Chip
+        label={
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            +
+            {isBBA ? (
+              <Balance daltons={Math.abs(delta.toNumber())} />
+            ) : (
+              delta.toString()
+            )}
+          </Box>
+        }
+        color="success"
+        size="small"
+        sx={{ fontWeight: 500 }}
+      />
     );
   } else if (delta.lt(0)) {
     return (
-      <span className="badge bg-warning-soft">
-        {isBBA ? <>-{amount}</> : delta.toString()}
-      </span>
+      <Chip
+        label={
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            -
+            {isBBA ? (
+              <Balance daltons={Math.abs(delta.toNumber())} />
+            ) : (
+              Math.abs(delta.toNumber()).toString()
+            )}
+          </Box>
+        }
+        color="warning"
+        size="small"
+        sx={{ fontWeight: 500 }}
+      />
     );
   }
 
-  return <span className="badge bg-secondary-soft">0</span>;
+  return (
+    <Chip label="0" color="default" size="small" sx={{ fontWeight: 500 }} />
+  );
 }

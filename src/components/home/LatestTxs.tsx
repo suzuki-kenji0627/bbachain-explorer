@@ -1,12 +1,26 @@
 // Next, React
-import { FC, useEffect, useState } from "react";
-import { Button } from "@mui/material";
+import { FC, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Box,
+  Link as MuiLink,
+} from "@mui/material";
 
 // Components
-import { Slot } from "components/common/Slot";
 import { ErrorCard } from "components/common/ErrorCard";
 import { LoadingCard } from "components/common/LoadingCard";
-import { HeadContainer } from "components/HeadContainer";
+import { Signature } from "components/common/Signature";
+import { Signer } from "components/common/Signer";
+import { Status } from "components/common/Status";
+import { Time } from "components/common/Time";
 
 // Hooks
 import { FetchStatus } from "hooks/useCache";
@@ -15,12 +29,6 @@ import {
   useFetchLatestTransactions,
   useLatestTransactions,
 } from "hooks/useLatestTransactions";
-import { displayTimestampUtc } from "utils/date";
-import { Signature } from "components/common/Signature";
-import { Confirmations } from "components/common/Confirmations";
-import { Signer } from "components/common/Signer";
-import { Status } from "components/common/Status";
-import { Time } from "components/common/Time";
 import Link from "next/link";
 
 export const LatestTxs: FC = ({}) => {
@@ -60,52 +68,62 @@ export const LatestTxs: FC = ({}) => {
 
   const { transactions } = confirmedTransactions.data;
   return (
-    <div className="card bg-[#011909] shadow-xl">
-      <div className="card-body">
-        <h2 className="card-title">Latest Transactions</h2>
-        <div className="overflow-x-auto">
-          <table className="table w-full">
-            <thead>
-              <tr>
-                <th>TX Hash</th>
-                <th>Signer</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
+    <Card>
+      <CardContent>
+        <Typography variant="h5" component="h2" gutterBottom>
+          Latest Transactions
+        </Typography>
+
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>TX Hash</TableCell>
+                <TableCell>Signer</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {transactions.slice(0, 10).map((transactionData, index) => {
                 return (
-                  <tr key={`${transactionData.signature}-${index}`}>
-                    <td>
+                  <TableRow key={`${transactionData.signature}-${index}`}>
+                    <TableCell>
                       <Signature
                         signature={transactionData.signature}
                         truncateChars={16}
                         link
                       />
                       <Time timestamp={transactionData.blockTime} />
-                    </td>
+                    </TableCell>
 
-                    <td>
+                    <TableCell>
                       <Signer
                         signer={transactionData.signer || ""}
                         truncateChars={16}
                       />
-                    </td>
-                    <td>
+                    </TableCell>
+                    <TableCell>
                       <Status confirmations={transactionData.confirmations} />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
-            </tbody>
-          </table>
-          <div className="grid justify-items-center space-y-2 mt-2">
-            <Link className="text-[#08b642]" href="/transactions">
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          <Link href="/transactions" passHref>
+            <MuiLink
+              color="success.light"
+              underline="hover"
+              sx={{ cursor: "pointer" }}
+            >
               Show more
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+            </MuiLink>
+          </Link>
+        </Box>
+      </CardContent>
+    </Card>
   );
 };

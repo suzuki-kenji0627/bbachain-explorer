@@ -1,5 +1,6 @@
 import React from "react";
 import { TransactionInstruction } from "@bbachain/web3.js";
+import { Chip, Box, Typography } from "@mui/material";
 import { Address } from "components/common/Address";
 import { HexData } from "components/common/HexData";
 
@@ -9,13 +10,34 @@ export function RawDetail({ ix }: { ix: TransactionInstruction }) {
       {ix.keys.map(({ pubkey, isSigner, isWritable }, keyIndex) => (
         <tr key={keyIndex}>
           <td>
-            <div className="me-2 d-md-inline">Account #{keyIndex + 1}</div>
-            {isWritable && (
-              <span className="badge bg-info-soft me-1">Writable</span>
-            )}
-            {isSigner && (
-              <span className="badge bg-info-soft me-1">Signer</span>
-            )}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                flexWrap: "wrap",
+              }}
+            >
+              <Typography variant="body2" sx={{ mr: 1 }}>
+                Account #{keyIndex + 1}
+              </Typography>
+              {isWritable && (
+                <Chip
+                  label="Writable"
+                  color="info"
+                  size="small"
+                  sx={{ fontSize: "0.75rem", height: 20 }}
+                />
+              )}
+              {isSigner && (
+                <Chip
+                  label="Signer"
+                  color="info"
+                  size="small"
+                  sx={{ fontSize: "0.75rem", height: 20 }}
+                />
+              )}
+            </Box>
           </td>
           <td className="text-lg-end">
             <Address pubkey={pubkey} link />

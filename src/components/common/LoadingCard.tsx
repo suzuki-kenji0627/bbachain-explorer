@@ -1,21 +1,33 @@
 import React from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+  Box,
+} from "@mui/material";
 
 export function LoadingCard({ message }: { message?: string }) {
   return (
-    <div className="card w-full bg-[#011909] shadow-xl">
-      <div className="card-body text-center">
-        <h2 className="card-title">{message || "Loading"}</h2>
-        <div className="text-center">
-          <div
-            className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-            role="status"
-          >
-            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-              {message || "Loading..."}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Card sx={{ width: "100%", mb: 2 }}>
+      <CardContent sx={{ textAlign: "center", py: 4 }}>
+        <Typography variant="h5" component="h2" gutterBottom>
+          {message || "Loading"}
+        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          <CircularProgress
+            size={32}
+            thickness={4}
+            sx={{
+              color: "primary.contrastText",
+              animationDuration: "1.5s",
+            }}
+          />
+        </Box>
+        <Typography variant="body2" sx={{ mt: 2, color: "text.secondary" }}>
+          {message || "Loading..."}
+        </Typography>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,4 +1,14 @@
 import React, { FC } from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableContainer,
+} from "@mui/material";
 
 // Components
 import { Slot } from "components/common/Slot";
@@ -55,90 +65,92 @@ export const BlockDetailView: FC<Props> = ({ block }) => {
       <HeadContainer />
 
       <div className="w-full mb-4">
-        <div className="card bg-[#011909] shadow-xl mb-4">
-          <div className="card-body">
-            <h2 className="card-title">Overview</h2>
+        <Card className="bg-[#011909] shadow-xl mb-4">
+          <CardContent>
+            <Typography variant="h5" component="h2">
+              Overview
+            </Typography>
 
             {/* Overview */}
-            <div className="overflow-x-auto">
-              <table className="table w-full">
-                <tbody>
-                  <tr>
-                    <td>Blockhash</td>
-                    <td>{blockData.blockhash}</td>
-                  </tr>
-                  <tr>
-                    <td>Block Number</td>
-                    <td>{block}</td>
-                  </tr>
+            <TableContainer>
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>Blockhash</TableCell>
+                    <TableCell>{blockData.blockhash}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Block Number</TableCell>
+                    <TableCell>{block}</TableCell>
+                  </TableRow>
                   {blockLeader !== undefined && (
-                    <tr>
-                      <td className="w-100">Proposer</td>
-                      <td className="text-lg-end">
+                    <TableRow>
+                      <TableCell>Proposer</TableCell>
+                      <TableCell align="right">
                         <Address pubkey={blockLeader} link />
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   )}
                   {blockData.blockTime ? (
-                    <tr>
-                      <td>Timestamp (UTC)</td>
-                      <td className="text-lg-end">
+                    <TableRow>
+                      <TableCell>Timestamp (UTC)</TableCell>
+                      <TableCell align="right">
                         <span className="font-monospace">
                           {displayTimestampUtc(
                             blockData.blockTime * 1000,
                             true
                           )}
                         </span>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ) : (
-                    <tr>
-                      <td className="w-100">Timestamp</td>
-                      <td className="text-lg-end">Unavailable</td>
-                    </tr>
+                    <TableRow>
+                      <TableCell>Timestamp</TableCell>
+                      <TableCell align="right">Unavailable</TableCell>
+                    </TableRow>
                   )}
                   {epoch !== undefined && (
-                    <tr>
-                      <td className="w-100">Epoch</td>
-                      <td className="text-lg-end font-monospace">
+                    <TableRow>
+                      <TableCell>Epoch</TableCell>
+                      <TableCell align="right" className="font-monospace">
                         <Epoch epoch={epoch} link />
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   )}
-                  <tr>
-                    <td className="w-100">Previous Blockhash</td>
-                    <td className="text-lg-end font-monospace">
+                  <TableRow>
+                    <TableCell>Previous Blockhash</TableCell>
+                    <TableCell align="right" className="font-monospace">
                       <span>{blockData.previousBlockhash}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="w-100">Previous Block</td>
-                    <td className="text-lg-end font-monospace">
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Previous Block</TableCell>
+                    <TableCell align="right" className="font-monospace">
                       <Slot slot={blockData.parentSlot} link />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                   {childSlot !== undefined && (
-                    <tr>
-                      <td className="w-100">Next Block</td>
-                      <td className="text-lg-end font-monospace">
+                    <TableRow>
+                      <TableCell>Next Block</TableCell>
+                      <TableCell align="right" className="font-monospace">
                         <Slot slot={childSlot} link />
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   )}
-                  <tr>
-                    <td className="w-100">Transactions</td>
-                    <td className="text-lg-end font-monospace">
+                  <TableRow>
+                    <TableCell>Transactions</TableCell>
+                    <TableCell align="right" className="font-monospace">
                       <span>
                         Total success {successfulTxs.length}/
                         {blockData.transactions.length} transactions
                       </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
 
         <BlockHistoryCard block={blockData} />
       </div>

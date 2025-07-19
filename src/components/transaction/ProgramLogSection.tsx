@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { Card, CardContent, Typography, Button, Box } from "@mui/material";
+import { VersionedMessage, ParsedMessage } from "@bbachain/web3.js";
 
 // Components
 import { SignatureProps } from "views/tx";
@@ -29,19 +31,49 @@ export function ProgramLogSection({ signature }: SignatureProps) {
   }
 
   return (
-    <>
-      <div className="card bg-[#011909] shadow-xl mb-4">
-        <div className="card-body">
-          <h2 className="card-title">Program Instruction Logs</h2>
-          <button
-            className={`btn btn-sm d-flex ${
-              showRaw ? "btn-black active" : "btn-white"
-            }`}
+    <Card
+      sx={{
+        mb: 4,
+        background:
+          "linear-gradient(135deg, rgba(17, 25, 9, 0.9) 0%, rgba(20, 70, 15, 0.8) 100%)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: 3,
+        overflow: "hidden",
+      }}
+    >
+      <CardContent sx={{ p: 0 }}>
+        <Box
+          sx={{
+            background: "rgba(0, 0, 0, 0.2)",
+            p: 3,
+            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+          }}
+        >
+          <Typography
+            variant="h5"
+            component="h2"
+            sx={{
+              fontWeight: 600,
+              color: "#33a382",
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              mb: 2,
+            }}
+          >
+            📝 Program Instruction Logs
+          </Typography>
+          <Button
+            variant={showRaw ? "outlined" : "contained"}
+            color="primary"
+            size="small"
             onClick={() => setShowRaw((r) => !r)}
           >
-            <span className="fe fe-code me-1"></span>
-            Raw
-          </button>
+            💻 Raw
+          </Button>
+        </Box>
+
+        <Box sx={{ p: 3 }}>
           {prettyLogs !== null ? (
             showRaw ? (
               <RawProgramLogs raw={logMessages!} />
@@ -54,26 +86,25 @@ export function ProgramLogSection({ signature }: SignatureProps) {
               />
             )
           ) : (
-            <div className="card-body">
+            <Typography
+              variant="body2"
+              sx={{ color: "text.secondary", fontStyle: "italic" }}
+            >
               Logs not supported for this transaction
-            </div>
+            </Typography>
           )}
-        </div>
-      </div>
-    </>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }
 
-const RawProgramLogs = ({ raw }: { raw: string[] }) => {
+function RawProgramLogs({ raw }: { raw: string[] }) {
   return (
-    <table className="table w-full">
-      <tbody>
-        <tr>
-          <td>
-            <pre className="text-start">{JSON.stringify(raw, null, 2)}</pre>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <>
+      {raw.map((log, key) => {
+        return <div key={key}>{log}</div>;
+      })}
+    </>
   );
-};
+}

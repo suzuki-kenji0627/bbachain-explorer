@@ -1,5 +1,16 @@
 // Next, React
 import { FC, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
 // Components
 import { ErrorCard } from "components/common/ErrorCard";
@@ -51,36 +62,40 @@ export const AccountsView: FC = ({}) => {
       <HeadContainer />
 
       <div className="w-full mb-4">
-        <div className="card bg-[#011909] shadow-xl mb-4">
-          <div className="card-body">
-            <h2 className="card-title">Top 20 Richest Accounts</h2>
+        <Card>
+          <CardContent>
+            <Typography variant="h5" component="h2" gutterBottom>
+              Top 20 Richest Accounts
+            </Typography>
 
-            <div className="overflow-x-auto">
-              <table className="table w-full">
-                <thead>
-                  <tr>
-                    <th>Address</th>
-                    <th>Balance</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Rank</TableCell>
+                    <TableCell>Address</TableCell>
+                    <TableCell>Balance</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
                   {topAccount.map((account, index) => {
                     return (
-                      <tr key={account.address.toBase58()}>
-                        <td>
+                      <TableRow key={account.address.toBase58()}>
+                        <TableCell>#{index + 1}</TableCell>
+                        <TableCell>
                           <Address pubkey={account.address} link />
-                        </td>
-                        <td>
+                        </TableCell>
+                        <TableCell>
                           <Balance daltons={account.daltons} />
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     );
                   })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

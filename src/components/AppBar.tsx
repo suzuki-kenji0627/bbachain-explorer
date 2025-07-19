@@ -1,139 +1,203 @@
-import Link from "next/link";
 import React, { useState } from "react";
-import NetworkSwitcher from "./NetworkSwitcher";
-import NavElement from "./nav-element";
-import Image from "next/image";
-import useQueryContext from "hooks/useQueryContext";
+import Link from "next/link";
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+// Components
 import { Logo } from "./common/Logo";
+import NavElement from "./nav-element";
+import NetworkSwitcher from "./NetworkSwitcher";
 
-export const AppBar: React.FC = () => {
+// Hooks
+import useQueryContext from "hooks/useQueryContext";
+
+export function AppBarContainer() {
   const { fmtUrlWithCluster } = useQueryContext();
-  const [isNavOpen, setIsNavOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
+    null
+  );
+  const [settingsMenuAnchor, setSettingsMenuAnchor] =
+    useState<null | HTMLElement>(null);
+
+  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMobileMenuAnchor(event.currentTarget);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMenuAnchor(null);
+  };
+
+  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setSettingsMenuAnchor(event.currentTarget);
+  };
+
+  const handleSettingsMenuClose = () => {
+    setSettingsMenuAnchor(null);
+  };
 
   return (
-    <div>
-      {/* NavBar / Header */}
-      <div className="navbar flex h-20 flex-row md:mb-2 shadow-lg bg-[#14460f] text-neutral-content border-b border-zinc-600 bg-opacity-66">
-        <div className="navbar-start align-items-center">
-          <div className="hidden sm:inline w-22 h-22 md:p-2 ml-10">
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "#14460f",
+        backgroundOpacity: 0.66,
+        borderBottom: "1px solid rgb(113 113 122)",
+        boxShadow: theme.shadows[4],
+        mb: { xs: 1, md: 2 },
+      }}
+    >
+      <Toolbar sx={{ minHeight: 80, px: { xs: 2, md: 4 } }}>
+        {/* Logo */}
+        <Box sx={{ display: "flex", alignItems: "center", mr: "auto" }}>
+          <Box sx={{ display: { xs: "none", sm: "block" }, ml: { md: 4 } }}>
             <Link
               href={fmtUrlWithCluster("/")}
-              rel="noopener noreferrer"
-              passHref
-              className="text-secondary hover:text-white"
+              style={{ textDecoration: "none", color: "inherit" }}
             >
               <Logo width={200} height={100} />
             </Link>
-          </div>
-        </div>
+          </Box>
+        </Box>
 
-        {/* Nav Links */}
-        {/* Blocks & Settings */}
-        <div className="navbar-end">
-          <div className="hidden md:inline-flex mr-6 align-items-center justify-items gap-6">
+        {/* Desktop Navigation */}
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            alignItems: "center",
+            gap: 3,
+            mr: 3,
+          }}
+        >
+          <NavElement
+            label="Home"
+            href={fmtUrlWithCluster("/")}
+            navigationStarts={() => {}}
+          />
+          <NavElement
+            label="Blocks"
+            href={fmtUrlWithCluster("/blocks")}
+            navigationStarts={() => {}}
+          />
+          <NavElement
+            label="Transactions"
+            href={fmtUrlWithCluster("/transactions")}
+            navigationStarts={() => {}}
+          />
+          <NavElement
+            label="Validators"
+            href={fmtUrlWithCluster("/validators")}
+            navigationStarts={() => {}}
+          />
+          <NavElement
+            label="Accounts"
+            href={fmtUrlWithCluster("/accounts")}
+            navigationStarts={() => {}}
+          />
+        </Box>
+
+        {/* Mobile Menu Button */}
+        {isMobile && (
+          <IconButton
+            color="inherit"
+            aria-label="open mobile menu"
+            edge="end"
+            onClick={handleMobileMenuOpen}
+            sx={{ mr: 2 }}
+          >
+            ☰
+          </IconButton>
+        )}
+
+        {/* Settings Menu */}
+        <IconButton
+          color="inherit"
+          aria-label="settings"
+          onClick={handleSettingsMenuOpen}
+          sx={{ mr: { xs: 0, md: 2 } }}
+        >
+          ⚙️
+        </IconButton>
+
+        {/* Mobile Menu */}
+        <Menu
+          anchorEl={mobileMenuAnchor}
+          open={Boolean(mobileMenuAnchor)}
+          onClose={handleMobileMenuClose}
+          PaperProps={{
+            sx: {
+              backgroundColor: "background.paper",
+              minWidth: 200,
+            },
+          }}
+        >
+          <MenuItem onClick={handleMobileMenuClose}>
             <NavElement
               label="Home"
               href={fmtUrlWithCluster("/")}
-              navigationStarts={() => setIsNavOpen(false)}
+              navigationStarts={handleMobileMenuClose}
             />
+          </MenuItem>
+          <MenuItem onClick={handleMobileMenuClose}>
             <NavElement
               label="Blocks"
               href={fmtUrlWithCluster("/blocks")}
-              navigationStarts={() => setIsNavOpen(false)}
+              navigationStarts={handleMobileMenuClose}
             />
+          </MenuItem>
+          <MenuItem onClick={handleMobileMenuClose}>
             <NavElement
               label="Transactions"
               href={fmtUrlWithCluster("/transactions")}
-              navigationStarts={() => setIsNavOpen(false)}
+              navigationStarts={handleMobileMenuClose}
             />
-            {/* <NavElement
+          </MenuItem>
+          <MenuItem onClick={handleMobileMenuClose}>
+            <NavElement
               label="Validators"
               href={fmtUrlWithCluster("/validators")}
-              navigationStarts={() => setIsNavOpen(false)}
-            /> */}
-            <NavElement
-              label="Top Accounts"
-              href={fmtUrlWithCluster("/accounts")}
-              navigationStarts={() => setIsNavOpen(false)}
+              navigationStarts={handleMobileMenuClose}
             />
-          </div>
-          <label
-            htmlFor="my-drawer"
-            className="btn-gh items-center justify-between md:hidden mr-6"
-            onClick={() => setIsNavOpen(!isNavOpen)}
-          >
-            <div className="HAMBURGER-ICON space-y-2.5 ml-5">
-              <div
-                className={`h-0.5 w-8 bg-purple-600 ${
-                  isNavOpen ? "hidden" : ""
-                }`}
-              />
-              <div
-                className={`h-0.5 w-8 bg-purple-600 ${
-                  isNavOpen ? "hidden" : ""
-                }`}
-              />
-              <div
-                className={`h-0.5 w-8 bg-purple-600 ${
-                  isNavOpen ? "hidden" : ""
-                }`}
-              />
-            </div>
-            <div
-              className={`absolute block h-0.5 w-8 animate-pulse bg-purple-600 ${
-                isNavOpen ? "" : "hidden"
-              }`}
-              style={{ transform: "rotate(45deg)" }}
-            ></div>
-            <div
-              className={`absolute block h-0.5 w-8 animate-pulse bg-purple-600 ${
-                isNavOpen ? "" : "hidden"
-              }`}
-              style={{ transform: "rotate(135deg)" }}
-            ></div>
-          </label>
-          <div>
-            <span className="absolute block h-0.5 w-12 bg-zinc-600 rotate-90 right-14"></span>
-          </div>
-          <div className="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              className="btn btn-square btn-ghost text-right mr-4"
-            >
-              <svg
-                className="w-7 h-7"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-            </div>
-            <ul
-              tabIndex={0}
-              className="p-2 shadow menu dropdown-content bg-base-100 rounded-box sm:w-52"
-            >
-              <li>
-                <div className="form-control bg-opacity-100">
-                  <NetworkSwitcher />
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+          </MenuItem>
+          <MenuItem onClick={handleMobileMenuClose}>
+            <NavElement
+              label="Accounts"
+              href={fmtUrlWithCluster("/accounts")}
+              navigationStarts={handleMobileMenuClose}
+            />
+          </MenuItem>
+        </Menu>
+
+        {/* Settings Menu */}
+        <Menu
+          anchorEl={settingsMenuAnchor}
+          open={Boolean(settingsMenuAnchor)}
+          onClose={handleSettingsMenuClose}
+          PaperProps={{
+            sx: {
+              backgroundColor: "background.paper",
+              minWidth: 160,
+            },
+          }}
+        >
+          <MenuItem onClick={handleSettingsMenuClose}>
+            <Box sx={{ width: "100%" }}>
+              <NetworkSwitcher />
+            </Box>
+          </MenuItem>
+        </Menu>
+      </Toolbar>
+    </AppBar>
   );
-};
+}
+
+// Export with alias for backward compatibility
+export { AppBarContainer as AppBar };

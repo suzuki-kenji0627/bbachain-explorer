@@ -1,4 +1,12 @@
 import React from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+  Button,
+  Box,
+} from "@mui/material";
 
 // Components
 import { Address as AddressComponent } from "components/common/Address";
@@ -46,7 +54,7 @@ export function UpgradeableLoaderAddressCard({
     case "programData": {
       return (
         <UpgradeableProgramDataSection
-            address={address}
+          address={address}
           programData={parsedData.info}
         />
       );
@@ -54,7 +62,7 @@ export function UpgradeableLoaderAddressCard({
     case "buffer": {
       return (
         <UpgradeableProgramBufferSection
-            address={address}
+          address={address}
           programBuffer={parsedData.info}
         />
       );
@@ -79,108 +87,110 @@ export function UpgradeableProgramSection({
   const label = addressLabel(address.pubkey.toBase58(), cluster);
   const { loading, verifiableBuilds } = useVerifiableBuilds(address.pubkey);
   return (
-    <div className="card">
-      <div className="card-header">
-        <h3 className="card-header-title mb-0 d-flex align-items-center">
-          {programData === undefined && "Closed "}Program Account
-        </h3>
-        <button
-          className="btn btn-white btn-sm"
-          onClick={() => refresh(address.pubkey, "parsed")}
-        >
-          <span className="fe fe-refresh-cw me-2"></span>
-          Refresh
-        </button>
-      </div>
+    <Card>
+      <CardHeader
+        action={
+          <Button
+            variant="outlined"
+            startIcon={<span className="fe fe-refresh-cw me-2"></span>}
+            onClick={() => refresh(address.pubkey, "parsed")}
+          >
+            Refresh
+          </Button>
+        }
+        title={
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            {programData === undefined && "Closed "}Program Account
+          </Box>
+        }
+      />
 
-      <table>
-        <tr>
-          <td>Address</td>
-          <td className="text-lg-end">
-            <AddressComponent pubkey={address.pubkey} />
-          </td>
-        </tr>
-        {label && (
+      <CardContent>
+        <table>
           <tr>
-            <td>Address Label</td>
-            <td className="text-lg-end">{label}</td>
+            <td>Address</td>
+            <td className="text-lg-end">
+              <AddressComponent pubkey={address.pubkey} />
+            </td>
           </tr>
-        )}
-        <tr>
-          <td>Balance (BBA)</td>
-          <td className="text-lg-end text-uppercase">
-            <Balance daltons={address.daltons} />
-          </td>
-        </tr>
-        <tr>
-          <td>Executable</td>
-          <td className="text-lg-end">
-            {programData !== undefined ? "Yes" : "No"}
-          </td>
-        </tr>
-        <tr>
-          <td>Executable Data{programData === undefined && " (Closed)"}</td>
-          <td className="text-lg-end">
-            <AddressComponent pubkey={programAccount.programData} link />
-          </td>
-        </tr>
-        {programData !== undefined && (
-          <>
+          {label && (
             <tr>
-              <td>Upgradeable</td>
-              <td className="text-lg-end">
-                {programData.authority !== null ? "Yes" : "No"}
-              </td>
+              <td>Address Label</td>
+              <td className="text-lg-end">{label}</td>
             </tr>
-            <tr>
-              <td>
-                {/* <LastVerifiedBuildLabel /> */}
-              </td>
-              <td className="text-lg-end">
-                {loading ? (
-                  <CheckingBadge />
-                ) : (
-                  <>
-                    {verifiableBuilds.map((b, i) => (
-                      <VerifiedBadge
-                        key={i}
-                        verifiableBuild={b}
-                        deploySlot={programData.slot}
-                      />
-                    ))}
-                  </>
-                )}
-              </td>
-            </tr>
-            <tr>
-              <td>
-                {/* <SecurityLabel /> */}
-              </td>
-              <td className="text-lg-end">
-                {/* <SecurityTXTBadge
+          )}
+          <tr>
+            <td>Balance (BBA)</td>
+            <td className="text-lg-end text-uppercase">
+              <Balance daltons={address.daltons} />
+            </td>
+          </tr>
+          <tr>
+            <td>Executable</td>
+            <td className="text-lg-end">
+              {programData !== undefined ? "Yes" : "No"}
+            </td>
+          </tr>
+          <tr>
+            <td>Executable Data{programData === undefined && " (Closed)"}</td>
+            <td className="text-lg-end">
+              <AddressComponent pubkey={programAccount.programData} link />
+            </td>
+          </tr>
+          {programData !== undefined && (
+            <>
+              <tr>
+                <td>Upgradeable</td>
+                <td className="text-lg-end">
+                  {programData.authority !== null ? "Yes" : "No"}
+                </td>
+              </tr>
+              <tr>
+                <td>{/* <LastVerifiedBuildLabel /> */}</td>
+                <td className="text-lg-end">
+                  {loading ? (
+                    <CheckingBadge />
+                  ) : (
+                    <>
+                      {verifiableBuilds.map((b, i) => (
+                        <VerifiedBadge
+                          key={i}
+                          verifiableBuild={b}
+                          deploySlot={programData.slot}
+                        />
+                      ))}
+                    </>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>{/* <SecurityLabel /> */}</td>
+                <td className="text-lg-end">
+                  {/* <SecurityTXTBadge
                   programData={programData}
                   pubkey={address.pubkey}
                 /> */}
-              </td>
-            </tr>
-            <tr>
-              <td>Last Deployed Slot</td>
-              <td className="text-lg-end">
-                <Slot slot={programData.slot} link />
-              </td>
-            </tr>
-            {programData.authority !== null && (
-              <tr>
-                <td>Upgrade Authority</td>
-                <td className="text-lg-end">
-                  <AddressComponent pubkey={programData.authority} link />
                 </td>
               </tr>
-            )}
-          </>
-        )}
-      </table>
-    </div>
+              <tr>
+                <td>Last Deployed Slot</td>
+                <td className="text-lg-end">
+                  <Slot slot={programData.slot} link />
+                </td>
+              </tr>
+              {programData.authority !== null && (
+                <tr>
+                  <td>Upgrade Authority</td>
+                  <td className="text-lg-end">
+                    <AddressComponent pubkey={programData.authority} link />
+                  </td>
+                </tr>
+              )}
+            </>
+          )}
+        </table>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -193,68 +203,74 @@ export function UpgradeableProgramDataSection({
 }) {
   const refresh = useFetchAddress();
   return (
-    <div className="card">
-      <div className="card-header">
-        <h3 className="card-header-title mb-0 d-flex align-items-center">
-          Program Executable Data Account
-        </h3>
-        <button
-          className="btn btn-white btn-sm"
-          onClick={() => refresh(address.pubkey, "parsed")}
-        >
-          <span className="fe fe-refresh-cw me-2"></span>
-          Refresh
-        </button>
-      </div>
+    <Card>
+      <CardHeader
+        action={
+          <Button
+            variant="outlined"
+            startIcon={<span className="fe fe-refresh-cw me-2"></span>}
+            onClick={() => refresh(address.pubkey, "parsed")}
+          >
+            Refresh
+          </Button>
+        }
+        title={
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            Program Executable Data Account
+          </Box>
+        }
+      />
 
-      <table>
-        <tr>
-          <td>Address</td>
-          <td className="text-lg-end">
-            <AddressComponent pubkey={address.pubkey} />
-          </td>
-        </tr>
-        <tr>
-          <td>Balance (BBA)</td>
-          <td className="text-lg-end text-uppercase">
-            <Balance daltons={address.daltons} />
-          </td>
-        </tr>
-        {address.space !== undefined && (
+      <CardContent>
+        <table>
           <tr>
-            <td>Data Size (Bytes)</td>
+            <td>Address</td>
             <td className="text-lg-end">
-              <Downloadable
-                data={programData.data[0]}
-                filename={`${address.pubkey.toString()}.bin`}
-              >
-                <span className="me-2">{address.space}</span>
-              </Downloadable>
+              <AddressComponent pubkey={address.pubkey} />
             </td>
           </tr>
-        )}
-        <tr>
-          <td>Upgradeable</td>
-          <td className="text-lg-end">
-            {programData.authority !== null ? "Yes" : "No"}
-          </td>
-        </tr>
-        <tr>
-          <td>Last Deployed Slot</td>
-          <td className="text-lg-end">
-            <Slot slot={programData.slot} link />
-          </td>
-        </tr>
-        {programData.authority !== null && (
           <tr>
-            <td>Upgrade Authority</td>
-            <td className="text-lg-end">
-              <AddressComponent pubkey={programData.authority} link />
+            <td>Balance (BBA)</td>
+            <td className="text-lg-end text-uppercase">
+              <Balance daltons={address.daltons} />
             </td>
           </tr>
-        )}
-      </table>
-    </div>
+          {address.space !== undefined && (
+            <tr>
+              <td>Data Size (Bytes)</td>
+              <td className="text-lg-end">
+                <Downloadable
+                  data={programData.data[0]}
+                  filename={`${address.pubkey.toString()}.bin`}
+                >
+                  <span className="me-2">{address.space}</span>
+                </Downloadable>
+              </td>
+            </tr>
+          )}
+          <tr>
+            <td>Upgradeable</td>
+            <td className="text-lg-end">
+              {programData.authority !== null ? "Yes" : "No"}
+            </td>
+          </tr>
+          <tr>
+            <td>Last Deployed Slot</td>
+            <td className="text-lg-end">
+              <Slot slot={programData.slot} link />
+            </td>
+          </tr>
+          {programData.authority !== null && (
+            <tr>
+              <td>Upgrade Authority</td>
+              <td className="text-lg-end">
+                <AddressComponent pubkey={programData.authority} link />
+              </td>
+            </tr>
+          )}
+        </table>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -267,54 +283,60 @@ export function UpgradeableProgramBufferSection({
 }) {
   const refresh = useFetchAddress();
   return (
-    <div className="card">
-      <div className="card-header">
-        <h3 className="card-header-title mb-0 d-flex align-items-center">
-          Program Deploy Buffer Account
-        </h3>
-        <button
-          className="btn btn-white btn-sm"
-          onClick={() => refresh(address.pubkey, "parsed")}
-        >
-          <span className="fe fe-refresh-cw me-2"></span>
-          Refresh
-        </button>
-      </div>
+    <Card>
+      <CardHeader
+        action={
+          <Button
+            variant="outlined"
+            startIcon={<span className="fe fe-refresh-cw me-2"></span>}
+            onClick={() => refresh(address.pubkey, "parsed")}
+          >
+            Refresh
+          </Button>
+        }
+        title={
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            Program Deploy Buffer Account
+          </Box>
+        }
+      />
 
-      <table>
-        <tr>
-          <td>Address</td>
-          <td className="text-lg-end">
-            <AddressComponent pubkey={address.pubkey} />
-          </td>
-        </tr>
-        <tr>
-          <td>Balance (BBA)</td>
-          <td className="text-lg-end text-uppercase">
-            <Balance daltons={address.daltons} />
-          </td>
-        </tr>
-        {address.space !== undefined && (
+      <CardContent>
+        <table>
           <tr>
-            <td>Data Size (Bytes)</td>
-            <td className="text-lg-end">{address.space}</td>
-          </tr>
-        )}
-        {programBuffer.authority !== null && (
-          <tr>
-            <td>Deploy Authority</td>
+            <td>Address</td>
             <td className="text-lg-end">
-              <AddressComponent pubkey={programBuffer.authority} link />
+              <AddressComponent pubkey={address.pubkey} />
             </td>
           </tr>
-        )}
-        <tr>
-          <td>Owner</td>
-          <td className="text-lg-end">
-            <AddressComponent pubkey={address.owner} link />
-          </td>
-        </tr>
-      </table>
-    </div>
+          <tr>
+            <td>Balance (BBA)</td>
+            <td className="text-lg-end text-uppercase">
+              <Balance daltons={address.daltons} />
+            </td>
+          </tr>
+          {address.space !== undefined && (
+            <tr>
+              <td>Data Size (Bytes)</td>
+              <td className="text-lg-end">{address.space}</td>
+            </tr>
+          )}
+          {programBuffer.authority !== null && (
+            <tr>
+              <td>Deploy Authority</td>
+              <td className="text-lg-end">
+                <AddressComponent pubkey={programBuffer.authority} link />
+              </td>
+            </tr>
+          )}
+          <tr>
+            <td>Owner</td>
+            <td className="text-lg-end">
+              <AddressComponent pubkey={address.owner} link />
+            </td>
+          </tr>
+        </table>
+      </CardContent>
+    </Card>
   );
 }

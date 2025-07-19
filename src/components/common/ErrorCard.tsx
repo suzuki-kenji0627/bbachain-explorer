@@ -1,4 +1,12 @@
 import React from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  Divider,
+} from "@mui/material";
 
 export function ErrorCard({
   retry,
@@ -12,32 +20,54 @@ export function ErrorCard({
   subtext?: string;
 }) {
   const buttonText = retryText || "Try Again";
+
   return (
-    <div className="card w-full bg-[#011909] shadow-xl">
-      <div className="card-body text-center">
-        {text}
+    <Card sx={{ width: "100%", mb: 2 }}>
+      <CardContent sx={{ textAlign: "center", py: 4 }}>
+        <Typography variant="body1" gutterBottom>
+          {text}
+        </Typography>
+
         {retry && (
-          <>
-            <span
-              className="btn btn-white ms-3 d-none d-md-inline"
+          <Box sx={{ mt: 3 }}>
+            {/* Desktop button */}
+            <Button
+              variant="contained"
+              color="primary"
               onClick={retry}
+              sx={{
+                mr: 1,
+                display: { xs: "none", md: "inline-flex" },
+              }}
             >
               {buttonText}
-            </span>
-            <div className="d-block d-md-none mt-4">
-              <span className="btn btn-white w-100" onClick={retry}>
-                {buttonText}
-              </span>
-            </div>
+            </Button>
+
+            {/* Mobile button */}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={retry}
+              fullWidth
+              sx={{
+                mt: 2,
+                display: { xs: "flex", md: "none" },
+              }}
+            >
+              {buttonText}
+            </Button>
+
             {subtext && (
-              <div className="text-muted">
-                <hr></hr>
-                {subtext}
-              </div>
+              <Box sx={{ mt: 3 }}>
+                <Divider sx={{ mb: 2 }} />
+                <Typography variant="body2" color="text.secondary">
+                  {subtext}
+                </Typography>
+              </Box>
             )}
-          </>
+          </Box>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

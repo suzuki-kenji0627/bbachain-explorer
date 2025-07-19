@@ -1,5 +1,12 @@
 import React from "react";
 import {
+  Button,
+  Typography,
+  CircularProgress,
+  Box,
+  CardActions,
+} from "@mui/material";
+import {
   ConfirmedSignatureInfo,
   ParsedTransactionWithMeta,
   TransactionError,
@@ -27,26 +34,30 @@ export function HistoryCardHeader({
   fetching: boolean;
 }) {
   return (
-    <>
-      <h3 className="card-title">{title}</h3>
-      {/* <button
-        className="btn btn-white btn-sm"
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        mb: 2,
+      }}
+    >
+      <Typography variant="h5" component="h3">
+        {title}
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        size="small"
         disabled={fetching}
         onClick={() => refresh()}
+        startIcon={
+          fetching ? <CircularProgress size={16} color="inherit" /> : null
+        }
       >
-        {fetching ? (
-          <>
-            <span className="spinner-grow spinner-grow-sm me-2"></span>
-            Loading
-          </>
-        ) : (
-          <>
-            <span className="fe fe-refresh-cw me-2"></span>
-            Refresh
-          </>
-        )}
-      </button> */}
-    </>
+        {fetching ? "Loading" : "⟳ Refresh"}
+      </Button>
+    </Box>
   );
 }
 
@@ -60,26 +71,30 @@ export function HistoryCardFooter({
   loadMore: Function;
 }) {
   return (
-    <div className="card-footer">
+    <CardActions sx={{ justifyContent: "center", pt: 2 }}>
       {foundOldest ? (
-        <div className="text-muted text-center">Fetched full history</div>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ textAlign: "center" }}
+        >
+          Fetched full history
+        </Typography>
       ) : (
-        <button
-          className="btn btn-primary w-100"
+        <Button
+          variant="contained"
+          color="secondary"
+          fullWidth
           onClick={() => loadMore()}
           disabled={fetching}
+          startIcon={
+            fetching ? <CircularProgress size={16} color="inherit" /> : null
+          }
         >
-          {fetching ? (
-            <>
-              <span className="spinner-grow spinner-grow-sm me-2"></span>
-              Loading
-            </>
-          ) : (
-            "Load More"
-          )}
-        </button>
+          {fetching ? "Loading" : "Load More"}
+        </Button>
       )}
-    </div>
+    </CardActions>
   );
 }
 

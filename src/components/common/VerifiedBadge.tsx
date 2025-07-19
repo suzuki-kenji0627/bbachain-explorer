@@ -1,3 +1,5 @@
+import React from "react";
+import { Chip, Typography, Link as MuiLink } from "@mui/material";
 import { VerifiableBuild } from "utils/program-verification";
 
 export function VerifiedBadge({
@@ -9,32 +11,55 @@ export function VerifiedBadge({
 }) {
   if (verifiableBuild && verifiableBuild.verified_slot === deploySlot) {
     return (
-      <h3 className="mb-0">
-        <a
-          className="c-pointer badge bg-info-soft rank"
+      <Typography variant="h6" sx={{ mb: 0 }}>
+        <MuiLink
           href={verifiableBuild.label}
           target="_blank"
           rel="noreferrer"
+          sx={{ textDecoration: "none" }}
         >
-          {verifiableBuild.label}: Verified
-        </a>
-      </h3>
+          <Chip
+            label={`${verifiableBuild.label}: Verified`}
+            color="info"
+            size="small"
+            sx={{
+              fontWeight: 600,
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "info.dark",
+              },
+            }}
+          />
+        </MuiLink>
+      </Typography>
     );
   } else {
     return (
-      <h3 className="mb-0">
-        <span className="badge bg-warning-soft rank">
-          {verifiableBuild.label}: Unverified
-        </span>
-      </h3>
+      <Typography variant="h6" sx={{ mb: 0 }}>
+        <Chip
+          label={`${verifiableBuild.label}: Unverified`}
+          color="warning"
+          size="small"
+          sx={{ fontWeight: 600 }}
+        />
+      </Typography>
     );
   }
 }
 
 export function CheckingBadge() {
   return (
-    <h3 className="mb-0">
-      <span className="badge bg-dark rank">Checking</span>
-    </h3>
+    <Typography variant="h6" sx={{ mb: 0 }}>
+      <Chip
+        label="Checking"
+        color="default"
+        size="small"
+        sx={{
+          fontWeight: 600,
+          backgroundColor: "grey.800",
+          color: "common.white",
+        }}
+      />
+    </Typography>
   );
 }

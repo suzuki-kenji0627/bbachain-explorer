@@ -1,4 +1,18 @@
 import React from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableContainer,
+  Alert,
+  Button,
+  Box,
+} from "@mui/material";
+// Icon import removed - using text only for refresh button
 import { displayTimestampUtc } from "utils/date";
 import { Address as AddressComponent } from "components/common/Address";
 import {
@@ -54,9 +68,9 @@ function LockupCard({ stakeAccount }: { stakeAccount: StakeAccountInfo }) {
   if (Date.now() < unixTimestamp) {
     const prettyTimestamp = displayTimestampUtc(unixTimestamp);
     return (
-      <div className="alert alert-warning text-center">
+      <Alert severity="warning" sx={{ textAlign: "center" }}>
         <strong>Account is locked!</strong> Lockup expires on {prettyTimestamp}
-      </div>
+      </Alert>
     );
   } else {
     return null;
@@ -100,55 +114,73 @@ function OverviewCard({
 }) {
   const refresh = useFetchAddress();
   return (
-    <>
-      <div className="card bg-[#011909] shadow-xl mb-4">
-        <div className="card-body">
-          <h2 className="card-title">Stake Address</h2>
-          <button
-            className="btn btn-white btn-sm"
+    <Card sx={{ mb: 2 }}>
+      <CardContent>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Typography variant="h5" component="h2">
+            Stake Address
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
             onClick={() => refresh(address.pubkey, "parsed")}
           >
-            <span className="fe fe-refresh-cw me-2"></span>
-            Refresh
-          </button>
+            ⟳ Refresh
+          </Button>
+        </Box>
 
-          <div className="overflow-x-auto">
-            <table className="table w-full">
-              <tbody>
-                <tr>
-                  <td>Address</td>
-                  <td className="text-lg-end">
-                    <AddressComponent pubkey={address.pubkey} />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Balance (BBA)</td>
-                  <td className="text-lg-end text-uppercase">
-                    <Balance daltons={address.daltons} />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Rent Reserve (BBA)</td>
-                  <td className="text-lg-end">
-                    <Balance daltons={stakeAccount.meta.rentExemptReserve} />
-                  </td>
-                </tr>
-                {hideDelegation && (
-                  <tr>
-                    <td>Status</td>
-                    <td className="text-lg-end">
-                      {isFullyInactivated(stakeAccount, activation)
-                        ? "Not delegated"
-                        : displayStatus(stakeAccountType, activation)}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </>
+        <TableContainer>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Address
+                </TableCell>
+                <TableCell align="right">
+                  <AddressComponent pubkey={address.pubkey} />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Balance (BBA)
+                </TableCell>
+                <TableCell align="right" sx={{ textTransform: "uppercase" }}>
+                  <Balance daltons={address.daltons} />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Rent Reserve (BBA)
+                </TableCell>
+                <TableCell align="right">
+                  <Balance daltons={stakeAccount.meta.rentExemptReserve} />
+                </TableCell>
+              </TableRow>
+              {hideDelegation && (
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Status
+                  </TableCell>
+                  <TableCell align="right">
+                    {isFullyInactivated(stakeAccount, activation)
+                      ? "Not delegated"
+                      : displayStatus(stakeAccountType, activation)}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -174,9 +206,11 @@ function DelegationCard({
   }
   const { stake } = stakeAccount;
   return (
-    <div className="card bg-[#011909] shadow-xl mb-4">
-      <div className="card-body">
-        <h2 className="card-title">Stake Delegation</h2>
+    <Card sx={{ mb: 2 }}>
+      <CardContent>
+        <Typography variant="h6" component="h3" sx={{ mb: 2 }}>
+          Stake Delegation
+        </Typography>
         <div className="overflow-x-auto">
           <table className="table w-full">
             <tbody>
@@ -248,53 +282,50 @@ function DelegationCard({
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
 function AuthoritiesCard({ meta }: { meta: StakeMeta }) {
   const hasLockup = meta.lockup.unixTimestamp > 0;
   return (
-    <>
-      <div className="card bg-[#011909] shadow-xl mb-4">
-        <div className="card-body">
-          <h2 className="card-title">Authorities</h2>
+    <Card sx={{ mb: 2 }}>
+      <CardContent>
+        <Typography variant="h6" component="h3" sx={{ mb: 2 }}>
+          Authorities
+        </Typography>
 
-          <div className="overflow-x-auto">
-            <table className="table w-full">
-              <tbody>
+        <div className="overflow-x-auto">
+          <table className="table w-full">
+            <tbody>
+              <tr>
+                <td>Stake Authority Address</td>
+                <td className="text-lg-end">
+                  <AddressComponent pubkey={meta.authorized.staker} link />
+                </td>
+              </tr>
+
+              <tr>
+                <td>Withdraw Authority Address</td>
+                <td className="text-lg-end">
+                  <AddressComponent pubkey={meta.authorized.withdrawer} link />
+                </td>
+              </tr>
+
+              {hasLockup && (
                 <tr>
-                  <td>Stake Authority Address</td>
+                  <td>Lockup Authority Address</td>
                   <td className="text-lg-end">
-                    <AddressComponent pubkey={meta.authorized.staker} link />
+                    <AddressComponent pubkey={meta.lockup.custodian} link />
                   </td>
                 </tr>
-
-                <tr>
-                  <td>Withdraw Authority Address</td>
-                  <td className="text-lg-end">
-                    <AddressComponent
-                      pubkey={meta.authorized.withdrawer}
-                      link
-                    />
-                  </td>
-                </tr>
-
-                {hasLockup && (
-                  <tr>
-                    <td>Lockup Authority Address</td>
-                    <td className="text-lg-end">
-                      <AddressComponent pubkey={meta.lockup.custodian} link />
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+              )}
+            </tbody>
+          </table>
         </div>
-      </div>
-    </>
+      </CardContent>
+    </Card>
   );
 }
 
