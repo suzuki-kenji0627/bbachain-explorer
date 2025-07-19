@@ -112,7 +112,11 @@ export default async function handler(
         connection,
         <string>name
       );
-      await collection.insertMany(transactions);
+
+      // Only insert if there are transactions to avoid empty batch error
+      if (transactions && transactions.length > 0) {
+        await collection.insertMany(transactions);
+      }
     } catch (e) {
       console.log(e);
     }
