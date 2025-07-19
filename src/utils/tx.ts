@@ -60,7 +60,6 @@ export enum PROGRAM_NAMES {
   MANGO_3 = "Mango Program v3",
   MARINADE = "Marinade Staking Program",
   MERCURIAL = "Mercurial Stable Swap Program",
-  METAPLEX = "Metaplex Program",
   NFT_AUCTION = "NFT Auction Program",
   NFT_CANDY_MACHINE = "NFT Candy Machine Program",
   NFT_CANDY_MACHINE_V2 = "NFT Candy Machine Program V2",
@@ -182,7 +181,7 @@ export const PROGRAM_INFO_BY_ID: { [address: string]: ProgramInfo } = {
     name: PROGRAM_NAMES.STAKE_POOL,
     deployments: LIVE_CLUSTERS,
   },
-  SwaPpA9LAaLfeLi3a68M4DjnLqgtticKg6CnyNwgAC8: {
+  SwapD4hpSrcB23e4RGdXPBdNzgXoFGaTEa1ZwoouotX: {
     name: PROGRAM_NAMES.SWAP,
     deployments: LIVE_CLUSTERS,
   },
@@ -190,7 +189,7 @@ export const PROGRAM_INFO_BY_ID: { [address: string]: ProgramInfo } = {
     name: PROGRAM_NAMES.TOKEN,
     deployments: ALL_CLUSTERS,
   },
-  metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s: {
+  meta9hXUUHmM7FT8haXiCVsw168kWb8UkFFhAWMEzim: {
     name: PROGRAM_NAMES.TOKEN_METADATA,
     deployments: LIVE_CLUSTERS,
   },
@@ -247,10 +246,6 @@ export const PROGRAM_INFO_BY_ID: { [address: string]: ProgramInfo } = {
   MERLuDFBMmsHnsBPZw2sDQZHvXFMwp8EdjudcU2HKky: {
     name: PROGRAM_NAMES.MERCURIAL,
     deployments: [Cluster.Mainnet],
-  },
-  p1exdMJcjVao65QdewkaZRUnU6VPSXhus9n2GzWfh98: {
-    name: PROGRAM_NAMES.METAPLEX,
-    deployments: LIVE_CLUSTERS,
   },
   auctxRXPeJoc4817jDhf4HbjnhEcr1cCXenosMhK5R8: {
     name: PROGRAM_NAMES.NFT_AUCTION,
@@ -410,7 +405,7 @@ export const PROGRAM_INFO_BY_ID: { [address: string]: ProgramInfo } = {
   },
 };
 
-export type LoaderName = typeof LOADER_IDS[keyof typeof LOADER_IDS];
+export type LoaderName = (typeof LOADER_IDS)[keyof typeof LOADER_IDS];
 export const LOADER_IDS = {
   MoveLdr111111111111111111111111111111111111: "Move Loader",
   NativeLoader1111111111111111111111111111111: "Native Loader",
@@ -457,7 +452,7 @@ export function programLabel(
 
 export function addressLabel(
   address: string,
-  cluster: Cluster,
+  cluster: Cluster
 ): string | undefined {
   return (
     programLabel(address, cluster) ||
@@ -466,10 +461,7 @@ export function addressLabel(
   );
 }
 
-export function displayAddress(
-  address: string,
-  cluster: Cluster,
-): string {
+export function displayAddress(address: string, cluster: Cluster): string {
   return addressLabel(address, cluster) || address;
 }
 
