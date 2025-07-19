@@ -63,9 +63,9 @@ export const ValidatorsView: FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {validatorsData.currentValidators.map((validator) => {
+                  {validatorsData.currentValidators.map((validator, index) => {
                     return (
-                      <tr key={validator.nodePubkey}>
+                      <tr key={`${validator.nodePubkey}-${index}`}>
                         <td>{}</td>
                         <td>
                           {PubKey({

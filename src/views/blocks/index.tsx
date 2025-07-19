@@ -66,9 +66,9 @@ export const BlocksView: FC = ({}) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {blocks.map((blockData) => {
+                  {blocks.map((blockData, index) => {
                     return (
-                      <tr key={blockData.block.blockhash}>
+                      <tr key={`${blockData.block.blockhash}-${index}`}>
                         <td>
                           <Slot slot={blockData.block.parentSlot} link />
                         </td>

@@ -73,9 +73,9 @@ export const LatestTxs: FC = ({}) => {
               </tr>
             </thead>
             <tbody>
-              {transactions.slice(0, 10).map((transactionData) => {
+              {transactions.slice(0, 10).map((transactionData, index) => {
                 return (
-                  <tr key={transactionData.signature}>
+                  <tr key={`${transactionData.signature}-${index}`}>
                     <td>
                       <Signature
                         signature={transactionData.signature}

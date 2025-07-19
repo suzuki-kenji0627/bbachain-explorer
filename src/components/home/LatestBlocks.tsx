@@ -54,7 +54,7 @@ export const LatestBlocks: FC = ({}) => {
             <tbody>
               {blocks.slice(0, 10).map((block, index) => {
                 return (
-                  <tr key={block.block.blockhash}>
+                  <tr key={`${block.block.blockhash}-${index}`}>
                     <th>
                       <div>
                         <Slot slot={block.block.parentSlot} link />

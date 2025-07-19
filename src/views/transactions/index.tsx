@@ -86,9 +86,9 @@ export const TransactionsView: FC = ({}) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions.map((transactionData) => {
+                  {transactions.map((transactionData, index) => {
                     return (
-                      <tr key={transactionData.signature}>
+                      <tr key={`${transactionData.signature}-${index}`}>
                         <td>
                           <Signature
                             signature={transactionData.signature}
