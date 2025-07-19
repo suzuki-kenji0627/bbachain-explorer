@@ -4,6 +4,7 @@ import NetworkSwitcher from "./NetworkSwitcher";
 import NavElement from "./nav-element";
 import Image from "next/image";
 import useQueryContext from "hooks/useQueryContext";
+import { Logo } from "./common/Logo";
 
 export const AppBar: React.FC = () => {
   const { fmtUrlWithCluster } = useQueryContext();
@@ -21,12 +22,7 @@ export const AppBar: React.FC = () => {
               passHref
               className="text-secondary hover:text-white"
             >
-              <Image
-                src={"/images/logo.png"}
-                width={200}
-                height={100}
-                alt={"BBASCAN"}
-              ></Image>
+              <Logo width={200} height={100} />
             </Link>
           </div>
         </div>
