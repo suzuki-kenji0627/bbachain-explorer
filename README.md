@@ -51,7 +51,6 @@ Notifications (optional): Example of using a notification system
 
 ```
 
-
 ### Structure
 
 The scaffold project structure may vary based on the front end framework being utilized. The below is an example structure for the Next js Scaffold.
@@ -82,7 +81,7 @@ If submitting a feature, please reference the project structure shown above and 
 
 To choose a task or make your own, do the following:
 
-1. [Add an issue](https://github.com/bbachain/bbascan-ui/issues/new) for the task and assign it to yourself or comment on the issue
+1. [Add an issue](https://github.com/bbachain/explorer/issues/new) for the task and assign it to yourself or comment on the issue
 2. Make a draft PR referencing the issue.
 
 The general flow for making a contribution:
@@ -96,9 +95,8 @@ The general flow for making a contribution:
 **NOTE**: Be sure to merge the latest from "upstream" before making a
 pull request!
 
-You can find tasks on the [project board](https://github.com/bbachain/bbascan-ui/projects/1)
+You can find tasks on the [project board](https://github.com/bbachain/explorer/projects/1)
 or create an issue and assign it to yourself.
-
 
 ## Learn More Next Js
 

@@ -6,8 +6,8 @@ const Home: NextPage = (props) => {
   return (
     <div>
       <Head>
-        <title>BBASCAN | Block Explorer</title>
-        <meta name="description" content="BBASCAN | Block Explorer" />
+        <title>BBAChain Explorer | Block Explorer</title>
+        <meta name="description" content="BBAChain Explorer | Block Explorer" />
       </Head>
       <ValidatorsView />
     </div>

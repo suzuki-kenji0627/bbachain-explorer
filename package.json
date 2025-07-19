@@ -1,7 +1,7 @@
 {
-  "name": "bbascan-ui",
+  "name": "@bbachain/explorer",
   "version": "0.0.1",
-  "author": "Maintainer <maintainer@bbachain.com>",
+  "author": "BBAChain Labs <developers@bbachain.com>",
   "license": "MIT",
   "private": false,
   "scripts": {

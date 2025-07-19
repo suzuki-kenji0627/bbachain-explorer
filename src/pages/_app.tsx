@@ -19,7 +19,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
     return (
         <>
           <Head>
-            <title>BBASCAN | Block Explorer</title>
+            <title>BBAChain Explorer | Block Explorer</title>
           </Head>
 
           <ContextProvider>
