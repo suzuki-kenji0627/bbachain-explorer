@@ -11,6 +11,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@bbachain/spl-token": "^0.1.5",
+    "@bbachain/spl-token-metadata": "^0.1.2",
     "@bbachain/web3.js": "^1.1.0",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",

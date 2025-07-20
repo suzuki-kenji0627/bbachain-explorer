@@ -1,93 +1,134 @@
 import { createTheme } from "@mui/material/styles";
 
-// Mapping from DaisyUI dark theme to MUI theme
+// BBAChain Modern Color Palette - Updated Design System
 export const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#000000", // DaisyUI primary
-      light: "#9945FF", // DaisyUI primary-focus
-      contrastText: "#ffffff", // DaisyUI primary-content
+      main: "#1E40AF", // Deep Blue - Primary brand color
+      light: "#3B82F6", // Bright Blue - Interactive elements
+      dark: "#1E3A8A", // Navy Blue - Hover states
+      contrastText: "#ffffff",
     },
     secondary: {
-      main: "#808080", // DaisyUI secondary
-      light: "#f3cc30", // DaisyUI secondary-focus
-      contrastText: "#ffffff", // DaisyUI secondary-content
+      main: "#8B5CF6", // Purple - Secondary brand color
+      light: "#A78BFA", // Light Purple - Highlights
+      dark: "#7C3AED", // Dark Purple - Active states
+      contrastText: "#ffffff",
     },
     background: {
-      default: "#000000", // DaisyUI base-100
-      paper: "#011909", // Custom dark green used in cards
+      default: "#0F172A", // Very Dark Blue - Main background
+      paper: "#1E293B", // Dark Blue Gray - Card backgrounds
     },
     surface: {
-      main: "#35363a", // DaisyUI base-200
-      dark: "#222222", // DaisyUI base-300
+      main: "#334155", // Blue Gray - Card surfaces
+      dark: "#475569", // Medium Gray - Elevated surfaces
+      light: "#64748B", // Light Gray - Subtle elements
     },
     text: {
-      primary: "#f9fafb", // DaisyUI base-content
-      secondary: "#ffffff", // DaisyUI neutral-content
+      primary: "#F8FAFC", // Almost White - Primary text
+      secondary: "#CBD5E1", // Light Blue Gray - Secondary text
     },
     info: {
-      main: "#2094f3", // DaisyUI info
+      main: "#0EA5E9", // Sky Blue - Information
+      light: "#38BDF8",
+      dark: "#0284C7",
     },
     success: {
-      main: "#009485", // DaisyUI success
-      light: "#08b642", // Custom green used in links
+      main: "#06D6A0", // Teal Green - Success states
+      light: "#20E6B8", // Light Teal - Success highlights
+      dark: "#059669", // Dark Teal - Success hover
     },
     warning: {
-      main: "#ff9900", // DaisyUI warning
+      main: "#F59E0B", // Amber - Warning states
+      light: "#FBBF24",
+      dark: "#D97706",
     },
     error: {
-      main: "#ff5724", // DaisyUI error
+      main: "#EF4444", // Red - Error states
+      light: "#F87171",
+      dark: "#DC2626",
     },
     // Custom colors for the blockchain explorer
     accent: {
-      main: "#33a382", // DaisyUI accent
-      light: "#2aa79b", // DaisyUI accent-focus
-      contrastText: "#ffffff", // DaisyUI accent-content
+      main: "#06D6A0", // Teal Green - Accent color
+      light: "#20E6B8", // Light Teal - Accent highlights
+      dark: "#059669", // Dark Teal - Accent hover
+      contrastText: "#ffffff",
     },
     neutral: {
-      main: "#2b2b2b", // DaisyUI neutral
-      light: "#2a2e37", // DaisyUI neutral-focus
-      contrastText: "#ffffff", // DaisyUI neutral-content
+      main: "#475569", // Medium Gray - Neutral elements
+      light: "#64748B", // Light Gray - Neutral highlights
+      dark: "#334155", // Dark Gray - Neutral shadows
+      contrastText: "#ffffff",
     },
   },
   typography: {
-    fontFamily: "Inter, system-ui, sans-serif", // DaisyUI body font
+    fontFamily: "Inter, system-ui, sans-serif", // Modern font stack
     h1: {
-      fontFamily: "PT Mono, monospace", // DaisyUI display font
-      fontWeight: 600,
+      fontFamily: "Inter, sans-serif", // Clean modern font
+      fontWeight: 700,
+      fontSize: "2.5rem",
+      letterSpacing: "-0.025em",
     },
     h2: {
-      fontFamily: "PT Mono, monospace",
+      fontFamily: "Inter, sans-serif",
       fontWeight: 600,
+      fontSize: "2rem",
+      letterSpacing: "-0.025em",
     },
     h3: {
-      fontFamily: "PT Mono, monospace",
-      fontWeight: 500,
+      fontFamily: "Inter, sans-serif",
+      fontWeight: 600,
+      fontSize: "1.5rem",
+      letterSpacing: "-0.025em",
+    },
+    h4: {
+      fontFamily: "Inter, sans-serif",
+      fontWeight: 600,
+      fontSize: "1.25rem",
+    },
+    h5: {
+      fontFamily: "Inter, sans-serif",
+      fontWeight: 600,
+      fontSize: "1.125rem",
     },
     body1: {
       fontFamily: "Inter, sans-serif",
+      fontSize: "1rem",
+      lineHeight: 1.6,
     },
     body2: {
       fontFamily: "Inter, sans-serif",
+      fontSize: "0.875rem",
+      lineHeight: 1.5,
     },
     button: {
       fontFamily: "Inter, sans-serif",
       fontWeight: 500,
       textTransform: "none",
+      letterSpacing: "0.025em",
     },
   },
   shape: {
-    borderRadius: 8, // DaisyUI default border radius
+    borderRadius: 12, // More modern border radius
   },
   components: {
     MuiCard: {
       styleOverrides: {
         root: {
-          backgroundColor: "#011909", // Matches current card bg
-          border: "none",
+          backgroundColor: "#1E293B", // Dark Blue Gray
+          border: "1px solid rgba(100, 116, 139, 0.2)", // Subtle border
+          borderRadius: 16,
           boxShadow:
-            "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // DaisyUI shadow-xl
+            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+          backdropFilter: "blur(8px)",
+          transition: "all 0.2s ease-in-out",
+          "&:hover": {
+            transform: "translateY(-2px)",
+            boxShadow:
+              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+          },
         },
       },
     },
@@ -95,28 +136,35 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: {
           textTransform: "none",
-          borderRadius: 6,
+          borderRadius: 8,
+          padding: "8px 16px",
+          fontWeight: 500,
+          transition: "all 0.2s ease-in-out",
         },
       },
       variants: [
         {
           props: { variant: "contained", color: "primary" },
           style: {
-            backgroundColor: "#ffffff",
-            color: "#000000",
+            background: "linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)",
+            color: "#ffffff",
             "&:hover": {
-              backgroundColor: "#f0f0f0",
+              background: "linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)",
+              transform: "translateY(-1px)",
+              boxShadow:
+                "0 10px 15px -3px rgba(30, 64, 175, 0.4), 0 4px 6px -2px rgba(30, 64, 175, 0.1)",
             },
           },
         },
         {
           props: { variant: "outlined", color: "primary" },
           style: {
-            borderColor: "#ffffff",
-            color: "#ffffff",
+            borderColor: "#3B82F6",
+            color: "#3B82F6",
             "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.1)",
-              borderColor: "#ffffff",
+              backgroundColor: "rgba(59, 130, 246, 0.1)",
+              borderColor: "#1E40AF",
+              transform: "translateY(-1px)",
             },
           },
         },
@@ -126,12 +174,21 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: {
           "& .MuiTableCell-root": {
-            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+            borderBottom: "1px solid rgba(100, 116, 139, 0.2)",
+            padding: "12px 16px",
           },
           "& .MuiTableHead-root .MuiTableCell-root": {
-            backgroundColor: "transparent",
+            backgroundColor: "rgba(30, 41, 59, 0.5)",
             fontWeight: 600,
-            color: "#f9fafb",
+            color: "#F8FAFC",
+            fontSize: "0.875rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+          },
+          "& .MuiTableBody-root .MuiTableRow-root": {
+            "&:hover": {
+              backgroundColor: "rgba(100, 116, 139, 0.1)",
+            },
           },
         },
       },
@@ -139,44 +196,81 @@ export const darkTheme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: "#14460f", // Matches current AppBar bg
-          borderBottom: "1px solid #374151",
+          background: "linear-gradient(135deg, #0F172A 0%, #1E293B 100%)",
+          borderBottom: "1px solid rgba(100, 116, 139, 0.2)",
+          backdropFilter: "blur(12px)",
+          boxShadow:
+            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
         },
       },
     },
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: "#011909", // Matches current drawer bg
+          backgroundColor: "#1E293B",
+          borderRight: "1px solid rgba(100, 116, 139, 0.2)",
         },
       },
     },
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: 6,
+          borderRadius: 8,
+          fontWeight: 500,
         },
       },
       variants: [
         {
           props: { color: "success" },
           style: {
-            backgroundColor: "rgba(0, 148, 133, 0.2)",
-            color: "#009485",
+            backgroundColor: "rgba(6, 214, 160, 0.2)",
+            color: "#06D6A0",
+            border: "1px solid rgba(6, 214, 160, 0.3)",
           },
         },
         {
           props: { color: "warning" },
           style: {
-            backgroundColor: "rgba(255, 153, 0, 0.2)",
-            color: "#ff9900",
+            backgroundColor: "rgba(245, 158, 11, 0.2)",
+            color: "#F59E0B",
+            border: "1px solid rgba(245, 158, 11, 0.3)",
           },
         },
         {
           props: { color: "error" },
           style: {
-            backgroundColor: "rgba(255, 87, 36, 0.2)",
-            color: "#ff5724",
+            backgroundColor: "rgba(239, 68, 68, 0.2)",
+            color: "#EF4444",
+            border: "1px solid rgba(239, 68, 68, 0.3)",
+          },
+        },
+        {
+          props: { color: "info" },
+          style: {
+            backgroundColor: "rgba(14, 165, 233, 0.2)",
+            color: "#0EA5E9",
+            border: "1px solid rgba(14, 165, 233, 0.3)",
+          },
+        },
+      ],
+    },
+    // New gradient backgrounds for special cards
+    MuiPaper: {
+      variants: [
+        {
+          props: { className: "gradient-card" },
+          style: {
+            background:
+              "linear-gradient(135deg, rgba(30, 64, 175, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)",
+            border: "1px solid rgba(30, 64, 175, 0.2)",
+          },
+        },
+        {
+          props: { className: "stats-card" },
+          style: {
+            background:
+              "linear-gradient(135deg, rgba(6, 214, 160, 0.1) 0%, rgba(14, 165, 233, 0.1) 100%)",
+            border: "1px solid rgba(6, 214, 160, 0.2)",
           },
         },
       ],

@@ -9,7 +9,7 @@ import {
 
 // Hooks
 import * as Cache from "./useCache";
-import { Cluster, useCluster } from "./useCluster";
+import { Cluster, useCluster, clusterName } from "./useCluster";
 
 type TxExtension = {
   confirmations?: SignatureStatus;
@@ -52,34 +52,32 @@ export async function fetchLatestTransactions(
 
   let status: Cache.FetchStatus;
   let data: LatestTransactions | undefined = undefined;
-  let transactions: ParsedTransactionWithMetaExtended[] = [];
+
   try {
-    fetch(
-      `/api/latest_transactions?page=${page || 0}&docs=${
-        pageSize || 25
-      }&name=${name}&url=${url}`
-    ).then((res) => {
-      res.json().then((trxs) => {
-        transactions = trxs.transactionResponse;
-        data = {
-          transactions: transactions,
-          nextPage: page + 1,
-        };
-        // console.log(data);
-        if (transactions.length > 0) {
-          dispatch({
-            type: Cache.ActionType.Update,
-            status,
-            data,
-            key: "transactions",
-            url,
-          });
-        }
-        fetch(`/api/latest_transactions?name=${name}&url=${url}`, {
-          method: "post",
-        });
-      });
-    });
+    const apiUrl = `/api/latest_transactions?page=${page || 0}&docs=${
+      pageSize || 25
+    }&name=${name}&url=${url}`;
+
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    const transactions = result.transactionResponse || [];
+
+    data = {
+      transactions: transactions,
+      nextPage: page + 1,
+    };
+
+    status = Cache.FetchStatus.Fetched;
+
+    // Optional: trigger background update
+    fetch(`/api/latest_transactions?name=${name}&url=${url}`, {
+      method: "post",
+    }).catch(() => {}); // Ignore errors for background update
   } catch (err) {
     status = Cache.FetchStatus.FetchFailed;
     if (cluster !== Cluster.Custom) {
@@ -118,7 +116,8 @@ export function useFetchLatestTransactions() {
     );
   }
 
-  const { cluster, url, name } = useCluster();
+  const { cluster, url } = useCluster();
+  const name = clusterName(cluster);
   return React.useCallback(
     (page: number, pageSize: number) =>
       fetchLatestTransactions(dispatch, url, name, cluster, page, pageSize),

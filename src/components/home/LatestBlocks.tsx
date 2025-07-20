@@ -1,4 +1,5 @@
-import { Button } from "@mui/material";
+import { FC, useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -10,74 +11,259 @@ import {
   TableHead,
   TableRow,
   Box,
+  Chip,
   Link as MuiLink,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
-import { Balance } from "components/common/Balance";
-import { BlockHash } from "components/common/BlockHash";
-import { ErrorCard } from "components/common/ErrorCard";
-import { LoadingCard } from "components/common/LoadingCard";
-import { Slot } from "components/common/Slot";
-import { Time } from "components/common/Time";
+
+// Components
+import { Slot } from "../common/Slot";
+import { BlockHash } from "../common/BlockHash";
+import { Balance } from "../common/Balance";
+import { Time } from "../common/Time";
+
+// Hooks
+import { useLatestBlocks } from "hooks/useLatestBlocks";
 import { FetchStatus } from "hooks/useCache";
-import { ClusterStatus, useCluster } from "hooks/useCluster";
-import { useFetchLatestBlocks, useLatestBlocks } from "hooks/useLatestBlocks";
-import Link from "next/link";
-import { FC, useEffect } from "react";
 
-export const LatestBlocks: FC = ({}) => {
-  const { status } = useCluster();
-  const confirmedBlocks = useLatestBlocks();
-  const fetchLatestBlocks = useFetchLatestBlocks();
-  const refresh = () => fetchLatestBlocks(0);
-  const BLOCK_TIME_INTERVAL = 20000;
+export const LatestBlocks: FC = () => {
+  const latestBlocks = useLatestBlocks();
+  const [mounted, setMounted] = useState(false);
 
-  // Fetch block on load
   useEffect(() => {
-    if (status === ClusterStatus.Connected) {
-      refresh();
-      const getBlocksInterval = setInterval(refresh, BLOCK_TIME_INTERVAL);
-      return () => clearInterval(getBlocksInterval);
-    }
-  }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
+    setMounted(true);
+  }, []);
 
-  if (
-    !confirmedBlocks ||
-    confirmedBlocks.status ||
-    confirmedBlocks.data === undefined
-  ) {
-    return <LoadingCard message="Loading block" />;
-  } else if (confirmedBlocks.status === FetchStatus.FetchFailed) {
-    return <ErrorCard retry={() => refresh()} text="Failed to fetch block" />;
+  // Show loading during SSR to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <Card
+        sx={{
+          height: "100%",
+          background:
+            "linear-gradient(135deg, rgba(30, 64, 175, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)",
+          border: "1px solid rgba(30, 64, 175, 0.2)",
+          borderRadius: 3,
+          overflow: "hidden",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: 200,
+        }}
+      >
+        <CircularProgress sx={{ color: "primary.main" }} />
+      </Card>
+    );
   }
 
-  const { blocks, next } = confirmedBlocks.data;
-  return (
-    <Card>
-      <CardContent>
-        <Typography variant="h5" component="h2" gutterBottom>
-          Latest Blocks
-        </Typography>
+  // Loading state
+  if (!latestBlocks) {
+    return (
+      <Card
+        sx={{
+          height: "100%",
+          background:
+            "linear-gradient(135deg, rgba(30, 64, 175, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)",
+          border: "1px solid rgba(30, 64, 175, 0.2)",
+          borderRadius: 3,
+          overflow: "hidden",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: 200,
+        }}
+      >
+        <CircularProgress sx={{ color: "primary.main" }} />
+      </Card>
+    );
+  }
 
+  // Error state
+  if (latestBlocks && latestBlocks.status === FetchStatus.FetchFailed) {
+    return (
+      <Card
+        sx={{
+          height: "100%",
+          background:
+            "linear-gradient(135deg, rgba(30, 64, 175, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)",
+          border: "1px solid rgba(30, 64, 175, 0.2)",
+          borderRadius: 3,
+          overflow: "hidden",
+        }}
+      >
+        <CardContent>
+          <Alert severity="error">Failed to load latest blocks</Alert>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // No data yet
+  if (!latestBlocks.data?.blocks || latestBlocks.data.blocks.length === 0) {
+    return (
+      <Card
+        sx={{
+          height: "100%",
+          background:
+            "linear-gradient(135deg, rgba(30, 64, 175, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)",
+          border: "1px solid rgba(30, 64, 175, 0.2)",
+          borderRadius: 3,
+          overflow: "hidden",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: 200,
+        }}
+      >
+        <Box sx={{ textAlign: "center" }}>
+          {latestBlocks && latestBlocks.status === FetchStatus.Fetching ? (
+            <>
+              <CircularProgress sx={{ color: "primary.main", mb: 2 }} />
+              <Typography>Loading latest blocks...</Typography>
+            </>
+          ) : (
+            <Typography>No blocks available</Typography>
+          )}
+        </Box>
+      </Card>
+    );
+  }
+
+  const { blocks } = latestBlocks.data;
+
+  return (
+    <Card
+      sx={{
+        height: "100%",
+        background:
+          "linear-gradient(135deg, rgba(30, 64, 175, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%)",
+        border: "1px solid rgba(30, 64, 175, 0.2)",
+        borderRadius: 3,
+        overflow: "hidden",
+      }}
+    >
+      <CardContent sx={{ p: 0 }}>
+        {/* Header */}
+        <Box
+          sx={{
+            background: "rgba(30, 41, 59, 0.5)",
+            p: 3,
+            borderBottom: "1px solid rgba(100, 116, 139, 0.2)",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
+            <Box
+              sx={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                bgcolor: "#3B82F6",
+                animation: "pulse 2s infinite",
+                "@keyframes pulse": {
+                  "0%, 100%": { opacity: 1 },
+                  "50%": { opacity: 0.5 },
+                },
+              }}
+            />
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 600,
+                color: "text.primary",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              🧱 Latest Blocks
+            </Typography>
+          </Box>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              opacity: 0.8,
+            }}
+          >
+            Most recent blocks added to the blockchain
+          </Typography>
+        </Box>
+
+        {/* Table */}
         <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Block</TableCell>
-                <TableCell>Block Hash</TableCell>
-                <TableCell>Rewards (BBA)</TableCell>
+                <TableCell
+                  sx={{
+                    color: "text.primary",
+                    fontWeight: 600,
+                    fontSize: "0.75rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.2)",
+                  }}
+                >
+                  Block
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: "text.primary",
+                    fontWeight: 600,
+                    fontSize: "0.75rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.2)",
+                  }}
+                >
+                  Hash
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: "text.primary",
+                    fontWeight: 600,
+                    fontSize: "0.75rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.2)",
+                  }}
+                >
+                  Rewards
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {blocks.slice(0, 10).map((block, index) => {
+              {blocks.slice(0, 8).map((block, index) => {
                 return (
-                  <TableRow key={`${block.block.blockhash}-${index}`}>
-                    <TableCell>
+                  <TableRow
+                    key={`${block.block.blockhash}-${index}`}
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "rgba(100, 116, 139, 0.1)",
+                      },
+                      "&:last-child td": {
+                        borderBottom: "none",
+                      },
+                    }}
+                  >
+                    <TableCell
+                      sx={{
+                        borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                        py: 2,
+                      }}
+                    >
                       <Box>
                         <Slot slot={block.block.parentSlot} link />
                         <Time timestamp={block.block.blockTime} />
                       </Box>
                     </TableCell>
-                    <TableCell>
+                    <TableCell
+                      sx={{
+                        borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                        py: 2,
+                      }}
+                    >
                       <BlockHash
                         hash={block.block.blockhash}
                         truncateChars={8}
@@ -85,13 +271,33 @@ export const LatestBlocks: FC = ({}) => {
                         link
                       />
                     </TableCell>
-                    <TableCell>
-                      <Balance
-                        daltons={block.block.rewards.reduce(
-                          (partialSum, a) => partialSum + a.daltons,
-                          0
-                        )}
-                      />
+                    <TableCell
+                      sx={{
+                        borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                        py: 2,
+                      }}
+                    >
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <Balance
+                          daltons={block.block.rewards.reduce(
+                            (partialSum, a) => partialSum + a.daltons,
+                            0
+                          )}
+                        />
+                        <Chip
+                          label="BBA"
+                          size="small"
+                          sx={{
+                            height: 20,
+                            fontSize: "0.65rem",
+                            bgcolor: "rgba(6, 214, 160, 0.1)",
+                            color: "#06D6A0",
+                            border: "1px solid rgba(6, 214, 160, 0.2)",
+                          }}
+                        />
+                      </Box>
                     </TableCell>
                   </TableRow>
                 );
@@ -100,14 +306,33 @@ export const LatestBlocks: FC = ({}) => {
           </Table>
         </TableContainer>
 
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        {/* Footer */}
+        <Box
+          sx={{
+            p: 3,
+            borderTop: "1px solid rgba(100, 116, 139, 0.2)",
+            textAlign: "center",
+            background: "rgba(15, 23, 42, 0.3)",
+          }}
+        >
           <Link href="/blocks" passHref>
             <MuiLink
-              color="success.light"
-              underline="hover"
-              sx={{ cursor: "pointer" }}
+              sx={{
+                color: "#3B82F6",
+                textDecoration: "none",
+                fontWeight: 500,
+                fontSize: "0.875rem",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 1,
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  color: "#1E40AF",
+                  transform: "translateX(4px)",
+                },
+              }}
             >
-              Show more
+              View all blocks →
             </MuiLink>
           </Link>
         </Box>

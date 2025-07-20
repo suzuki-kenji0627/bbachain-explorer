@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import Link from "next/link";
 import {
-  AppBar,
+  AppBar as MuiAppBar,
   Toolbar,
+  Typography,
+  Button,
   Box,
   IconButton,
   Menu,
@@ -10,13 +12,48 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+
 // Components
 import { Logo } from "./common/Logo";
-import NavElement from "./nav-element";
 import NetworkSwitcher from "./NetworkSwitcher";
 
 // Hooks
 import useQueryContext from "hooks/useQueryContext";
+
+// Custom Hamburger Menu Icon
+const HamburgerIcon = () => (
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      gap: 0.5,
+      width: 20,
+      height: 16,
+    }}
+  >
+    <Box
+      sx={{
+        height: 2,
+        bgcolor: "currentColor",
+        borderRadius: 1,
+      }}
+    />
+    <Box
+      sx={{
+        height: 2,
+        bgcolor: "currentColor",
+        borderRadius: 1,
+      }}
+    />
+    <Box
+      sx={{
+        height: 2,
+        bgcolor: "currentColor",
+        borderRadius: 1,
+      }}
+    />
+  </Box>
+);
 
 export function AppBarContainer() {
   const { fmtUrlWithCluster } = useQueryContext();
@@ -25,8 +62,6 @@ export function AppBarContainer() {
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
     null
   );
-  const [settingsMenuAnchor, setSettingsMenuAnchor] =
-    useState<null | HTMLElement>(null);
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMenuAnchor(event.currentTarget);
@@ -36,95 +71,73 @@ export function AppBarContainer() {
     setMobileMenuAnchor(null);
   };
 
-  const handleSettingsMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setSettingsMenuAnchor(event.currentTarget);
-  };
-
-  const handleSettingsMenuClose = () => {
-    setSettingsMenuAnchor(null);
-  };
-
   return (
-    <AppBar
+    <MuiAppBar
       position="static"
       sx={{
-        backgroundColor: "#14460f",
-        backgroundOpacity: 0.66,
-        borderBottom: "1px solid rgb(113 113 122)",
-        boxShadow: theme.shadows[4],
-        mb: { xs: 1, md: 2 },
+        background:
+          "linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%)",
+        backdropFilter: "blur(10px)",
+        borderBottom: "1px solid rgba(100, 116, 139, 0.2)",
+        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
       }}
     >
-      <Toolbar sx={{ minHeight: 80, px: { xs: 2, md: 4 } }}>
+      <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 4 } }}>
         {/* Logo */}
-        <Box sx={{ display: "flex", alignItems: "center", mr: "auto" }}>
-          <Box sx={{ display: { xs: "none", sm: "block" }, ml: { md: 4 } }}>
-            <Link
-              href={fmtUrlWithCluster("/")}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <Logo width={200} height={100} />
-            </Link>
-          </Box>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Logo />
         </Box>
 
         {/* Desktop Navigation */}
-        <Box
-          sx={{
-            display: { xs: "none", md: "flex" },
-            alignItems: "center",
-            gap: 3,
-            mr: 3,
-          }}
-        >
-          <NavElement
-            label="Home"
-            href={fmtUrlWithCluster("/")}
-            navigationStarts={() => {}}
-          />
-          <NavElement
-            label="Blocks"
+        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 1 }}>
+          <Button
+            component={Link}
             href={fmtUrlWithCluster("/blocks")}
-            navigationStarts={() => {}}
-          />
-          <NavElement
-            label="Transactions"
+            sx={{ color: "white", fontWeight: 500 }}
+          >
+            Blocks
+          </Button>
+          <Button
+            component={Link}
             href={fmtUrlWithCluster("/transactions")}
-            navigationStarts={() => {}}
-          />
-          <NavElement
-            label="Validators"
+            sx={{ color: "white", fontWeight: 500 }}
+          >
+            Transactions
+          </Button>
+          <Button
+            component={Link}
+            href={fmtUrlWithCluster("/tokens")}
+            sx={{ color: "white", fontWeight: 500 }}
+          >
+            Tokens
+          </Button>
+          {/* <Button
+            component={Link}
             href={fmtUrlWithCluster("/validators")}
-            navigationStarts={() => {}}
-          />
-          <NavElement
-            label="Accounts"
+            sx={{ color: "white", fontWeight: 500 }}
+          >
+            Validators
+          </Button> */}
+          <Button
+            component={Link}
             href={fmtUrlWithCluster("/accounts")}
-            navigationStarts={() => {}}
-          />
+            sx={{ color: "white", fontWeight: 500 }}
+          >
+            Accounts
+          </Button>
+        </Box>
+
+        {/* Network Switcher */}
+        <Box sx={{ display: { xs: "none", md: "flex" }, mr: 2 }}>
+          <NetworkSwitcher />
         </Box>
 
         {/* Mobile Menu Button */}
-        {isMobile && (
-          <IconButton
-            color="inherit"
-            aria-label="open mobile menu"
-            edge="end"
-            onClick={handleMobileMenuOpen}
-            sx={{ mr: 2 }}
-          >
-            ☰
-          </IconButton>
-        )}
-
-        {/* Settings Menu */}
         <IconButton
-          color="inherit"
-          aria-label="settings"
-          onClick={handleSettingsMenuOpen}
-          sx={{ mr: { xs: 0, md: 2 } }}
+          sx={{ display: { xs: "block", md: "none" }, color: "white" }}
+          onClick={handleMobileMenuOpen}
         >
-          ⚙️
+          <HamburgerIcon />
         </IconButton>
 
         {/* Mobile Menu */}
@@ -132,70 +145,93 @@ export function AppBarContainer() {
           anchorEl={mobileMenuAnchor}
           open={Boolean(mobileMenuAnchor)}
           onClose={handleMobileMenuClose}
-          PaperProps={{
-            sx: {
-              backgroundColor: "background.paper",
+          sx={{
+            "& .MuiPaper-root": {
+              backgroundColor: "rgba(15, 23, 42, 0.95)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(100, 116, 139, 0.2)",
+              borderRadius: 2,
               minWidth: 200,
             },
           }}
         >
-          <MenuItem onClick={handleMobileMenuClose}>
-            <NavElement
-              label="Home"
-              href={fmtUrlWithCluster("/")}
-              navigationStarts={handleMobileMenuClose}
-            />
+          <MenuItem
+            onClick={handleMobileMenuClose}
+            component={Link}
+            href={fmtUrlWithCluster("/")}
+            sx={{
+              color: "text.primary",
+              "&:hover": {
+                bgcolor: "rgba(100, 116, 139, 0.1)",
+              },
+            }}
+          >
+            🏠 Home
           </MenuItem>
-          <MenuItem onClick={handleMobileMenuClose}>
-            <NavElement
-              label="Blocks"
-              href={fmtUrlWithCluster("/blocks")}
-              navigationStarts={handleMobileMenuClose}
-            />
+          <MenuItem
+            onClick={handleMobileMenuClose}
+            component={Link}
+            href={fmtUrlWithCluster("/blocks")}
+            sx={{
+              color: "text.primary",
+              "&:hover": {
+                bgcolor: "rgba(100, 116, 139, 0.1)",
+              },
+            }}
+          >
+            🧱 Blocks
           </MenuItem>
-          <MenuItem onClick={handleMobileMenuClose}>
-            <NavElement
-              label="Transactions"
-              href={fmtUrlWithCluster("/transactions")}
-              navigationStarts={handleMobileMenuClose}
-            />
+          <MenuItem
+            onClick={handleMobileMenuClose}
+            component={Link}
+            href={fmtUrlWithCluster("/transactions")}
+            sx={{
+              color: "text.primary",
+              "&:hover": {
+                bgcolor: "rgba(100, 116, 139, 0.1)",
+              },
+            }}
+          >
+            🔄 Transactions
           </MenuItem>
-          <MenuItem onClick={handleMobileMenuClose}>
-            <NavElement
-              label="Validators"
-              href={fmtUrlWithCluster("/validators")}
-              navigationStarts={handleMobileMenuClose}
-            />
+          <MenuItem
+            onClick={handleMobileMenuClose}
+            component={Link}
+            href={fmtUrlWithCluster("/tokens")}
+            sx={{
+              color: "text.primary",
+              "&:hover": {
+                bgcolor: "rgba(100, 116, 139, 0.1)",
+              },
+            }}
+          >
+            🪙 Tokens
           </MenuItem>
-          <MenuItem onClick={handleMobileMenuClose}>
-            <NavElement
-              label="Accounts"
-              href={fmtUrlWithCluster("/accounts")}
-              navigationStarts={handleMobileMenuClose}
-            />
+          <MenuItem
+            onClick={handleMobileMenuClose}
+            component={Link}
+            href={fmtUrlWithCluster("/accounts")}
+            sx={{
+              color: "text.primary",
+              "&:hover": {
+                bgcolor: "rgba(100, 116, 139, 0.1)",
+              },
+            }}
+          >
+            👥 Accounts
           </MenuItem>
-        </Menu>
-
-        {/* Settings Menu */}
-        <Menu
-          anchorEl={settingsMenuAnchor}
-          open={Boolean(settingsMenuAnchor)}
-          onClose={handleSettingsMenuClose}
-          PaperProps={{
-            sx: {
-              backgroundColor: "background.paper",
-              minWidth: 160,
-            },
-          }}
-        >
-          <MenuItem onClick={handleSettingsMenuClose}>
-            <Box sx={{ width: "100%" }}>
-              <NetworkSwitcher />
-            </Box>
-          </MenuItem>
+          <Box
+            sx={{
+              px: 2,
+              py: 1,
+              borderTop: "1px solid rgba(100, 116, 139, 0.2)",
+            }}
+          >
+            <NetworkSwitcher />
+          </Box>
         </Menu>
       </Toolbar>
-    </AppBar>
+    </MuiAppBar>
   );
 }
 

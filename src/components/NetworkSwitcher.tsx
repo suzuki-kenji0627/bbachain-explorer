@@ -1,13 +1,6 @@
 import { FC } from "react";
 import dynamic from "next/dynamic";
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Box,
-  Typography,
-} from "@mui/material";
+import { FormControl, Select, MenuItem, Box } from "@mui/material";
 import { useNetworkConfiguration } from "../contexts/NetworkConfigurationProvider";
 import useQueryContext from "hooks/useQueryContext";
 import { EndpointTypes } from "models/types";
@@ -24,12 +17,12 @@ const NetworkSwitcher: FC = () => {
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 2, minWidth: 200 }}>
-      <Typography
+      {/* <Typography
         variant="body2"
         sx={{ color: "text.primary", fontWeight: 500 }}
       >
         Network
-      </Typography>
+      </Typography> */}
       <FormControl size="small" sx={{ minWidth: 120 }}>
         <Select
           value={networkConfiguration}

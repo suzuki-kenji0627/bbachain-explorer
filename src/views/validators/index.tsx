@@ -1,118 +1,105 @@
-import { FC, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
+// Next, React
+import React, { FC, useState } from "react";
+import { Box, Button, Typography } from "@mui/material";
 
 // Components
-import { ErrorCard } from "components/common/ErrorCard";
-import { LoadingCard } from "components/common/LoadingCard";
-import { HeadContainer } from "components/HeadContainer";
-
-// Hooks
-import { FetchStatus } from "hooks/useCache";
-import { ClusterStatus, useCluster } from "hooks/useCluster";
-import { useFetchValidators, useValidators } from "hooks/useValidators";
-import { PubKey } from "components/common/PubKey";
-import { Epoch } from "components/common/Epoch";
 import { ValidatorsStats } from "components/ValidatorsStats";
 
 export const ValidatorsView: FC = () => {
-  const { status } = useCluster();
-  const validators = useValidators();
-  const fetchValidators = useFetchValidators();
-  const refresh = () => fetchValidators();
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Fetch validators on load
-  useEffect(() => {
-    if (!validators && status === ClusterStatus.Connected) refresh();
-  }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  if (!validators || validators.status === FetchStatus.Fetching) {
-    return <LoadingCard message="Loading validators" />;
-  } else if (
-    validators.data === undefined ||
-    validators.status === FetchStatus.FetchFailed
-  ) {
-    return (
-      <ErrorCard retry={() => refresh()} text="Failed to fetch validators" />
-    );
-  } else if (validators.data.currentValidators.length === 0) {
-    return <ErrorCard retry={() => refresh()} text={`No validators found`} />;
-  }
-
-  const { data: validatorsData } = validators;
+  const handleLoadMore = () => {
+    setIsLoadingMore(true);
+    // Simulate loading delay
+    setTimeout(() => {
+      setIsLoadingMore(false);
+    }, 1000);
+  };
 
   return (
-    <div className="mx-4">
-      <HeadContainer />
-      <div className="w-full mb-4">
-        <Card>
-          <CardContent>
-            <ValidatorsStats />
-            <Typography variant="h5" component="h2" gutterBottom>
-              Validators
-            </Typography>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        background: `
+          linear-gradient(135deg, 
+            rgba(15, 23, 42, 0.95) 0%,
+            rgba(30, 41, 59, 0.9) 25%,
+            rgba(51, 65, 85, 0.8) 50%,
+            rgba(30, 58, 138, 0.7) 75%,
+            rgba(79, 70, 229, 0.6) 100%
+          ),
+          radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 40% 60%, rgba(16, 185, 129, 0.2) 0%, transparent 50%)
+        `,
+        position: "relative",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: `
+            linear-gradient(45deg, transparent 0%, rgba(59, 130, 246, 0.05) 50%, transparent 100%),
+            linear-gradient(-45deg, transparent 0%, rgba(139, 92, 246, 0.05) 50%, transparent 100%)
+          `,
+          pointerEvents: "none",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          position: "relative",
+          zIndex: 1,
+          px: 4,
+          py: 3,
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            mb: 3,
+            fontWeight: 700,
+            background: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            color: "transparent",
+          }}
+        >
+          Validators
+        </Typography>
 
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Node Account</TableCell>
-                    <TableCell>Vote Account</TableCell>
-                    <TableCell>Commission</TableCell>
-                    <TableCell>Last Vote Slot</TableCell>
-                    <TableCell>Credit</TableCell>
-                    <TableCell>Staked</TableCell>
-                    <TableCell>Epoch</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {validatorsData.currentValidators.map((validator, index) => {
-                    return (
-                      <TableRow key={`${validator.nodePubkey}-${index}`}>
-                        <TableCell>{}</TableCell>
-                        <TableCell>
-                          {PubKey({
-                            pubkey: validator.nodePubkey,
-                            truncateChars: 15,
-                            link: true,
-                          })}
-                        </TableCell>
-                        <TableCell>
-                          {PubKey({
-                            pubkey: validator.votePubkey,
-                            truncateChars: 15,
-                            link: true,
-                          })}
-                        </TableCell>
-                        <TableCell>{`${validator.commission} %`}</TableCell>
-                        <TableCell>{validator.lastVote}</TableCell>
-                        <TableCell>{validator.epochCredits[0][1]}</TableCell>
-                        <TableCell>{`${
-                          validator.activatedStake / 10 ** 9
-                        } BBA`}</TableCell>
+        <ValidatorsStats />
 
-                        <TableCell>
-                          {Epoch({ epoch: validator.epochCredits[0][0] })}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+          <Button
+            variant="contained"
+            onClick={handleLoadMore}
+            disabled={isLoadingMore}
+            sx={{
+              background: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
+              color: "white",
+              fontWeight: 600,
+              borderRadius: 2,
+              px: 4,
+              py: 1.5,
+              "&:hover": {
+                background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
+                transform: "translateY(-1px)",
+                boxShadow: "0 8px 25px rgba(16, 185, 129, 0.3)",
+              },
+              "&:disabled": {
+                background: "rgba(100, 116, 139, 0.3)",
+                color: "rgba(255, 255, 255, 0.5)",
+              },
+              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+          >
+            {isLoadingMore ? "Loading..." : "Load More"}
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   );
 };

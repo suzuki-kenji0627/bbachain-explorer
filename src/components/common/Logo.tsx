@@ -1,20 +1,35 @@
 import React from "react";
+import Link from "next/link";
 import Image from "next/image";
+import { Box, Typography } from "@mui/material";
 import logoSvg from "../icons/logo.svg";
 
 interface LogoProps {
   width?: number;
   height?: number;
   className?: string;
+  href?: string;
 }
 
-export function Logo({ width = 200, height = 100, className = "" }: LogoProps) {
+export function Logo({
+  width = 200,
+  height = 100,
+  className = "",
+  href = "/",
+}: LogoProps) {
   // Calculate proportional sizing for the logo
-  const logoSize = height * 0.5; // Main logo takes 60% of height
-  const textSize = height * 0.3; // Text size relative to height
+  const logoSize = height * 0.5; // Main logo takes 50% of height
 
   return (
-    <div className={`flex items-center ${className}`} style={{ width, height }}>
+    <Box
+      className={className}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        width,
+        height,
+      }}
+    >
       {/* BBA Chain Logo from logo.svg */}
       <Image
         src={logoSvg}
@@ -26,23 +41,26 @@ export function Logo({ width = 200, height = 100, className = "" }: LogoProps) {
         }}
       />
 
-      {/* BBAChain text with modern styling */}
-      <div className="ml-3 flex flex-col">
-        {/* Explorer text */}
-        <span
-          style={{
-            fontSize: textSize * 0.75,
-            fontFamily: "Inter, system-ui, sans-serif",
-            fontWeight: "500",
-            color: "#6b7280",
-            letterSpacing: "0.025em",
-            lineHeight: "1",
-          }}
-        >
-          EXPLORER
-        </span>
-      </div>
-    </div>
+      {/* EXPLORER text with gradient styling */}
+      <Typography
+        variant="h6"
+        component={Link}
+        href={href}
+        sx={{
+          ml: 2,
+          fontWeight: 700,
+          color: "white",
+          textDecoration: "none",
+          background: "linear-gradient(135deg, #06D6A0 0%, #1A9D59 100%)",
+          backgroundClip: "text",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          fontSize: { xs: "1.1rem", md: "1.25rem" },
+        }}
+      >
+        EXPLORER
+      </Typography>
+    </Box>
   );
 }
 

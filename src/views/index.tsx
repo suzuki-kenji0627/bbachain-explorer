@@ -1,8 +1,11 @@
-export { AddressDetailView } from "./address";
 export { BlockDetailView } from "./block-detail";
 export { HomeView } from "./home";
 export { TxDetailView } from "./tx";
-export { BlocksView } from "./blocks";
 export { TransactionsView } from "./transactions";
+export { BlocksView } from "./blocks";
 export { ValidatorsView } from "./validators";
 export { AccountsView } from "./accounts";
+export { AddressDetailView } from "./address";
+export { EpochDetailView } from "./epoch";
+export { TokensView } from "./tokens";
+export { TokenDetailView } from "./token-detail";

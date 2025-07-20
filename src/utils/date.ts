@@ -1,56 +1,66 @@
 export function displayTimestamp(
-  unixTimestamp: number,
-  shortTimeZoneName = false
+  timestamp: number,
+  includeTime?: boolean
 ): string {
-  const expireDate = new Date(unixTimestamp);
-  const dateString = new Intl.DateTimeFormat("en-US", {
+  const date = new Date(timestamp);
+
+  if (includeTime) {
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZoneName: "short",
+    });
+  }
+
+  return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
-  }).format(expireDate);
-  const timeString = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    hourCycle: "h23",
-    timeZoneName: shortTimeZoneName ? "short" : "long",
-  }).format(expireDate);
-  return `${dateString} at ${timeString}`;
+  });
 }
 
 export function displayTimestampUtc(
-  unixTimestamp: number,
-  shortTimeZoneName = false
+  timestamp: number,
+  includeTime?: boolean
 ): string {
-  const expireDate = new Date(unixTimestamp);
-  const dateString = new Intl.DateTimeFormat("en-US", {
+  const date = new Date(timestamp);
+
+  if (includeTime) {
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZone: "UTC",
+      timeZoneName: "short",
+    });
+  }
+
+  return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
     timeZone: "UTC",
-  }).format(expireDate);
-  const timeString = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    hourCycle: "h23",
-    timeZone: "UTC",
-    timeZoneName: shortTimeZoneName ? "short" : "long",
-  }).format(expireDate);
-  return `${dateString} at ${timeString}`;
+  });
 }
 
-export function displayTimestampWithoutDate(
-  unixTimestamp: number,
-  shortTimeZoneName = true
-) {
-  const expireDate = new Date(unixTimestamp);
-  const timeString = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    hourCycle: "h23",
-    timeZoneName: shortTimeZoneName ? "short" : "long",
-  }).format(expireDate);
-  return timeString;
+// Client-only timestamp string to avoid hydration mismatch
+export function getClientTimestamp(
+  timestamp: number,
+  utc = false,
+  includeTime = false
+): string {
+  // Return placeholder during SSR
+  if (typeof window === "undefined") {
+    return "--:--";
+  }
+
+  const displayFn = utc ? displayTimestampUtc : displayTimestamp;
+  return displayFn(timestamp, includeTime);
 }

@@ -6,7 +6,8 @@ import { useCluster } from "hooks/useCluster";
 import {
   LatestBlocks,
   LatestBlocksDispatchContext,
-  LatestBlocksStateContext
+  LatestBlocksStateContext,
+  fetchLatestBlocks,
 } from "hooks/useLatestBlocks";
 
 type Props = {
@@ -14,12 +15,19 @@ type Props = {
 };
 
 export function LatestBlocksProvider({ children }: Props) {
-  const { url } = useCluster();
+  const { url, cluster } = useCluster();
   const [state, dispatch] = Cache.useReducer<LatestBlocks>(url);
 
   React.useEffect(() => {
     dispatch({ type: Cache.ActionType.Clear, url });
-  }, [dispatch, url]);
+
+    // Auto-fetch latest blocks when provider mounts or URL changes
+    if (url && cluster !== undefined) {
+      fetchLatestBlocks(dispatch, url, cluster, 0).catch(() => {
+        // Silent error handling
+      });
+    }
+  }, [dispatch, url, cluster]);
 
   return (
     <LatestBlocksStateContext.Provider value={state}>

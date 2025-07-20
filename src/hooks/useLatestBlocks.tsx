@@ -17,14 +17,23 @@ export type LatestBlocks = {
 type State = Cache.State<LatestBlocks>;
 type Dispatch = Cache.Dispatch<LatestBlocks>;
 
-export const LatestBlocksStateContext = React.createContext<State | undefined>(undefined);
-export const LatestBlocksDispatchContext = React.createContext<Dispatch | undefined>(undefined);
+export const LatestBlocksStateContext = React.createContext<State | undefined>(
+  undefined
+);
+export const LatestBlocksDispatchContext = React.createContext<
+  Dispatch | undefined
+>(undefined);
 
-export async function fetchLatestBlocks(dispatch: Dispatch, url: string, cluster: Cluster, next: number) {
+export async function fetchLatestBlocks(
+  dispatch: Dispatch,
+  url: string,
+  cluster: Cluster,
+  next: number
+) {
   dispatch({
     type: Cache.ActionType.Update,
     status: Cache.FetchStatus.Fetching,
-    key: 'blocks',
+    key: "blocks",
     url,
   });
 
@@ -37,21 +46,31 @@ export async function fetchLatestBlocks(dispatch: Dispatch, url: string, cluster
     const end = Number(next) || lastBlock;
 
     const blocks = await connection.getBlocks(end - MAX_PAGINATION_PAGE, end);
-    const result = await Promise.all(blocks.map(async block => {
-      const blockData = await connection.getBlock(block, {
-        maxSupportedTransactionVersion: 0,
-      });
-      if (blockData !== null) {
-        return {
-          block: blockData,
-        };;
-      }
-    }));
+
+    const result = await Promise.all(
+      blocks.map(async (block) => {
+        try {
+          const blockData = await connection.getBlock(block, {
+            maxSupportedTransactionVersion: 0,
+          });
+          if (blockData !== null) {
+            return {
+              block: blockData,
+            };
+          }
+        } catch (err) {
+          return null;
+        }
+      })
+    );
+
+    const validBlocks = result.filter(Boolean).reverse();
 
     data = {
-      blocks: result.reverse(),
+      blocks: validBlocks,
       next: Number(end - (MAX_PAGINATION_PAGE + 1)),
-    }
+    };
+    status = Cache.FetchStatus.Fetched;
   } catch (err) {
     status = Cache.FetchStatus.FetchFailed;
     if (cluster !== Cluster.Custom) {
@@ -62,7 +81,7 @@ export async function fetchLatestBlocks(dispatch: Dispatch, url: string, cluster
   dispatch({
     type: Cache.ActionType.Update,
     url,
-    key: 'blocks',
+    key: "blocks",
     status,
     data,
   });
@@ -72,16 +91,20 @@ export function useLatestBlocks(): Cache.CacheEntry<LatestBlocks> | undefined {
   const context = React.useContext(LatestBlocksStateContext);
 
   if (!context) {
-    throw new Error(`useLatestBlocks must be used within a LatestBlocksProvider`);
+    throw new Error(
+      `useLatestBlocks must be used within a LatestBlocksProvider`
+    );
   }
 
-  return context.entries['blocks'];
+  return context.entries["blocks"];
 }
 
 export function useFetchLatestBlocks() {
   const dispatch = React.useContext(LatestBlocksDispatchContext);
   if (!dispatch) {
-    throw new Error(`useFetchLatestBlocks must be used within a LatestBlocksProvider`);
+    throw new Error(
+      `useFetchLatestBlocks must be used within a LatestBlocksProvider`
+    );
   }
 
   const { cluster, url } = useCluster();

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import bs58 from "bs58";
@@ -107,18 +107,49 @@ const CustomMenuList = ({ children, maxHeight }) => {
 };
 
 export const SearchBar: FC = () => {
+  const [mounted, setMounted] = useState(false);
   const { fmtUrlWithCluster } = useQueryContext();
   const router = useRouter();
-
   const searchRef = React.useRef("");
-
   const [search, setSearch] = React.useState("");
   const [loadingSearch, setLoadingSearch] = React.useState<boolean>(false);
   const [searchOptions, setSearchOptions] = React.useState<SearchOptions[]>([]);
   const [loadingSearchMessage, setLoadingSearchMessage] =
     React.useState<string>("loading...");
-
   const { cluster, clusterInfo } = useCluster();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  React.useEffect(() => {
+    searchRef.current = search;
+    setLoadingSearchMessage("Loading...");
+    setLoadingSearch(true);
+
+    // builds and sets local search output
+    const options = buildOptions(search, cluster, clusterInfo?.epochInfo.epoch);
+
+    setSearchOptions(options);
+
+    setLoadingSearch(false);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
+
+  // Show placeholder during SSR to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="relative w-full">
+        <input
+          type="text"
+          placeholder="Search by Address / Txn Hash / Block / Token..."
+          className="w-full px-4 py-3 text-lg bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          disabled
+        />
+      </div>
+    );
+  }
 
   const onInputChange = (value: string, { action }: InputActionMeta) => {
     if (action === "input-change") {
@@ -136,21 +167,6 @@ export const SearchBar: FC = () => {
       setSearch("");
     }
   };
-
-  React.useEffect(() => {
-    searchRef.current = search;
-    setLoadingSearchMessage("Loading...");
-    setLoadingSearch(true);
-
-    // builds and sets local search output
-    const options = buildOptions(search, cluster, clusterInfo?.epochInfo.epoch);
-
-    setSearchOptions(options);
-
-    setLoadingSearch(false);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
 
   const resetValue = "" as any;
 
@@ -199,7 +215,6 @@ export const SearchBar: FC = () => {
     </>
   );
 };
-
 function buildProgramOptions(search: string, cluster: Cluster) {
   const matchedPrograms = Object.entries(PROGRAM_INFO_BY_ID).filter(
     ([address, { name, deployments }]) => {
