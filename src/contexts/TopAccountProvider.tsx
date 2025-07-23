@@ -14,16 +14,15 @@ export function TopAccountProvider({ children }: Props) {
   const { status: clusterStatus, cluster, url } = useCluster();
 
   useEffect(() => {
-    if (state !== TopAccountStatus.Idle) {
-      if (clusterStatus === ClusterStatus.Connecting) {
-        setState(TopAccountStatus.Disconnected);
-      }
-
-      if (clusterStatus === ClusterStatus.Connected) {
-        fetch(setState, cluster, url);
-      }
+    if (clusterStatus === ClusterStatus.Connecting) {
+      setState(TopAccountStatus.Disconnected);
     }
-  }, [clusterStatus, cluster, url]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    if (clusterStatus === ClusterStatus.Connected) {
+      // Auto-fetch top accounts when cluster becomes connected
+      fetch(setState, cluster, url);
+    }
+  }, [clusterStatus, cluster, url]);
 
   return (
     <TopAccountStateContext.Provider value={state}>

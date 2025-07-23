@@ -297,7 +297,7 @@ const TokenDetailView: FC<Props> = ({ mint }) => {
     if (mounted && pubkey) {
       fetchTokenData();
     }
-  }, [mounted, fetchTokenData]);
+  }, [mounted, fetchTokenData, pubkey]);
 
   const handleRefresh = () => {
     fetchTokenData(true);

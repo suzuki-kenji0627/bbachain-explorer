@@ -9,12 +9,18 @@ import {
   Box,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
+
+// Components
+import { Address } from "components/common/Address";
 
 // Hooks
 import { Cluster } from "hooks/useCluster";
+import useQueryContext from "hooks/useQueryContext";
 
 // Utils
 import { InstructionLogs } from "utils/program-logs";
+import { getProgramName } from "utils/tx";
 
 const NATIVE_PROGRAMS_MISSING_INVOKE_LOG: string[] = [
   "AddressLookupTab1e1111111111111111111111111",
@@ -35,8 +41,10 @@ export function ProgramLogsCardBody({
   cluster: Cluster;
   url: string;
 }) {
+  const { fmtUrlWithCluster } = useQueryContext();
   let logIndex = 0;
   let instructionProgramIds: PublicKey[];
+
   if ("compiledInstructions" in message) {
     instructionProgramIds = message.compiledInstructions.map((ix) => {
       return message.staticAccountKeys[ix.programIdIndex];
@@ -50,6 +58,8 @@ export function ProgramLogsCardBody({
       <TableBody>
         {instructionProgramIds.map((programId, index) => {
           const programAddress = programId.toBase58();
+          const programName = getProgramName(programAddress, cluster);
+
           let programLogs: InstructionLogs | undefined = logs[logIndex];
           if (programLogs?.invokedProgram === programAddress) {
             logIndex++;
@@ -84,16 +94,35 @@ export function ProgramLogsCardBody({
                     size="small"
                     sx={{ mr: 2, fontWeight: 600 }}
                   />
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontFamily: "monospace",
-                      color: "text.primary",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {programId.toString()} Instruction
-                  </Typography>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Link
+                      href={fmtUrlWithCluster(`/address/${programAddress}`)}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "primary.main",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          "&:hover": {
+                            textDecoration: "underline",
+                          },
+                        }}
+                      >
+                        {programName}
+                      </Typography>
+                    </Link>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "text.secondary",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      Instruction
+                    </Typography>
+                  </Box>
                   <Typography sx={{ ml: 2, color: "text.secondary" }}>
                     ⌄
                   </Typography>
@@ -107,9 +136,9 @@ export function ProgramLogsCardBody({
                       fontFamily: "monospace",
                       fontSize: "0.875rem",
                       p: 2,
-                      backgroundColor: "rgba(255, 255, 255, 0.05)",
-                      borderRadius: 1,
-                      border: "1px solid rgba(255, 255, 255, 0.1)",
+                      backgroundColor: "rgba(0, 0, 0, 0.2)",
+                      borderRadius: 2,
+                      border: "1px solid rgba(100, 116, 139, 0.1)",
                     }}
                   >
                     {programLogs.logs.map((log, key) => {
@@ -129,11 +158,12 @@ export function ProgramLogsCardBody({
                             fontSize: "0.875rem",
                             display: "block",
                             whiteSpace: "pre-wrap",
+                            py: 0.25,
                           }}
                         >
                           <Typography
                             component="span"
-                            sx={{ color: "text.secondary" }}
+                            sx={{ color: "text.secondary", opacity: 0.8 }}
                           >
                             {log.prefix}
                           </Typography>
