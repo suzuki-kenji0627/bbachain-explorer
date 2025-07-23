@@ -18,7 +18,6 @@ interface LoadingCardProps {
 export function LoadingCard({
   message = "Loading",
   variant = "default",
-  showIcon = true,
 }: LoadingCardProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -34,9 +33,6 @@ export function LoadingCard({
           gap: 2,
         }}
       >
-        {showIcon && (
-          <BBAIcon size={24} sx={{ animation: "spin 2s linear infinite" }} />
-        )}
         <Typography variant="body1" sx={{ color: "text.secondary" }}>
           {message}...
         </Typography>
@@ -129,22 +125,6 @@ export function LoadingCard({
           zIndex: 1,
         }}
       >
-        {/* Animated Icon */}
-        {showIcon && (
-          <Box sx={{ mb: 2 }}>
-            <BBAIcon
-              size={isMobile ? 32 : 40}
-              sx={{
-                animation: "float 3s ease-in-out infinite",
-                "@keyframes float": {
-                  "0%, 100%": { transform: "translateY(0px)" },
-                  "50%": { transform: "translateY(-10px)" },
-                },
-              }}
-            />
-          </Box>
-        )}
-
         {/* Loading Title */}
         <Typography
           variant={isMobile ? "h6" : "h5"}
