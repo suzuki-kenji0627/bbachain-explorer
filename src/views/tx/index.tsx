@@ -1,7 +1,19 @@
 import React, { FC } from "react";
 import bs58 from "bs58";
 import { TransactionSignature } from "@bbachain/web3.js";
-import { Box } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Chip,
+  CircularProgress,
+} from "@mui/material";
 
 // Components
 import { ErrorCard } from "components/common/ErrorCard";
@@ -10,6 +22,10 @@ import { HeadContainer } from "components/HeadContainer";
 import { InstructionsSection } from "components/transaction/InstructionsSection";
 import { ProgramLogSection } from "components/transaction/ProgramLogSection";
 import { TokenBalancesCard } from "components/transaction/TokenBalancesCard";
+import { Signature } from "components/common/Signature";
+import { Slot } from "components/common/Slot";
+import { Time } from "components/common/Time";
+import { Balance } from "components/common/Balance";
 
 // Hooks
 import { useTransaction, useFetchTransaction } from "hooks/useTransaction";
@@ -183,7 +199,7 @@ function StatusCard({
     (status.status === FetchStatus.Fetching &&
       autoRefresh === AutoRefresh.Inactive)
   ) {
-    return <LoadingCard />;
+    return <LoadingCard message="Loading transaction status..." />;
   } else if (status.status === FetchStatus.FetchFailed) {
     return (
       <ErrorCard retry={() => fetchStatus(signature)} text="Fetch Failed" />
@@ -207,7 +223,7 @@ function StatusCard({
   let statusText = "Success";
   let errorReason = undefined;
   if (info.result.err) {
-    statusClass = "warning";
+    statusClass = "error";
     statusText = "Failed";
     if (typeof info.result.err === "object") {
       if ("InstructionError" in info.result.err) {
@@ -220,11 +236,246 @@ function StatusCard({
     }
   }
 
-  // Rest of StatusCard component with modern styling would go here
-  // For brevity, I'll focus on the main structural changes
+  const renderConfirmations = () => {
+    if (typeof info.confirmations === "number") {
+      return (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              fontFamily: "monospace",
+              color: "text.primary",
+              fontWeight: 600,
+            }}
+          >
+            {info.confirmations}
+          </Typography>
+          {autoRefresh === AutoRefresh.Active && (
+            <CircularProgress size={16} sx={{ color: "primary.main" }} />
+          )}
+        </Box>
+      );
+    } else {
+      return (
+        <Typography
+          variant="body2"
+          sx={{
+            fontFamily: "monospace",
+            color: "text.primary",
+            fontWeight: 600,
+          }}
+        >
+          max
+        </Typography>
+      );
+    }
+  };
+
   return (
-    // StatusCard implementation with modern styling
-    <LoadingCard message="Transaction status loading..." />
+    <Card
+      sx={{
+        mb: 3,
+        background:
+          "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)",
+        border: "1px solid rgba(59, 130, 246, 0.2)",
+        borderRadius: 3,
+        overflow: "hidden",
+      }}
+    >
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 3, gap: 2 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 700,
+              background: "linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              color: "transparent",
+            }}
+          >
+            Transaction Details
+          </Typography>
+          <Chip
+            label={statusText}
+            color={statusClass === "success" ? "success" : "error"}
+            sx={{
+              fontWeight: 600,
+              fontSize: "0.875rem",
+            }}
+          />
+        </Box>
+
+        <TableContainer>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <TableCell
+                  component="th"
+                  scope="row"
+                  sx={{
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                    py: 2,
+                    fontWeight: 600,
+                    color: "text.secondary",
+                    width: "200px",
+                  }}
+                >
+                  Signature
+                </TableCell>
+                <TableCell
+                  sx={{
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                    py: 2,
+                  }}
+                >
+                  <Signature signature={signature} truncateChars={64} />
+                </TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell
+                  component="th"
+                  scope="row"
+                  sx={{
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                    py: 2,
+                    fontWeight: 600,
+                    color: "text.secondary",
+                  }}
+                >
+                  Slot
+                </TableCell>
+                <TableCell
+                  sx={{
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                    py: 2,
+                  }}
+                >
+                  <Slot slot={info.slot} link />
+                </TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell
+                  component="th"
+                  scope="row"
+                  sx={{
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                    py: 2,
+                    fontWeight: 600,
+                    color: "text.secondary",
+                  }}
+                >
+                  Confirmations
+                </TableCell>
+                <TableCell
+                  sx={{
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                    py: 2,
+                  }}
+                >
+                  {renderConfirmations()}
+                </TableCell>
+              </TableRow>
+
+              {info.confirmationStatus && (
+                <TableRow>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    sx={{
+                      borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                      py: 2,
+                      fontWeight: 600,
+                      color: "text.secondary",
+                    }}
+                  >
+                    Confirmation Status
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                      py: 2,
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontFamily: "monospace",
+                        color: "text.primary",
+                        fontWeight: 600,
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {info.confirmationStatus}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+
+              {info.timestamp !== "unavailable" && (
+                <TableRow>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    sx={{
+                      borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                      py: 2,
+                      fontWeight: 600,
+                      color: "text.secondary",
+                    }}
+                  >
+                    Block Time
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                      py: 2,
+                    }}
+                  >
+                    <Time timestamp={info.timestamp} />
+                  </TableCell>
+                </TableRow>
+              )}
+
+              {errorReason && (
+                <TableRow>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    sx={{
+                      borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                      py: 2,
+                      fontWeight: 600,
+                      color: "text.secondary",
+                    }}
+                  >
+                    Error
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                      py: 2,
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "error.main",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {errorReason}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
   );
 }
 
