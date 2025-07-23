@@ -7,6 +7,7 @@ import Select, {
   ActionMeta,
   OnChangeValue,
 } from "react-select";
+import { useTheme, useMediaQuery } from "@mui/material";
 
 // Hooks
 import useQueryContext from "hooks/useQueryContext";
@@ -32,10 +33,10 @@ interface SearchOptions {
 
 function DropdownIndicator() {
   return (
-    <button className="p-3 text-secondary">
+    <button className="p-2 text-secondary">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6"
+        className="h-5 w-5 md:h-6 md:w-6"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -117,6 +118,8 @@ export const SearchBar: FC = () => {
   const [loadingSearchMessage, setLoadingSearchMessage] =
     React.useState<string>("loading...");
   const { cluster, clusterInfo } = useCluster();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     setMounted(true);
@@ -143,8 +146,12 @@ export const SearchBar: FC = () => {
       <div className="relative w-full">
         <input
           type="text"
-          placeholder="Search by Address / Txn Hash / Block / Token..."
-          className="w-full px-4 py-3 text-lg bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder={
+            isMobile
+              ? "Search..."
+              : "Search by Address / Txn Hash / Block / Token..."
+          }
+          className="w-full px-3 py-2 md:px-4 md:py-3 text-sm md:text-lg bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           disabled
         />
       </div>
@@ -171,30 +178,83 @@ export const SearchBar: FC = () => {
   const resetValue = "" as any;
 
   return (
-    <>
-      {/* <div className="card mb-4 bg-red-400">
-        <div className="card-body"> */}
+    <div className="w-full">
       <Select
         blurInputOnSelect
         noOptionsMessage={() => "No Results"}
-        placeholder="Search by Address / Txn Hash / Block / Token / Domain Name"
+        placeholder={
+          isMobile
+            ? "Search..."
+            : "Search by Address / Txn Hash / Block / Token / Domain Name"
+        }
         styles={{
-          /* work around for, 
-          https://github.com/JedWatson/react-select/issues/3857 
-          https://github.com/JedWatson/react-select/issues/4106
-          */
-          placeholder: (style) => ({
-            ...style,
+          control: (provided, state) => ({
+            ...provided,
+            backgroundColor: "rgba(255, 255, 255, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            borderRadius: "12px",
+            padding: isMobile ? "2px 4px" : "4px 8px",
+            fontSize: isMobile ? "14px" : "16px",
+            minHeight: isMobile ? "44px" : "52px",
+            boxShadow: state.isFocused
+              ? "0 0 0 2px rgba(59, 130, 246, 0.5)"
+              : "none",
+            "&:hover": {
+              borderColor: "rgba(255, 255, 255, 0.3)",
+            },
+          }),
+          input: (provided) => ({
+            ...provided,
+            color: "white",
+            fontSize: isMobile ? "14px" : "16px",
+            width: "100%",
+            gridTemplateColumns: "0 minmax(min-content, 1fr)",
+          }),
+          placeholder: (provided) => ({
+            ...provided,
+            color: "rgba(255, 255, 255, 0.6)",
+            fontSize: isMobile ? "14px" : "16px",
             pointerEvents: "none",
             userSelect: "none",
             MozUserSelect: "none",
             WebkitUserSelect: "none",
             msUserSelect: "none",
           }),
-          input: (style) => ({
-            ...style,
-            width: "100%",
-            gridTemplateColumns: "0 minmax(min-content, 1fr)",
+          singleValue: (provided) => ({
+            ...provided,
+            color: "white",
+          }),
+          menu: (provided) => ({
+            ...provided,
+            backgroundColor: "#1a1a1a",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: "8px",
+            zIndex: 9999,
+          }),
+          menuList: (provided) => ({
+            ...provided,
+            padding: 0,
+            maxHeight: isMobile ? "200px" : "300px",
+          }),
+          option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isFocused
+              ? "rgba(255, 255, 255, 0.1)"
+              : "transparent",
+            color: "#f9fafb",
+            fontSize: isMobile ? "13px" : "14px",
+            padding: isMobile ? "8px 12px" : "12px 16px",
+            cursor: "pointer",
+          }),
+          noOptionsMessage: (provided) => ({
+            ...provided,
+            color: "rgba(255, 255, 255, 0.6)",
+            fontSize: isMobile ? "13px" : "14px",
+          }),
+          loadingMessage: (provided) => ({
+            ...provided,
+            color: "rgba(255, 255, 255, 0.6)",
+            fontSize: isMobile ? "13px" : "14px",
           }),
         }}
         loadingMessage={() => loadingSearchMessage}
@@ -209,12 +269,15 @@ export const SearchBar: FC = () => {
         inputValue={search}
         options={searchOptions}
         value={resetValue}
+        menuPosition="absolute"
+        menuPortalTarget={
+          typeof document !== "undefined" ? document.body : null
+        }
       />
-      {/* </div>
-      </div> */}
-    </>
+    </div>
   );
 };
+
 function buildProgramOptions(search: string, cluster: Cluster) {
   const matchedPrograms = Object.entries(PROGRAM_INFO_BY_ID).filter(
     ([address, { name, deployments }]) => {

@@ -12,6 +12,7 @@ import Link from "next/link";
 // Components
 import { LoadingCard } from "components/common/LoadingCard";
 import { ErrorCard } from "components/common/ErrorCard";
+import { SkeletonLoader } from "components/common/SkeletonLoader";
 
 // Hooks
 import { ClusterStatus, useCluster } from "hooks/useCluster";
@@ -148,30 +149,7 @@ export const NetworkStats: FC = () => {
 
   // Show loading during SSR to prevent hydration mismatch
   if (!mounted) {
-    return (
-      <Box sx={{ mb: 4 }}>
-        <Grid container spacing={3}>
-          {[1, 2, 3, 4].map((i) => (
-            <Grid item xs={12} sm={6} lg={3} key={i}>
-              <Card
-                sx={{
-                  background: "rgba(30, 41, 59, 0.5)",
-                  border: "1px solid rgba(100, 116, 139, 0.2)",
-                  borderRadius: 3,
-                  overflow: "hidden",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  minHeight: 140,
-                }}
-              >
-                <CircularProgress sx={{ color: "primary.main" }} />
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-    );
+    return <SkeletonLoader variant="stats" />;
   }
 
   if (supply === SupplyStatus.Disconnected) {
@@ -180,7 +158,9 @@ export const NetworkStats: FC = () => {
   }
 
   if (supply === SupplyStatus.Idle || supply === SupplyStatus.Connecting) {
-    return <LoadingCard message="Loading supply and price data" />;
+    return (
+      <LoadingCard message="Loading network statistics" variant="minimal" />
+    );
   } else if (typeof supply === "string") {
     return <ErrorCard text={supply} retry={fetchData} />;
   }
@@ -226,14 +206,15 @@ export const NetworkStats: FC = () => {
   ];
 
   return (
-    <Box sx={{ mb: 4 }}>
+    <Box sx={{ mb: 3 }}>
       {/* Header Section */}
-      <Box sx={{ mb: 3, textAlign: "center" }}>
+      <Box sx={{ mb: 2, textAlign: "center" }}>
         <Typography
           variant="h4"
           sx={{
             fontWeight: 700,
-            mb: 1,
+            mb: 0.5,
+            fontSize: { xs: "1.5rem", md: "2rem" },
             background: "linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)",
             backgroundClip: "text",
             WebkitBackgroundClip: "text",
@@ -246,8 +227,10 @@ export const NetworkStats: FC = () => {
           variant="body1"
           sx={{
             color: "text.secondary",
-            maxWidth: 600,
+            maxWidth: 500,
             mx: "auto",
+            fontSize: { xs: "0.8rem", md: "0.9rem" },
+            opacity: 0.8,
           }}
         >
           Real-time statistics and metrics from the BBAChain network
@@ -255,7 +238,7 @@ export const NetworkStats: FC = () => {
       </Box>
 
       {/* Stats Grid */}
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 1.5, sm: 2 }}>
         {stats.map((stat, index) => {
           const StatComponent = (
             <Card
@@ -268,20 +251,25 @@ export const NetworkStats: FC = () => {
                 transition: "all 0.3s ease-in-out",
                 cursor: stat.link ? "pointer" : "default",
                 "&:hover": {
-                  transform: "translateY(-4px)",
+                  transform: "translateY(-2px)",
                   boxShadow:
-                    "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                    "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
                   borderColor: stat.iconColor,
                 },
               }}
             >
-              <CardContent sx={{ p: 3, "&:last-child": { pb: 3 } }}>
+              <CardContent
+                sx={{
+                  p: { xs: 2, md: 2.5 },
+                  "&:last-child": { pb: { xs: 2, md: 2.5 } },
+                }}
+              >
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "flex-start",
                     justifyContent: "space-between",
-                    mb: 2,
+                    mb: 1.5,
                   }}
                 >
                   <Box sx={{ flex: 1 }}>
@@ -292,7 +280,7 @@ export const NetworkStats: FC = () => {
                         fontWeight: 600,
                         letterSpacing: "0.1em",
                         textTransform: "uppercase",
-                        fontSize: "0.75rem",
+                        fontSize: { xs: "0.65rem", md: "0.75rem" },
                       }}
                     >
                       {stat.title}
@@ -303,6 +291,10 @@ export const NetworkStats: FC = () => {
                       color: stat.iconColor,
                       opacity: 0.8,
                       transition: "all 0.2s ease-in-out",
+                      "& svg": {
+                        width: { xs: 20, md: 24 },
+                        height: { xs: 20, md: 24 },
+                      },
                     }}
                   >
                     {stat.icon}
@@ -314,9 +306,9 @@ export const NetworkStats: FC = () => {
                   sx={{
                     fontWeight: "bold",
                     color: "text.primary",
-                    lineHeight: 1.2,
-                    mb: stat.subtitle ? 1 : 0,
-                    fontSize: { xs: "1.5rem", md: "2rem" },
+                    lineHeight: 1.1,
+                    mb: stat.subtitle ? 0.5 : 0,
+                    fontSize: { xs: "1.3rem", md: "1.75rem" },
                   }}
                 >
                   {stat.value}
@@ -329,6 +321,7 @@ export const NetworkStats: FC = () => {
                       color: "text.secondary",
                       fontWeight: 500,
                       opacity: 0.8,
+                      fontSize: { xs: "0.7rem", md: "0.8rem" },
                     }}
                   >
                     {stat.subtitle}
@@ -337,10 +330,10 @@ export const NetworkStats: FC = () => {
 
                 {/* Progress indicator for epoch */}
                 {stat.title === "CURRENT EPOCH" && (
-                  <Box sx={{ mt: 2 }}>
+                  <Box sx={{ mt: 1.5 }}>
                     <Box
                       sx={{
-                        height: 4,
+                        height: 3,
                         bgcolor: "rgba(100, 116, 139, 0.3)",
                         borderRadius: 2,
                         overflow: "hidden",

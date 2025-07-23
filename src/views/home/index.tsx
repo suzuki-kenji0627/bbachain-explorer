@@ -47,8 +47,9 @@ export const HomeView: FC = ({}) => {
         sx={{
           position: "relative",
           zIndex: 1,
-          mx: 4,
-          pt: 2,
+          px: { xs: 2, sm: 2.5, md: 3 },
+          pt: { xs: 1, md: 1.5 },
+          pb: { xs: 2, md: 3 },
         }}
       >
         <HeadContainer />
@@ -57,10 +58,12 @@ export const HomeView: FC = ({}) => {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-            gap: 2,
-            my: 4,
-            pb: 4,
+            gridTemplateColumns: {
+              xs: "1fr",
+              lg: "1fr 1fr",
+            },
+            gap: { xs: 1.5, sm: 2 },
+            mt: { xs: 2, md: 3 },
           }}
         >
           <LatestBlocks />

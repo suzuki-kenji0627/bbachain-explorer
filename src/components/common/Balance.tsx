@@ -1,5 +1,7 @@
 import React from "react";
+import { Box } from "@mui/material";
 import { toBalanceString } from "utils";
+import { BBAIcon } from "./BBAIcon";
 
 export function Balance({
   daltons,
@@ -9,10 +11,16 @@ export function Balance({
   maximumFractionDigits?: number;
 }) {
   return (
-    <span>
-      <span className="font-monospace">
-        {`${toBalanceString(daltons, maximumFractionDigits)} BBA`}
-      </span>
-    </span>
+    <Box
+      sx={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 0.5,
+        fontFamily: "monospace",
+      }}
+    >
+      <span>{toBalanceString(daltons, maximumFractionDigits)}</span>
+      <BBAIcon size={16} />
+    </Box>
   );
 }
