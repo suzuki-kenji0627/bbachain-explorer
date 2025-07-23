@@ -8,6 +8,7 @@ import {
   SignatureResult,
   TransactionSignature,
 } from "@bbachain/web3.js";
+import { Card, CardContent, Typography, Box } from "@mui/material";
 import { INNER_INSTRUCTIONS_START_SLOT, SignatureProps } from "views/tx";
 
 // Components
@@ -80,57 +81,76 @@ export function InstructionsSection({ signature }: SignatureProps) {
   }
 
   return (
-    <>
-      <div className="card bg-[#011909] shadow-xl mb-4">
-        <div className="card-body">
-          <h2 className="card-title">
+    <Card
+      sx={{
+        mb: 3,
+        background:
+          "linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%)",
+        border: "1px solid rgba(139, 92, 246, 0.2)",
+        borderRadius: 3,
+        overflow: "hidden",
+      }}
+    >
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 3, gap: 2 }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 700,
+              background: "linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              color: "transparent",
+            }}
+          >
             {transaction.message.instructions.length > 1
-              ? "Instructions"
-              : "Instruction"}
-          </h2>
-          <div className="overflow-x-auto">
-            <React.Suspense
-              fallback={<LoadingCard message="Loading Instructions" />}
-            >
-              {transaction.message.instructions.map((instruction, index) => {
-                let innerCards: JSX.Element[] = [];
+              ? "🔧 Instructions"
+              : "🔧 Instruction"}
+          </Typography>
+        </Box>
 
-                if (index in innerInstructions) {
-                  innerInstructions[index].forEach((ix, childIndex) => {
-                    let res = (
-                      <InstructionCard
-                        key={`${index}-${childIndex}`}
-                        index={index}
-                        ix={ix}
-                        result={result}
-                        signature={signature}
-                        tx={transaction}
-                        childIndex={childIndex}
-                        url={url}
-                      />
-                    );
-                    innerCards.push(res);
-                  });
-                }
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <React.Suspense
+            fallback={<LoadingCard message="Loading Instructions" />}
+          >
+            {transaction.message.instructions.map((instruction, index) => {
+              let innerCards: JSX.Element[] = [];
 
-                return (
-                  <InstructionCard
-                    key={`${index}`}
-                    index={index}
-                    ix={instruction}
-                    result={result}
-                    signature={signature}
-                    tx={transaction}
-                    innerCards={innerCards}
-                    url={url}
-                  />
-                );
-              })}
-            </React.Suspense>
-          </div>
-        </div>
-      </div>
-    </>
+              if (index in innerInstructions) {
+                innerInstructions[index].forEach((ix, childIndex) => {
+                  let res = (
+                    <InstructionCard
+                      key={`${index}-${childIndex}`}
+                      index={index}
+                      ix={ix}
+                      result={result}
+                      signature={signature}
+                      tx={transaction}
+                      childIndex={childIndex}
+                      url={url}
+                    />
+                  );
+                  innerCards.push(res);
+                });
+              }
+
+              return (
+                <InstructionCard
+                  key={`${index}`}
+                  index={index}
+                  ix={instruction}
+                  result={result}
+                  signature={signature}
+                  tx={transaction}
+                  innerCards={innerCards}
+                  url={url}
+                />
+              );
+            })}
+          </React.Suspense>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }
 

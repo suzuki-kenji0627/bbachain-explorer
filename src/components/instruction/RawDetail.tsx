@@ -1,6 +1,6 @@
 import React from "react";
 import { TransactionInstruction } from "@bbachain/web3.js";
-import { Chip, Box, Typography } from "@mui/material";
+import { Chip, Box, Typography, TableRow, TableCell } from "@mui/material";
 import { Address } from "components/common/Address";
 import { HexData } from "components/common/HexData";
 
@@ -8,8 +8,16 @@ export function RawDetail({ ix }: { ix: TransactionInstruction }) {
   return (
     <>
       {ix.keys.map(({ pubkey, isSigner, isWritable }, keyIndex) => (
-        <tr key={keyIndex}>
-          <td>
+        <TableRow key={keyIndex}>
+          <TableCell
+            sx={{
+              borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+              py: 2,
+              fontWeight: 600,
+              color: "text.secondary",
+              width: "200px",
+            }}
+          >
             <Box
               sx={{
                 display: "flex",
@@ -38,21 +46,46 @@ export function RawDetail({ ix }: { ix: TransactionInstruction }) {
                 />
               )}
             </Box>
-          </td>
-          <td className="text-lg-end">
+          </TableCell>
+          <TableCell
+            sx={{
+              borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+              py: 2,
+            }}
+          >
             <Address pubkey={pubkey} link />
-          </td>
-        </tr>
+          </TableCell>
+        </TableRow>
       ))}
 
-      <tr>
-        <td>
-          Instruction Data <span className="text-muted">(Hex)</span>
-        </td>
-        <td className="text-lg-end">
+      <TableRow>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          Instruction Data{" "}
+          <Typography
+            component="span"
+            variant="body2"
+            sx={{ color: "text.secondary", opacity: 0.7 }}
+          >
+            (Hex)
+          </Typography>
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <HexData raw={ix.data} />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
     </>
   );
 }

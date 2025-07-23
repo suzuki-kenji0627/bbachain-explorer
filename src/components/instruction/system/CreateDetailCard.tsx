@@ -4,6 +4,7 @@ import {
   SignatureResult,
   ParsedInstruction,
 } from "@bbachain/web3.js";
+import { TableRow, TableCell } from "@mui/material";
 import { Balance } from "components/common/Balance";
 import { InstructionCard } from "../InstructionCard";
 import { Address } from "components/common/Address";
@@ -28,45 +29,137 @@ export function CreateDetailCard(props: {
       innerCards={innerCards}
       childIndex={childIndex}
     >
-      <tr>
-        <td>Program</td>
-        <td className="text-lg-end">
+      <TableRow>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          Program
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Address pubkey={SystemProgram.programId} link />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
 
-      <tr>
-        <td>From Address</td>
-        <td className="text-lg-end">
+      <TableRow>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          From Address
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Address pubkey={info.source} link />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
 
-      <tr>
-        <td>New Address</td>
-        <td className="text-lg-end">
+      <TableRow>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          New Address
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Address pubkey={info.newAccount} link />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
 
-      <tr>
-        <td>Transfer Amount (BBA)</td>
-        <td className="text-lg-end">
+      <TableRow>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          Transfer Amount (BBA)
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Balance daltons={info.daltons} />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
 
-      <tr>
-        <td>Allocated Data Size</td>
-        <td className="text-lg-end">{info.space} byte(s)</td>
-      </tr>
+      <TableRow>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          Allocated Data Size
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
+          {info.space} byte(s)
+        </TableCell>
+      </TableRow>
 
-      <tr>
-        <td>Assigned Program Id</td>
-        <td className="text-lg-end">
+      <TableRow>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          Assigned Program Id
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Address pubkey={info.owner} link />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
     </InstructionCard>
   );
 }

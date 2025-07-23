@@ -1,6 +1,7 @@
 import React from "react";
 import { PublicKey } from "@bbachain/web3.js";
 import { create, Struct } from "superstruct";
+import { TableRow, TableCell, Typography } from "@mui/material";
 import { ParsedInfo } from "validators";
 import {
   UpdateCommissionInfo,
@@ -71,41 +72,126 @@ function renderDetails<T>(
 
     if (key === "vote") {
       attributes.push(
-        <tr key="vote-hash">
-          <td>Vote Hash</td>
-          <td className="text-lg-end">
-            <pre className="d-inline-block text-start mb-0">{value.hash}</pre>
-          </td>
-        </tr>
+        <TableRow key="vote-hash">
+          <TableCell
+            sx={{
+              borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+              py: 2,
+              fontWeight: 600,
+              color: "text.secondary",
+              width: "200px",
+            }}
+          >
+            Vote Hash
+          </TableCell>
+          <TableCell
+            sx={{
+              borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+              py: 2,
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                fontFamily: "monospace",
+                fontSize: "0.875rem",
+              }}
+            >
+              {value.hash}
+            </Typography>
+          </TableCell>
+        </TableRow>
       );
 
       if (value.timestamp) {
         attributes.push(
-          <tr key="timestamp">
-            <td>Timestamp</td>
-            <td className="text-lg-end font-monospace">
-              {displayTimestamp(value.timestamp * 1000)}
-            </td>
-          </tr>
+          <TableRow key="timestamp">
+            <TableCell
+              sx={{
+                borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                py: 2,
+                fontWeight: 600,
+                color: "text.secondary",
+                width: "200px",
+              }}
+            >
+              Timestamp
+            </TableCell>
+            <TableCell
+              sx={{
+                borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                py: 2,
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  fontFamily: "monospace",
+                  fontSize: "0.875rem",
+                }}
+              >
+                {displayTimestamp(value.timestamp * 1000)}
+              </Typography>
+            </TableCell>
+          </TableRow>
         );
       }
 
       attributes.push(
-        <tr key="vote-slots">
-          <td>Slots</td>
-          <td className="text-lg-end font-monospace">
-            <pre className="d-inline-block text-start mb-0">
+        <TableRow key="vote-slots">
+          <TableCell
+            sx={{
+              borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+              py: 2,
+              fontWeight: 600,
+              color: "text.secondary",
+              width: "200px",
+            }}
+          >
+            Slots
+          </TableCell>
+          <TableCell
+            sx={{
+              borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+              py: 2,
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                fontFamily: "monospace",
+                fontSize: "0.875rem",
+                whiteSpace: "pre-line",
+              }}
+            >
               {value.slots.join("\n")}
-            </pre>
-          </td>
-        </tr>
+            </Typography>
+          </TableCell>
+        </TableRow>
       );
     } else {
       attributes.push(
-        <tr key={key}>
-          <td>{camelToTitleCase(key)} </td>
-          <td className="text-lg-end">{value}</td>
-        </tr>
+        <TableRow key={key}>
+          <TableCell
+            sx={{
+              borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+              py: 2,
+              fontWeight: 600,
+              color: "text.secondary",
+              width: "200px",
+            }}
+          >
+            {camelToTitleCase(key)}
+          </TableCell>
+          <TableCell
+            sx={{
+              borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+              py: 2,
+            }}
+          >
+            {value}
+          </TableCell>
+        </TableRow>
       );
     }
   }
@@ -115,12 +201,27 @@ function renderDetails<T>(
       {...props}
       title={`Vote: ${camelToTitleCase(parsed.type)}`}
     >
-      <tr>
-        <td>Program</td>
-        <td className="text-lg-end">
+      <TableRow>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          Program
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Address pubkey={props.ix.programId} link />
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
       {attributes}
     </InstructionCard>
   );

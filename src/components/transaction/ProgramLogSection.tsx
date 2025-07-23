@@ -33,32 +33,25 @@ export function ProgramLogSection({ signature }: SignatureProps) {
   return (
     <Card
       sx={{
-        mb: 4,
+        mb: 3,
         background:
-          "linear-gradient(135deg, rgba(17, 25, 9, 0.9) 0%, rgba(20, 70, 15, 0.8) 100%)",
-        border: "1px solid rgba(255, 255, 255, 0.1)",
+          "linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%)",
+        border: "1px solid rgba(245, 158, 11, 0.2)",
         borderRadius: 3,
         overflow: "hidden",
       }}
     >
-      <CardContent sx={{ p: 0 }}>
-        <Box
-          sx={{
-            background: "rgba(0, 0, 0, 0.2)",
-            p: 3,
-            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-          }}
-        >
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 3, gap: 2 }}>
           <Typography
             variant="h5"
-            component="h2"
             sx={{
-              fontWeight: 600,
-              color: "#33a382",
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              mb: 2,
+              fontWeight: 700,
+              background: "linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              color: "transparent",
+              flex: 1,
             }}
           >
             📝 Program Instruction Logs
@@ -68,12 +61,17 @@ export function ProgramLogSection({ signature }: SignatureProps) {
             color="primary"
             size="small"
             onClick={() => setShowRaw((r) => !r)}
+            sx={{
+              minWidth: "auto",
+              px: 2,
+              fontSize: "0.875rem",
+            }}
           >
             💻 Raw
           </Button>
         </Box>
 
-        <Box sx={{ p: 3 }}>
+        <Box>
           {prettyLogs !== null ? (
             showRaw ? (
               <RawProgramLogs raw={logMessages!} />
@@ -88,7 +86,12 @@ export function ProgramLogSection({ signature }: SignatureProps) {
           ) : (
             <Typography
               variant="body2"
-              sx={{ color: "text.secondary", fontStyle: "italic" }}
+              sx={{
+                color: "text.secondary",
+                fontStyle: "italic",
+                textAlign: "center",
+                py: 2,
+              }}
             >
               Logs not supported for this transaction
             </Typography>
@@ -101,10 +104,34 @@ export function ProgramLogSection({ signature }: SignatureProps) {
 
 function RawProgramLogs({ raw }: { raw: string[] }) {
   return (
-    <>
+    <Box
+      sx={{
+        backgroundColor: "rgba(0, 0, 0, 0.2)",
+        borderRadius: 2,
+        p: 2,
+        fontFamily: "monospace",
+        fontSize: "0.875rem",
+        maxHeight: 400,
+        overflow: "auto",
+      }}
+    >
       {raw.map((log, key) => {
-        return <div key={key}>{log}</div>;
+        return (
+          <Box
+            key={key}
+            sx={{
+              py: 0.5,
+              borderBottom:
+                key < raw.length - 1
+                  ? "1px solid rgba(100, 116, 139, 0.1)"
+                  : "none",
+              color: "text.secondary",
+            }}
+          >
+            {log}
+          </Box>
+        );
       })}
-    </>
+    </Box>
   );
 }

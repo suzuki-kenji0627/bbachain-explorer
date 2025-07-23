@@ -65,17 +65,48 @@ export function TokenBalancesCard({ signature }: SignatureProps) {
     const key = account.toBase58() + mint;
 
     return (
-      <TableRow key={key}>
-        <TableCell>
+      <TableRow
+        key={key}
+        sx={{
+          "&:hover": {
+            backgroundColor: "rgba(100, 116, 139, 0.1)",
+          },
+        }}
+      >
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Address pubkey={account} link />
         </TableCell>
-        <TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Address pubkey={new PublicKey(mint)} link />
         </TableCell>
-        <TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <BalanceDelta delta={delta} />
         </TableCell>
-        <TableCell>{balance.uiAmountString} UNITs</TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
+          <Typography variant="body2" sx={{ fontFamily: "monospace" }}>
+            {balance.uiAmountString} UNITs
+          </Typography>
+        </TableCell>
       </TableRow>
     );
   });
@@ -83,96 +114,91 @@ export function TokenBalancesCard({ signature }: SignatureProps) {
   return (
     <Card
       sx={{
-        mb: 4,
+        mb: 3,
         background:
-          "linear-gradient(135deg, rgba(17, 25, 9, 0.9) 0%, rgba(20, 70, 15, 0.8) 100%)",
-        border: "1px solid rgba(255, 255, 255, 0.1)",
+          "linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 214, 160, 0.1) 100%)",
+        border: "1px solid rgba(16, 185, 129, 0.2)",
         borderRadius: 3,
         overflow: "hidden",
       }}
     >
-      <CardContent sx={{ p: 0 }}>
-        <Box
-          sx={{
-            background: "rgba(0, 0, 0, 0.2)",
-            p: 3,
-            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-          }}
-        >
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 3, gap: 2 }}>
           <Typography
             variant="h5"
-            component="h2"
             sx={{
-              fontWeight: 600,
-              color: "#33a382",
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
+              fontWeight: 700,
+              background: "linear-gradient(135deg, #10B981 0%, #06D6A0 100%)",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              color: "transparent",
             }}
           >
             💰 Token Balances
           </Typography>
         </Box>
 
-        <Box sx={{ p: 3 }}>
-          <TableContainer>
-            <Table
-              sx={{
-                "& .MuiTableCell-root": {
-                  border: "none",
-                  py: 2,
-                  fontSize: "0.875rem",
-                },
-              }}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell
-                    sx={{
-                      fontWeight: 600,
-                      color: "text.secondary",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    Address
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      fontWeight: 600,
-                      color: "text.secondary",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    Token
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      fontWeight: 600,
-                      color: "text.secondary",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    Change (BBA)
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      fontWeight: 600,
-                      color: "text.secondary",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    Post Balance (BBA)
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>{accountRows}</TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.2)",
+                    py: 2,
+                    fontWeight: 600,
+                    color: "text.secondary",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  Address
+                </TableCell>
+                <TableCell
+                  sx={{
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.2)",
+                    py: 2,
+                    fontWeight: 600,
+                    color: "text.secondary",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  Token
+                </TableCell>
+                <TableCell
+                  sx={{
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.2)",
+                    py: 2,
+                    fontWeight: 600,
+                    color: "text.secondary",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  Change
+                </TableCell>
+                <TableCell
+                  sx={{
+                    borderBottom: "1px solid rgba(100, 116, 139, 0.2)",
+                    py: 2,
+                    fontWeight: 600,
+                    color: "text.secondary",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  Post Balance
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{accountRows}</TableBody>
+          </Table>
+        </TableContainer>
       </CardContent>
     </Card>
   );

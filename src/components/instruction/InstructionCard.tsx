@@ -75,131 +75,128 @@ export function InstructionCard({
   return (
     <Card
       sx={{
-        mb: 4,
+        mb: 2,
         background:
-          "linear-gradient(135deg, rgba(20, 70, 15, 0.8) 0%, rgba(17, 25, 9, 0.9) 100%)",
-        border: "1px solid rgba(255, 255, 255, 0.1)",
+          "linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%)",
+        border: "1px solid rgba(79, 70, 229, 0.2)",
         borderRadius: 3,
         overflow: "hidden",
       }}
     >
-      <CardContent sx={{ p: 0 }}>
-        <Box
-          sx={{
-            background: "rgba(0, 0, 0, 0.2)",
-            p: 3,
-            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
-            <Chip
-              label={`#${index + 1}${
-                childIndex !== undefined ? `.${childIndex + 1}` : ""
-              }`}
-              color={
-                resultClass === "success"
-                  ? "success"
-                  : resultClass === "warning"
-                  ? "warning"
-                  : "error"
-              }
-              size="small"
-              sx={{ fontWeight: 600 }}
-            />
-            <Typography
-              variant="h5"
-              component="h3"
-              sx={{
-                fontWeight: 600,
-                color: "#ff9900",
-                flex: 1,
-              }}
-            >
-              ⚙️ {title}
-            </Typography>
-          </Box>
-
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 3, gap: 2 }}>
+          <Chip
+            label={`#${index + 1}${
+              childIndex !== undefined ? `.${childIndex + 1}` : ""
+            }`}
+            color={
+              resultClass === "success"
+                ? "success"
+                : resultClass === "warning"
+                ? "warning"
+                : "error"
+            }
+            size="small"
+            sx={{ fontWeight: 600 }}
+          />
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 600,
+              color: "text.primary",
+              flex: 1,
+            }}
+          >
+            {title}
+          </Typography>
           <Button
             disabled={defaultRaw}
             variant={showRaw ? "outlined" : "contained"}
             color="primary"
             size="small"
             onClick={rawClickHandler}
+            sx={{
+              minWidth: "auto",
+              px: 2,
+              fontSize: "0.875rem",
+            }}
           >
             💻 Raw
           </Button>
         </Box>
 
-        <Box sx={{ p: 3 }}>
-          <TableContainer>
-            <Table
-              sx={{
-                "& .MuiTableCell-root": {
-                  border: "none",
-                  py: 2,
-                  "&:first-of-type": {
-                    fontWeight: 600,
-                    color: "text.secondary",
-                    width: "200px",
-                    fontSize: "0.875rem",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                  },
-                  "&:last-of-type": {
-                    fontFamily: "monospace",
-                    fontSize: "0.875rem",
-                  },
-                },
-              }}
-            >
-              <TableBody>
-                {showRaw ? (
-                  <>
-                    <TableRow>
-                      <TableCell>Program</TableCell>
-                      <TableCell>
-                        <Address pubkey={ix.programId} link />
-                      </TableCell>
-                    </TableRow>
-                    {"parsed" in ix ? (
-                      <RawParsedDetail ix={ix}>
-                        {raw ? <RawDetail ix={raw} /> : null}
-                      </RawParsedDetail>
-                    ) : (
-                      <RawDetail ix={ix} />
-                    )}
-                  </>
-                ) : (
-                  children
-                )}
-                {innerCards && innerCards.length > 0 && (
-                  <>
-                    <TableRow>
-                      <TableCell
-                        colSpan={2}
-                        sx={{
-                          borderTop: "1px solid rgba(255, 255, 255, 0.1)",
-                          pt: 3,
-                          fontWeight: 600,
-                          color: "#ff9900",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                        }}
-                      >
-                        Inner Instructions
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell colSpan={2} sx={{ p: 0 }}>
-                        <Box sx={{ p: 2 }}>{innerCards}</Box>
-                      </TableCell>
-                    </TableRow>
-                  </>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
+        <TableContainer>
+          <Table>
+            <TableBody>
+              {showRaw ? (
+                <>
+                  <TableRow>
+                    <TableCell
+                      sx={{
+                        borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                        py: 2,
+                        fontWeight: 600,
+                        color: "text.secondary",
+                        width: "200px",
+                      }}
+                    >
+                      Program
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                        py: 2,
+                      }}
+                    >
+                      <Address pubkey={ix.programId} link />
+                    </TableCell>
+                  </TableRow>
+                  {"parsed" in ix ? (
+                    <RawParsedDetail ix={ix}>
+                      {raw ? <RawDetail ix={raw} /> : null}
+                    </RawParsedDetail>
+                  ) : (
+                    <RawDetail ix={ix} />
+                  )}
+                </>
+              ) : (
+                children
+              )}
+              {innerCards && innerCards.length > 0 && (
+                <>
+                  <TableRow>
+                    <TableCell
+                      colSpan={2}
+                      sx={{
+                        borderTop: "1px solid rgba(100, 116, 139, 0.2)",
+                        borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+                        py: 2,
+                        fontWeight: 600,
+                        color: "text.secondary",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                        fontSize: "0.875rem",
+                      }}
+                    >
+                      Inner Instructions
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell
+                      colSpan={2}
+                      sx={{
+                        p: 0,
+                        borderBottom: "none",
+                      }}
+                    >
+                      <Box sx={{ p: 2, pt: 0 }}>{innerCards}</Box>
+                    </TableCell>
+                  </TableRow>
+                </>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </CardContent>
     </Card>
   );
@@ -207,15 +204,25 @@ export function InstructionCard({
 
 function ixResult(result: SignatureResult, index: number) {
   if (result.err) {
-    const err = result.err as any;
-    const ixError = err["InstructionError"];
-    if (ixError && Array.isArray(ixError)) {
-      const [errorIndex, error] = ixError;
-      if (Number.isInteger(errorIndex) && errorIndex === index) {
-        return ["warning", `Error: ${JSON.stringify(error)}`];
-      }
+    const errorIndex = ixErrorIndex(result.err);
+    if (errorIndex !== undefined && errorIndex === index) {
+      return ["warning", "Instruction Error"];
+    } else {
+      return ["muted"];
     }
-    return ["dark"];
   }
+
   return ["success"];
+}
+
+function ixErrorIndex(err: any): number | undefined {
+  if (typeof err === "object" && "InstructionError" in err) {
+    if (
+      typeof err["InstructionError"] === "object" &&
+      Array.isArray(err["InstructionError"])
+    ) {
+      return err["InstructionError"][0];
+    }
+  }
+  return undefined;
 }

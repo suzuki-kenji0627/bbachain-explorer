@@ -30,29 +30,89 @@ export function TransferDetailCard(props: {
       childIndex={childIndex}
     >
       <TableRow>
-        <TableCell>Program</TableCell>
-        <TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          Program
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Address pubkey={SystemProgram.programId} link />
         </TableCell>
       </TableRow>
 
       <TableRow>
-        <TableCell>From Address</TableCell>
-        <TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          From Address
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Address pubkey={info.source} link />
         </TableCell>
       </TableRow>
 
       <TableRow>
-        <TableCell>To Address</TableCell>
-        <TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          To Address
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Address pubkey={info.destination} link />
         </TableCell>
       </TableRow>
 
       <TableRow>
-        <TableCell>Transfer Amount (BBA)</TableCell>
-        <TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+            fontWeight: 600,
+            color: "text.secondary",
+            width: "200px",
+          }}
+        >
+          Transfer Amount (BBA)
+        </TableCell>
+        <TableCell
+          sx={{
+            borderBottom: "1px solid rgba(100, 116, 139, 0.1)",
+            py: 2,
+          }}
+        >
           <Balance daltons={info.daltons} />
         </TableCell>
       </TableRow>
